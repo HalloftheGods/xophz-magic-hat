@@ -16,3 +16,6 @@ add_theme_support( 'title-tag' );
 
 // Support post thumbnails
 add_theme_support( 'post-thumbnails' );
+
+// Load Customizer Settings
+require_once get_template_directory() . '/inc/customizer.php';
