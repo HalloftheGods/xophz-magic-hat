@@ -1,0 +1,16 @@
+{
+  "name": "hallofthegods/xophz-magic-hat",
+  "description": "The ultra-minimal, semantic parent theme designed exclusively for the Xophz-COMPASS Magic Wand ecosystem.",
+  "version": "1.0.0",
+  "type": "wordpress-theme",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Hall of the Gods, Inc.",
+      "homepage": "https://www.hallofthegods.com"
+    }
+  ],
+  "require": {
+    "composer/installers": "^1.0 || ^2.0"
+  }
+}
