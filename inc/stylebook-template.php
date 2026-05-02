@@ -40,11 +40,15 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 		.color-swatch { height: 100px; border-radius: 8px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); display: flex; align-items: flex-end; padding: 10px; font-size: 12px; font-weight: bold; }
 		
 		/* Typography */
-		.type-preview h1 { font-size: 3rem; margin: 0 0 10px 0; line-height: 1.2; }
-		.type-preview h2 { font-size: 2.5rem; margin: 0 0 10px 0; }
-		.type-preview h3 { font-size: 2rem; margin: 0 0 10px 0; }
-		.type-preview p { font-size: 1rem; line-height: 1.6; color: var(--mh-color-text); max-width: 800px; }
-		.type-preview blockquote { border-left: 4px solid var(--mh-color-brand); margin: 20px 0; padding: 10px 20px; font-size: 1.2rem; font-style: italic; background: rgba(0,0,0,0.02); }
+		.type-preview h1, .type-preview h2, .type-preview h3, .type-preview h4, .type-preview h5, .type-preview h6 { font-weight: var(--mh-heading-weight, 600); line-height: var(--mh-heading-line-height, 1.2); color: var(--mh-color-text); margin: 0 0 10px 0; }
+		.type-preview h1 { font-size: var(--mh-font-size-h1, 48px); }
+		.type-preview h2 { font-size: var(--mh-font-size-h2, 36px); }
+		.type-preview h3 { font-size: var(--mh-font-size-h3, 28px); }
+		.type-preview h4 { font-size: var(--mh-font-size-h4, 24px); }
+		.type-preview h5 { font-size: var(--mh-font-size-h5, 20px); }
+		.type-preview h6 { font-size: var(--mh-font-size-h6, 16px); }
+		.type-preview p { font-size: var(--mh-font-size, 16px); line-height: var(--mh-line-height, 1.6); color: var(--mh-color-text); max-width: 800px; }
+		.type-preview blockquote { border-left: 4px solid var(--mh-color-brand); margin: 20px 0; padding: 10px 20px; font-size: 1.2em; font-style: italic; background: rgba(0,0,0,0.02); }
 		
 		/* Buttons */
 		.btn-preview { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }

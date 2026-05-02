@@ -307,18 +307,61 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	// Base Font Size
 	$wp_customize->add_setting( 'mh_font_size', array( 'default' => '16' ) );
 	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_font_size', array(
-		'label'       => __( 'Base Font Size', 'xophz-magic-hat' ),
+		'label'       => __( 'Base / Paragraph Font Size (px)', 'xophz-magic-hat' ),
 		'section'     => 'magic_hat_typography',
-		'input_attrs' => array( 'min' => 12, 'max' => 24, 'step' => 1, 'unit' => 'px' ),
+		'input_attrs' => array( 'min' => 12, 'max' => 24, 'step' => 1 ),
 	) ) );
 
-	// Line Height
+	// Base Line Height
 	$wp_customize->add_setting( 'mh_line_height', array( 'default' => '1.6' ) );
 	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_line_height', array(
 		'label'       => __( 'Base Line Height', 'xophz-magic-hat' ),
 		'section'     => 'magic_hat_typography',
-		'input_attrs' => array( 'min' => 1.0, 'max' => 2.5, 'step' => 0.1, 'unit' => '' ),
+		'input_attrs' => array( 'min' => 1.0, 'max' => 2.5, 'step' => 0.1 ),
 	) ) );
+
+	// Heading Weight
+	$wp_customize->add_setting( 'mh_heading_weight', array( 'default' => '600' ) );
+	$wp_customize->add_control( 'mh_heading_weight', array(
+		'label'    => __( 'Heading Font Weight', 'xophz-magic-hat' ),
+		'section'  => 'magic_hat_typography',
+		'type'     => 'select',
+		'choices'  => array(
+			'300' => '300 - Light',
+			'400' => '400 - Normal',
+			'500' => '500 - Medium',
+			'600' => '600 - Semi-Bold',
+			'700' => '700 - Bold',
+			'800' => '800 - Extra Bold',
+			'900' => '900 - Black',
+		),
+	) );
+
+	// Heading Line Height
+	$wp_customize->add_setting( 'mh_heading_line_height', array( 'default' => '1.2' ) );
+	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_heading_line_height', array(
+		'label'       => __( 'Heading Line Height', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_typography',
+		'input_attrs' => array( 'min' => 0.8, 'max' => 2.0, 'step' => 0.05 ),
+	) ) );
+
+	// H1 - H6 Sizes
+	$headings = array(
+		'1' => 48,
+		'2' => 36,
+		'3' => 28,
+		'4' => 24,
+		'5' => 20,
+		'6' => 16,
+	);
+	foreach ( $headings as $level => $default_size ) {
+		$wp_customize->add_setting( 'mh_font_size_h' . $level, array( 'default' => $default_size ) );
+		$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_font_size_h' . $level, array(
+			'label'       => sprintf( __( 'H%s Font Size (px)', 'xophz-magic-hat' ), $level ),
+			'section'     => 'magic_hat_typography',
+			'input_attrs' => array( 'min' => 10, 'max' => 120, 'step' => 1 ),
+		) ) );
+	}
 
 	// ==============================================
 	// SECTION: Buttons
@@ -427,10 +470,14 @@ function mh_hex2rgb($hex) {
 
 function xophz_magic_hat_customizer_css() {
 	$font_family = get_theme_mod( 'mh_font_family', 'Inter, sans-serif' );
+	$font_size   = get_theme_mod( 'mh_font_size', '16' );
+	$line_height = get_theme_mod( 'mh_line_height', '1.6' );
+	$heading_weight = get_theme_mod( 'mh_heading_weight', '600' );
+	$heading_lh     = get_theme_mod( 'mh_heading_line_height', '1.2' );
 	
 	// Extract font name for Google Fonts API (e.g. "Space Grotesk, sans-serif" -> "Space Grotesk")
 	$font_name = trim( explode(',', $font_family)[0] );
-	$font_url = 'https://fonts.googleapis.com/css2?family=' . urlencode($font_name) . ':wght@300;400;500;600;700&display=swap';
+	$font_url = 'https://fonts.googleapis.com/css2?family=' . urlencode($font_name) . ':wght@300;400;500;600;700;800;900&display=swap';
 	
 	// Fetch Colors
 	$colors = array(
@@ -449,6 +496,18 @@ function xophz_magic_hat_customizer_css() {
 		@import url('<?php echo esc_url($font_url); ?>');
 
 		:root {
+			--mh-font-size: <?php echo esc_attr( $font_size ); ?>px;
+			--mh-line-height: <?php echo esc_attr( $line_height ); ?>;
+			--mh-heading-weight: <?php echo esc_attr( $heading_weight ); ?>;
+			--mh-heading-line-height: <?php echo esc_attr( $heading_lh ); ?>;
+			
+			--mh-font-size-h1: <?php echo esc_attr( get_theme_mod( 'mh_font_size_h1', 48 ) ); ?>px;
+			--mh-font-size-h2: <?php echo esc_attr( get_theme_mod( 'mh_font_size_h2', 36 ) ); ?>px;
+			--mh-font-size-h3: <?php echo esc_attr( get_theme_mod( 'mh_font_size_h3', 28 ) ); ?>px;
+			--mh-font-size-h4: <?php echo esc_attr( get_theme_mod( 'mh_font_size_h4', 24 ) ); ?>px;
+			--mh-font-size-h5: <?php echo esc_attr( get_theme_mod( 'mh_font_size_h5', 20 ) ); ?>px;
+			--mh-font-size-h6: <?php echo esc_attr( get_theme_mod( 'mh_font_size_h6', 16 ) ); ?>px;
+
 			<?php foreach ( $colors as $key => $hex ) : ?>
 			--mh-color-<?php echo esc_attr($key); ?>: <?php echo esc_attr( $hex ); ?>;
 			--mh-color-<?php echo esc_attr($key); ?>-rgb: <?php echo esc_attr( mh_hex2rgb($hex) ); ?>;
