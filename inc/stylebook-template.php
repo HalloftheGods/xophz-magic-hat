@@ -123,13 +123,30 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 		
 		/* Cards */
 		.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--mh-space-4, 16px); }
-		.mh-card { background: var(--mh-color-card); border-radius: var(--mh-border-radius, 4px); box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; border: var(--mh-border-width, 1px) solid var(--mh-color-section); padding: var(--mh-space-4, 16px); }
+		.card, .mh-card { background: var(--mh-color-card); border-radius: var(--mh-border-radius, 4px); box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; border: var(--mh-border-width, 1px) solid var(--mh-color-section); }
+		.card-img { height: 180px; background-size: cover; background-position: center; }
+		.card-body { padding: var(--mh-space-4, 16px); }
+		.card-title { margin: 0 0 var(--mh-space-2, 8px) 0; font-size: 1.1rem; }
+		.mh-card { padding: var(--mh-space-4, 16px); }
 		
 		/* Forms */
 		.form-group { margin-bottom: var(--mh-space-3, 12px); }
 		label { display: block; margin-bottom: var(--mh-space-1, 4px); font-weight: 500; font-size: 14px; color: var(--mh-color-text-main); font-family: var(--mh-font-body); }
 		
-		/* Progress/Alerts */
+		/* Alerts */
+		.alert { display: flex; align-items: center; gap: var(--mh-space-2, 8px); padding: var(--mh-space-3, 12px) var(--mh-space-4, 16px); border-radius: var(--mh-border-radius, 4px); margin-bottom: var(--mh-space-3, 12px); font-size: 14px; border: var(--mh-border-width, 1px) solid transparent; }
+		.alert-success { background: color-mix(in srgb, var(--mh-color-success) 10%, transparent); color: var(--mh-color-success); border-color: color-mix(in srgb, var(--mh-color-success) 25%, transparent); }
+		.alert-warning { background: color-mix(in srgb, var(--mh-color-warning) 10%, transparent); color: var(--mh-color-warning); border-color: color-mix(in srgb, var(--mh-color-warning) 25%, transparent); }
+		.alert-danger { background: color-mix(in srgb, var(--mh-color-danger) 10%, transparent); color: var(--mh-color-danger); border-color: color-mix(in srgb, var(--mh-color-danger) 25%, transparent); }
+		.alert-info { background: color-mix(in srgb, var(--mh-color-info) 10%, transparent); color: var(--mh-color-info); border-color: color-mix(in srgb, var(--mh-color-info) 25%, transparent); }
+		
+		/* Accordion */
+		.accordion { border: var(--mh-border-width, 1px) solid var(--mh-color-section); border-radius: var(--mh-border-radius, 4px); overflow: hidden; }
+		.accordion-item { padding: var(--mh-space-3, 12px) var(--mh-space-4, 16px); border-bottom: var(--mh-border-width, 1px) solid var(--mh-color-section); display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 14px; font-weight: 500; transition: background 0.2s; }
+		.accordion-item:last-child { border-bottom: none; }
+		.accordion-item:hover { background: var(--mh-color-section); }
+		
+		/* Progress */
 		.progress-bar { height: 8px; background: var(--mh-color-section); border-radius: var(--mh-border-radius, 4px); overflow: hidden; margin-bottom: 20px; }
 		.progress-fill { height: 100%; background: var(--mh-color-brand-base); width: 65%; }
 	</style>
@@ -244,9 +261,6 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					<button class="action-btn" onclick="toggleAIConjurer()" id="btn-conjure">
 						<span class="dashicons dashicons-art"></span> Conjure
 					</button>
-					<button class="action-btn primary" onclick="focusCustomizer('magic_hat_colors_panel')">
-						<span class="dashicons dashicons-edit"></span> Edit
-					</button>
 				</div>
 				<h2 class="section-title">Site Colors</h2>
 				
@@ -255,7 +269,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					<h3 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; display: flex; align-items: center; gap: 8px;">
 						<span class="dashicons dashicons-upload"></span> Import Palette JSON
 					</h3>
-					<p style="margin-top: 0; margin-bottom: 15px; font-size: 14px; color: #666;">Paste a previously exported JSON palette here to instantly apply it.</p>
+					<p style="margin-top: 0; margin-bottom: 15px; font-size: 14px; color: var(--mh-color-text-muted);">Paste a previously exported JSON palette here to instantly apply it.</p>
 					<textarea id="import-textarea" style="width: 100%; height: 120px; padding: 10px; border-radius: 4px; border: 1px solid #ddd; font-family: monospace; font-size: 12px; margin-bottom: 10px; background: var(--mh-color-main); color: var(--mh-color-text-main);"></textarea>
 					<button onclick="executeImport()" class="action-btn primary" style="display: inline-flex;">Apply JSON Palette</button>
 				</div>
@@ -265,7 +279,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					<h3 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; display: flex; align-items: center; gap: 8px;">
 						<span class="dashicons dashicons-superhero"></span> AI Palette Conjurer
 					</h3>
-					<p style="margin-top: 0; margin-bottom: 15px; font-size: 14px; color: #666;">Describe your desired brand or vibe, and Gemini will generate a complete color system for you.</p>
+					<p style="margin-top: 0; margin-bottom: 15px; font-size: 14px; color: var(--mh-color-text-muted);">Describe your desired brand or vibe, and Gemini will generate a complete color system for you.</p>
 					<div style="display: flex; gap: 10px;">
 						<input type="text" id="ai-palette-prompt" placeholder="e.g. Fast food burger chain, cyberpunk neon hacker, minimalist luxury spa..." style="flex: 1; padding: 10px 15px; border-radius: 4px; border: 1px solid #ddd; font-family: inherit;">
 						<button id="ai-conjure-btn" onclick="conjureAIPalette()" style="background: var(--mh-color-brand-base, #62c9ff); color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;">
@@ -346,15 +360,62 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					</div>
 
 				</div>
+				
+				<div class="subsection-title">Circadian Rhythm Preview</div>
+				<div style="background: var(--mh-color-card); border: var(--mh-border-width, 1px) solid var(--mh-color-section); border-radius: var(--mh-border-radius, 4px); padding: var(--mh-space-4, 16px);">
+					<div style="display: flex; align-items: center; gap: var(--mh-space-3, 12px); margin-bottom: var(--mh-space-2, 8px);">
+						<span id="daylight-icon" style="font-size: 20px;">🌙</span>
+						<input type="range" id="daylight-slider" min="0" max="1440" step="1" style="flex: 1; accent-color: var(--mh-color-brand-base); cursor: pointer;">
+						<span id="daylight-time" style="font-size: 14px; font-weight: 600; min-width: 60px; text-align: right; color: var(--mh-color-text-main); font-family: var(--mh-font-body);">12:00 PM</span>
+					</div>
+					<div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--mh-color-text-muted); padding: 0 2px;">
+						<span>🌙 Midnight</span>
+						<span>🌅 6 AM</span>
+						<span>☀️ Noon</span>
+						<span>🌅 6 PM</span>
+						<span>🌙 Midnight</span>
+					</div>
+					<div id="daylight-bar" style="height: 6px; border-radius: 3px; margin-top: var(--mh-space-2, 8px); background: linear-gradient(to right, #0a0b2e, #1a1a4e, #4a6fa5, #87ceeb, #ffd700, #87ceeb, #4a6fa5, #1a1a4e, #0a0b2e); opacity: 0.6;"></div>
+				</div>
+				<script>
+					(function() {
+						var slider = document.getElementById('daylight-slider');
+						var timeLabel = document.getElementById('daylight-time');
+						var icon = document.getElementById('daylight-icon');
+
+						var now = new Date();
+						var currentMinutes = now.getHours() * 60 + now.getMinutes();
+						slider.value = currentMinutes;
+
+						function formatTime(totalMinutes) {
+							var h = Math.floor(totalMinutes / 60) % 24;
+							var m = Math.floor(totalMinutes % 60);
+							var ampm = h >= 12 ? 'PM' : 'AM';
+							var displayH = h % 12 || 12;
+							return displayH + ':' + (m < 10 ? '0' : '') + m + ' ' + ampm;
+						}
+
+						function updateFromSlider() {
+							var minutes = parseInt(slider.value);
+							var hours = minutes / 60;
+							var ratio = (Math.cos((hours - 12) * Math.PI / 12) + 1) / 2;
+							var percent = (ratio * 100).toFixed(2) + '%';
+							document.documentElement.style.setProperty('--mh-daylight', percent);
+							timeLabel.textContent = formatTime(minutes);
+
+							var isDay = ratio > 0.6;
+							var isTwilight = ratio > 0.3 && ratio <= 0.6;
+							icon.textContent = isDay ? '☀️' : (isTwilight ? '🌅' : '🌙');
+						}
+
+						slider.addEventListener('input', updateFromSlider);
+						updateFromSlider();
+					})();
+				</script>
 			</section>
 
 			<!-- TYPOGRAPHY -->
 			<section id="section-typography" class="stylebook-section">
-				<div class="section-actions">
-					<button class="action-btn primary" onclick="focusCustomizer('magic_hat_typography')">
-						<span class="dashicons dashicons-edit"></span> Edit
-					</button>
-				</div>
 				<h2 class="section-title">Typography</h2>
 				
 				<div class="type-preview">
@@ -392,11 +453,6 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 
 			<!-- SPACING & LAYOUT -->
 			<section id="section-spacing" class="stylebook-section">
-				<div class="section-actions">
-					<button class="action-btn primary" onclick="focusCustomizer('magic_hat_spacing')">
-						<span class="dashicons dashicons-edit"></span> Edit
-					</button>
-				</div>
 				<h2 class="section-title">Spacing & Layout</h2>
 				<p style="font-size: 14px; color: var(--mh-color-text-muted); margin-bottom: 20px;">
 					Instead of tracking padding and radiuses across dozens of components, the system uses a single unified scale. 
@@ -430,11 +486,6 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 
 			<!-- BUTTONS -->
 			<section id="section-buttons" class="stylebook-section">
-				<div class="section-actions">
-					<button class="action-btn primary" onclick="focusCustomizer('magic_hat_buttons')">
-						<span class="dashicons dashicons-edit"></span> Edit
-					</button>
-				</div>
 				<h2 class="section-title">Buttons & Calls to Action</h2>
 				
 				<div class="subsection-title">Standard Call To Action</div>
@@ -496,21 +547,21 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 						<div class="card-img" style="background: url('https://placehold.co/400x200') center/cover;"></div>
 						<div class="card-body">
 							<h3 class="card-title">Feature Card</h3>
-							<p style="font-size: 14px; color: #666;">This is a standard card component used for displaying blog posts, features, or team members.</p>
-							<a href="#" class="btn btn-text" style="padding:0;">Read More</a>
+							<p style="font-size: 14px; color: var(--mh-color-text-muted);">This is a standard card component used for displaying blog posts, features, or team members.</p>
+							<a href="#" class="mh-btn mh-btn-text">Read More</a>
 						</div>
 					</div>
 					
 					<!-- Pricing Box -->
-					<div class="card" style="text-align: center; padding: 30px;">
+					<div class="card" style="text-align: center; padding: var(--mh-space-6, 32px);">
 						<div style="text-transform: uppercase; font-size: 12px; letter-spacing: 1px; color: var(--mh-color-brand-base);">Pro Plan</div>
-						<h2 style="font-size: 3rem; margin: 15px 0;">$49<span style="font-size: 1rem; color: #888;">/mo</span></h2>
-						<ul style="list-style: none; padding: 0; margin: 20px 0; color: #555; font-size: 14px; line-height: 2;">
+						<h2 style="font-size: 3rem; margin: 15px 0;">$49<span style="font-size: 1rem; color: var(--mh-color-text-muted);">/mo</span></h2>
+						<ul style="list-style: none; padding: 0; margin: 20px 0; color: var(--mh-color-text-muted); font-size: 14px; line-height: 2;">
 							<li>Unlimited Projects</li>
 							<li>24/7 Support</li>
 							<li>Custom Domain</li>
 						</ul>
-						<button class="btn btn-primary" style="width: 100%;">Get Started</button>
+						<button class="mh-btn mh-btn-primary" style="width: 100%;">Get Started</button>
 					</div>
 
 					<!-- Icon Box / Feature -->
@@ -519,7 +570,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 							<span class="dashicons dashicons-admin-site-alt3" style="font-size: 30px; width: 30px; height: 30px;"></span>
 						</div>
 						<h3 class="card-title">Global Network</h3>
-						<p style="font-size: 14px; color: #666; margin: 0;">Our infrastructure scales globally with absolute zero latency across regions.</p>
+						<p style="font-size: 14px; color: var(--mh-color-text-muted); margin: 0;">Our infrastructure scales globally with absolute zero latency across regions.</p>
 					</div>
 				</div>
 			</section>
@@ -529,7 +580,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 				<h2 class="section-title">UI Elements</h2>
 
 				<div class="subsection-title">Alerts & Notifications (Transparency Layering)</div>
-				<p style="font-size: 14px; color: #666; margin-bottom: 20px;">These components demonstrate the use of the generated RGB variables to create 10% opacity backgrounds based on your solid status colors.</p>
+				<p style="font-size: 14px; color: var(--mh-color-text-muted); margin-bottom: 20px;">These alerts use <code>color-mix()</code> to create 10% opacity backgrounds from your solid status colors.</p>
 				
 				<div class="alert alert-success">
 					<span class="dashicons dashicons-yes-alt"></span> System operations completed successfully.
@@ -547,8 +598,8 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 				<div class="subsection-title" style="margin-top: 40px;">Accordion / Toggle</div>
 				<div class="accordion">
 					<div class="accordion-item"><span>What is Magic Wand?</span> <span>+</span></div>
-					<div class="accordion-item" style="background: rgba(0,0,0,0.02); cursor: default;">
-						<div style="font-weight: normal; font-size: 14px; color: #555; padding: 10px 0;">It is a visual compiler for WordPress that generates child themes instantly.</div>
+					<div class="accordion-item" style="background: var(--mh-color-section); cursor: default;">
+						<div style="font-weight: normal; font-size: 14px; color: var(--mh-color-text-muted); padding: var(--mh-space-2, 8px) 0;">It is a visual compiler for WordPress that generates child themes instantly.</div>
 					</div>
 					<div class="accordion-item"><span>Does it support custom posts?</span> <span>+</span></div>
 				</div>
@@ -557,13 +608,13 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 				<div class="progress-bar"><div class="progress-fill"></div></div>
 				
 				<div class="subsection-title" style="margin-top: 40px;">Dividers & Spacers</div>
-				<hr style="border: none; border-top: 2px dashed var(--mh-border-color, #ccc); margin: 20px 0;">
+				<hr style="border: none; border-top: 2px dashed var(--mh-color-border-base); margin: var(--mh-space-5, 24px) 0;">
 			</section>
 
 			<!-- MEDIA & GALLERIES -->
 			<section id="section-media" class="stylebook-section">
 				<h2 class="section-title">Media & Galleries</h2>
-				<p style="font-size: 14px; color: #666; margin-bottom: 20px;">Standard WordPress image alignments and gallery grids.</p>
+				<p style="font-size: 14px; color: var(--mh-color-text-muted); margin-bottom: 20px;">Standard WordPress image alignments and gallery grids.</p>
 				<div style="display: flex; gap: var(--mh-space-4, 16px); flex-wrap: wrap;">
 					<img src="https://picsum.photos/400/300?random=1" style="border-radius: var(--mh-border-radius, 4px); max-width: 100%; height: auto; border: var(--mh-border-width, 1px) solid var(--mh-color-section); flex: 1; min-width: 250px; object-fit: cover;">
 					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--mh-space-2, 8px); flex: 1; min-width: 250px;">
@@ -578,7 +629,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			<!-- POST & QUERY LOOP -->
 			<section id="section-post" class="stylebook-section">
 				<h2 class="section-title">Post & Query Loop</h2>
-				<p style="font-size: 14px; color: #666; margin-bottom: 20px;">How standard blog posts and archives render.</p>
+				<p style="font-size: 14px; color: var(--mh-color-text-muted); margin-bottom: 20px;">How standard blog posts and archives render.</p>
 				<article class="mh-card" style="margin-bottom: 30px;">
 					<h3 style="margin-top:0;"><a href="#" style="text-decoration:none;">The Magic of Web Design</a></h3>
 					<div style="font-size: 12px; color: var(--mh-color-text-muted); margin-bottom: 15px;">Published on May 2, 2026 by Admin</div>
@@ -596,22 +647,22 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			<!-- COMMENTS -->
 			<section id="section-comments" class="stylebook-section">
 				<h2 class="section-title">Comments</h2>
-				<div class="mh-card" style="margin-bottom: 20px; background: rgba(0,0,0,0.02); box-shadow: none;">
-					<div style="display: flex; gap: 15px;">
-						<div style="width: 40px; height: 40px; border-radius: 50%; background: var(--mh-color-brand-base); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">U</div>
+				<div class="mh-card" style="margin-bottom: 20px; background: var(--mh-color-section); box-shadow: none;">
+					<div style="display: flex; gap: var(--mh-space-3, 12px);">
+						<div style="width: 40px; height: 40px; border-radius: 50%; background: var(--mh-color-brand-base); color: var(--mh-color-text-inverse); display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">U</div>
 						<div>
 							<div style="font-weight: bold; font-size: 14px;">User Name <span style="font-weight:normal; color: var(--mh-color-text-muted); font-size:12px; margin-left: 10px;">May 1, 2026</span></div>
 							<p style="margin: 5px 0 0 0; font-size: 14px;">This is a fantastic article! The layout looks incredibly clean and magical.</p>
 						</div>
 					</div>
 				</div>
-				<div style="margin-top: 30px;">
-					<h3 style="font-size: 16px; margin-bottom: 15px; font-family: var(--mh-font-heading);">Leave a Reply</h3>
+				<div style="margin-top: var(--mh-space-5, 24px);">
+					<h3 style="font-size: 16px; margin-bottom: var(--mh-space-3, 12px); font-family: var(--mh-font-heading);">Leave a Reply</h3>
 					<div class="form-group">
-						<label class="mh-label">Comment</label>
-						<textarea class="mh-input" rows="4" placeholder="Share your thoughts..."></textarea>
+						<label>Comment</label>
+						<textarea rows="4" placeholder="Share your thoughts..."></textarea>
 					</div>
-					<button class="mh-btn">Post Comment</button>
+					<button class="mh-btn mh-btn-primary">Post Comment</button>
 				</div>
 			</section>
 
@@ -879,7 +930,13 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 						colors[key] = window.parent.wp.customize(key).get();
 					}
 				});
-				const jsonStr = JSON.stringify(colors, null, 2);
+				
+				const exportObj = {
+					version: "<?php echo esc_js( wp_get_theme()->get('Version') ); ?>",
+					type: "Magic Hat Design Tokens",
+					tokens: colors
+				};
+				const jsonStr = JSON.stringify(exportObj, null, 2);
 				const fileName = generatePaletteName(colors);
 				
 				const blob = new Blob([jsonStr], { type: 'application/json' });
@@ -917,8 +974,16 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 				return;
 			}
 			try {
-				const colors = JSON.parse(jsonStr);
-				applyPaletteToCustomizer(colors);
+				const parsed = JSON.parse(jsonStr);
+				let tokensToImport = parsed;
+				
+				// Support Versioned Exports (v1.1.0+)
+				if (parsed.version && parsed.tokens) {
+					tokensToImport = parsed.tokens;
+					console.log("Importing Magic Hat Theme Version: " + parsed.version);
+				}
+				
+				applyPaletteToCustomizer(tokensToImport);
 				alert("✨ Palette imported successfully!");
 				toggleImportPanel();
 				textarea.value = '';
