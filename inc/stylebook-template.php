@@ -135,6 +135,28 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 		/* Forms */
 		.form-group { margin-bottom: var(--mh-space-3, 12px); }
 		label { display: block; margin-bottom: var(--mh-space-1, 4px); font-weight: 500; font-size: 14px; color: var(--mh-color-text-main); font-family: var(--mh-font-body); }
+		input[type="text"], input[type="email"], input[type="password"], select, textarea {
+			width: 100%; padding: var(--mh-space-2, 8px) var(--mh-space-3, 12px);
+			background: color-mix(in srgb, var(--mh-color-main) 80%, transparent);
+			border: var(--mh-border-width, 1px) solid var(--mh-color-border-base);
+			border-radius: var(--mh-border-radius, 4px);
+			color: var(--mh-color-text-main);
+			font-family: var(--mh-font-body);
+			font-size: var(--mh-text-base, 16px);
+			transition: all 0.2s;
+			box-sizing: border-box;
+		}
+		input[type="text"]:focus, select:focus, textarea:focus {
+			outline: none;
+			border-color: var(--mh-color-border-focus);
+			box-shadow: 0 0 0 3px color-mix(in srgb, var(--mh-color-border-focus) 20%, transparent);
+			background: var(--mh-color-body);
+		}
+		input[type="checkbox"], input[type="radio"] {
+			accent-color: var(--mh-color-brand-base);
+			width: 16px; height: 16px;
+			cursor: pointer;
+		}
 		
 		/* Alerts */
 		.alert { display: flex; align-items: center; gap: var(--mh-space-2, 8px); padding: var(--mh-space-3, 12px) var(--mh-space-4, 16px); border-radius: var(--mh-border-radius, 4px); margin-bottom: var(--mh-space-3, 12px); font-size: 14px; border: var(--mh-border-width, 1px) solid transparent; }
@@ -151,7 +173,8 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 		
 		/* Progress */
 		.progress-bar { height: 8px; background: var(--mh-color-section); border-radius: var(--mh-border-radius, 4px); overflow: hidden; margin-bottom: 20px; }
-		.progress-fill { height: 100%; background: var(--mh-color-brand-base); width: 65%; }
+		.progress-fill { height: 100%; background: var(--mh-color-brand-base); width: 65%; border-radius: var(--mh-border-radius, 4px); animation: progressBreath 3s ease-in-out infinite alternate; }
+		@keyframes progressBreath { 0% { width: 30%; } 100% { width: 85%; background: var(--mh-color-brand-hover); } }
 	</style>
 	<style>
 		@keyframes conjurePulse {
@@ -184,6 +207,33 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			text-align: left;
 			animation: bounceDots 1.5s infinite step-end;
 		}
+		#ai-conjure-btn { transition: all 0.2s; }
+		#ai-conjure-btn:hover:not(:disabled) {
+			box-shadow: 0 4px 15px color-mix(in srgb, var(--mh-color-brand-base) 40%, transparent);
+			transform: translateY(-1px);
+		}
+		/* Modals */
+		.mh-modal-overlay {
+			display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+			background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
+			z-index: 99999; justify-content: center; align-items: center;
+			opacity: 0; transition: opacity 0.3s;
+		}
+		.mh-modal-overlay.active { display: flex; opacity: 1; }
+		.mh-modal-content {
+			background: var(--mh-color-body); border: 1px solid var(--mh-color-border-base);
+			border-radius: var(--mh-border-radius, 8px); padding: 30px;
+			width: 90%; max-width: 500px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+			transform: scale(0.95); transition: transform 0.3s;
+			position: relative;
+		}
+		.mh-modal-overlay.active .mh-modal-content { transform: scale(1); }
+		.mh-modal-close {
+			position: absolute; top: 15px; right: 15px; background: none; border: none;
+			color: var(--mh-color-text-muted); cursor: pointer; font-size: 20px; transition: color 0.2s;
+			padding: 5px; line-height: 1;
+		}
+		.mh-modal-close:hover { color: var(--mh-color-danger); }
 	</style>
 	<script>
 		function focusCustomizer( controlId ) {
@@ -270,33 +320,39 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 				</div>
 				<h2 class="section-title">Site Colors</h2>
 				
-				<!-- Import/Export Panel -->
-				<div id="import-panel" style="display: none; background: rgba(98, 201, 255, 0.05); border: 1px solid rgba(98, 201, 255, 0.2); border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-					<h3 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; display: flex; align-items: center; gap: 8px;">
-						<span class="dashicons dashicons-upload"></span> Import Palette JSON
-					</h3>
-					<p style="margin-top: 0; margin-bottom: 15px; font-size: 14px; color: var(--mh-color-text-muted);">Paste a previously exported JSON palette here to instantly apply it.</p>
-					<textarea id="import-textarea" style="width: 100%; height: 120px; padding: 10px; border-radius: 4px; border: 1px solid #ddd; font-family: monospace; font-size: 12px; margin-bottom: 10px; background: var(--mh-color-main); color: var(--mh-color-text-main);"></textarea>
-					<button onclick="executeImport()" class="action-btn primary" style="display: inline-flex;">Apply JSON Palette</button>
+				<!-- Import/Export Modal -->
+				<div id="import-panel" class="mh-modal-overlay" onclick="if(event.target===this) toggleImportPanel()">
+					<div class="mh-modal-content">
+						<button class="mh-modal-close" onclick="toggleImportPanel()"><span class="dashicons dashicons-no-alt"></span></button>
+						<h3 style="margin-top: 0; margin-bottom: 10px; font-size: 18px; display: flex; align-items: center; gap: 8px; color: var(--mh-color-text-heading);">
+							<span class="dashicons dashicons-upload"></span> Import Palette JSON
+						</h3>
+						<p style="margin-top: 0; margin-bottom: 15px; font-size: 14px; color: var(--mh-color-text-muted);">Paste a previously exported JSON palette here to instantly apply it.</p>
+						<textarea id="import-textarea" style="width: 100%; height: 160px; padding: 10px; border-radius: 4px; border: 1px solid var(--mh-color-border-base); font-family: monospace; font-size: 12px; margin-bottom: 15px; background: var(--mh-color-main); color: var(--mh-color-text-main);"></textarea>
+						<button onclick="executeImport()" class="action-btn primary" style="display: inline-flex; width: 100%; justify-content: center;">Apply JSON Palette</button>
+					</div>
 				</div>
 
-				<!-- AI Palette Conjurer -->
-				<div id="ai-conjurer-panel" style="display: none; background: rgba(98, 201, 255, 0.05); border: 1px solid rgba(98, 201, 255, 0.2); border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-					<h3 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; display: flex; align-items: center; gap: 8px;">
-						<span class="dashicons dashicons-superhero"></span> AI Palette Conjurer
-					</h3>
-					<p style="margin-top: 0; margin-bottom: 15px; font-size: 14px; color: var(--mh-color-text-muted);">Describe your desired brand or vibe, and Gemini will generate a complete color system for you.</p>
-					<div style="display: flex; gap: 10px;">
-						<input type="text" id="ai-palette-prompt" placeholder="e.g. Fast food burger chain, cyberpunk neon hacker, minimalist luxury spa..." style="flex: 1; padding: 10px 15px; border-radius: 4px; border: 1px solid #ddd; font-family: inherit;">
-						<button id="ai-conjure-btn" onclick="conjureAIPalette()" style="background: var(--mh-color-brand-base, #62c9ff); color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-							<span class="dashicons dashicons-art"></span> <span class="btn-text">Conjure</span>
-						</button>
-					</div>
-					<div id="ai-palette-status" style="display: none; margin-top: 15px; font-size: 13px; color: var(--mh-color-brand-base); font-weight: 500;">
-						✨ Please wait<span class="loading-ellipsis"></span>
-					</div>
-					<div id="ai-palette-history" style="margin-top: 15px; display: none; gap: 8px; flex-wrap: wrap;">
-						<!-- Cached palettes will appear here -->
+				<!-- AI Palette Conjurer Modal -->
+				<div id="ai-conjurer-panel" class="mh-modal-overlay" onclick="if(event.target===this) toggleAIConjurer()">
+					<div class="mh-modal-content">
+						<button class="mh-modal-close" onclick="toggleAIConjurer()"><span class="dashicons dashicons-no-alt"></span></button>
+						<h3 style="margin-top: 0; margin-bottom: 10px; font-size: 18px; display: flex; align-items: center; gap: 8px; color: var(--mh-color-text-heading);">
+							<span class="dashicons dashicons-superhero"></span> AI Palette Conjurer
+						</h3>
+						<p style="margin-top: 0; margin-bottom: 15px; font-size: 14px; color: var(--mh-color-text-muted);">Describe your desired brand or vibe, and the Conjurer will generate a complete 56-token OKLCH color system for you.</p>
+						<div style="display: flex; gap: 10px; flex-direction: column;">
+							<input type="text" id="ai-palette-prompt" placeholder="e.g. Cyberpunk neon hacker, minimalist luxury spa..." style="width: 100%; padding: 12px 15px; border-radius: 4px; border: 1px solid var(--mh-color-border-base); font-family: inherit; background: var(--mh-color-main); color: var(--mh-color-text-main);">
+							<button id="ai-conjure-btn" onclick="conjureAIPalette()" style="background: var(--mh-color-brand-base, #62c9ff); color: #fff; border: none; padding: 12px 20px; border-radius: 4px; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
+								<span class="dashicons dashicons-art"></span> <span class="btn-text">Conjure Theme</span>
+							</button>
+						</div>
+						<div id="ai-palette-status" style="display: none; margin-top: 15px; font-size: 13px; color: var(--mh-color-brand-base); font-weight: 500; text-align: center;">
+							✨ Please wait<span class="loading-ellipsis"></span>
+						</div>
+						<div id="ai-palette-history" style="margin-top: 20px; display: none; gap: 8px; flex-wrap: wrap; border-top: 1px solid var(--mh-color-border-base); padding-top: 15px;">
+							<!-- Cached palettes will appear here -->
+						</div>
 					</div>
 				</div>
 				
@@ -490,7 +546,13 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 							var hours = minutes / 60;
 							var ratio = (Math.cos((hours - 12) * Math.PI / 12) + 1) / 2;
 							var percent = (ratio * 100).toFixed(2) + '%';
+							
+							// Text transitions much faster to maintain contrast
+							var textRatio = Math.max(0, Math.min(1, (ratio - 0.5) * 10 + 0.5));
+							var textPercent = (textRatio * 100).toFixed(2) + '%';
+							
 							document.documentElement.style.setProperty('--mh-daylight', percent);
+							document.documentElement.style.setProperty('--mh-daylight-text', textPercent);
 							timeLabel.textContent = formatTime(minutes);
 
 							var isDay = ratio > 0.6;
@@ -687,11 +749,11 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 				
 				<div class="subsection-title" style="margin-top: 40px;">Accordion / Toggle</div>
 				<div class="accordion">
-					<div class="accordion-item"><span>What is Magic Wand?</span> <span>+</span></div>
-					<div class="accordion-item" style="background: var(--mh-color-section); cursor: default;">
-						<div style="font-weight: normal; font-size: 14px; color: var(--mh-color-text-muted); padding: var(--mh-space-2, 8px) 0;">It is a visual compiler for WordPress that generates child themes instantly.</div>
-					</div>
-					<div class="accordion-item"><span>Does it support custom posts?</span> <span>+</span></div>
+					<div class="accordion-item" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'"><span>What is Magic Wand?</span> <span>+</span></div>
+					<div style="display:none; background: var(--mh-color-section); padding: var(--mh-space-3, 12px) var(--mh-space-4, 16px); font-size: 14px; color: var(--mh-color-text-muted);">It is a visual compiler for WordPress that generates child themes instantly.</div>
+					
+					<div class="accordion-item" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'"><span>Does it support custom posts?</span> <span>+</span></div>
+					<div style="display:none; background: var(--mh-color-section); padding: var(--mh-space-3, 12px) var(--mh-space-4, 16px); font-size: 14px; color: var(--mh-color-text-muted);">Yes, it fully supports all custom post types and taxonomies with dynamic tokens.</div>
 				</div>
 
 				<div class="subsection-title" style="margin-top: 40px;">Progress Bars</div>
@@ -767,6 +829,80 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 				if (row.children.length === 2 && row.children[0].innerText) {
 					row.children[1].innerText = row.children[0].innerText;
 				}
+			});
+
+			// --- Developer Quality of Life: Copy CSS Variables ---
+			window.showStylebookToast = function(msg) {
+				var toast = document.getElementById('mh-toast');
+				if (!toast) {
+					toast = document.createElement('div');
+					toast.id = 'mh-toast';
+					toast.style.cssText = 'position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:var(--mh-color-brand-base, #111); color:var(--mh-color-text-inverse, #fff); padding:10px 24px; border-radius:30px; font-weight:600; font-size:14px; z-index:99999; box-shadow:0 10px 25px rgba(0,0,0,0.2); transition:all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity:0; pointer-events:none; font-family:var(--mh-font-body, sans-serif);';
+					document.body.appendChild(toast);
+				}
+				toast.innerHTML = msg;
+				toast.style.opacity = '1';
+				toast.style.bottom = '40px';
+				setTimeout(function() { toast.style.opacity = '0'; toast.style.bottom = '30px'; }, 2500);
+			};
+
+			document.querySelectorAll('.color-swatch').forEach(function(swatch) {
+				// 1. Move inline onclick to a data attribute to prevent execution overlap
+				var onclickAttr = swatch.getAttribute('onclick');
+				if (onclickAttr) {
+					var match = onclickAttr.match(/'([^']+)'/);
+					if (match) {
+						swatch.setAttribute('data-control', match[1]);
+					}
+					swatch.removeAttribute('onclick'); // Stop inline from firing
+				}
+
+				swatch.title = "Click to edit in Customizer\nAlt+Click to copy CSS variable var(--mh-color-...)";
+				
+				swatch.addEventListener('click', function(e) {
+					var controlId = this.getAttribute('data-control');
+					if (!controlId) return;
+
+					if (e.altKey || e.shiftKey) {
+						e.stopPropagation();
+						e.preventDefault();
+						var varName = '--' + controlId.replace(/_/g, '-');
+						var text = 'var(' + varName + ')';
+						
+						// Reliable clipboard fallback for non-HTTPS or embedded iframes
+						var copyFallback = function(t) {
+							var textArea = document.createElement("textarea");
+							textArea.value = t;
+							textArea.style.position = "fixed";
+							textArea.style.opacity = "0";
+							document.body.appendChild(textArea);
+							textArea.focus();
+							textArea.select();
+							try {
+								document.execCommand('copy');
+								window.showStylebookToast('Copied <b>' + t + '</b> to clipboard! 🪄');
+							} catch (err) {
+								window.showStylebookToast('Copy failed.');
+							}
+							document.body.removeChild(textArea);
+						};
+						
+						if (navigator.clipboard && window.isSecureContext) {
+							navigator.clipboard.writeText(text).then(function() {
+								window.showStylebookToast('Copied <b>' + text + '</b> to clipboard! 🪄');
+							}).catch(function() {
+								copyFallback(text);
+							});
+						} else {
+							copyFallback(text);
+						}
+					} else {
+						// Normal click -> focus customizer
+						if (typeof focusCustomizerControl === 'function') {
+							focusCustomizerControl(controlId);
+						}
+					}
+				});
 			});
 
 			// --- Dynamic Swatch Text Contrast ---
@@ -959,32 +1095,32 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 		// --- UI Toggles ---
 		function toggleAIConjurer() {
 			const panel = document.getElementById('ai-conjurer-panel');
-			const importPanel = document.getElementById('import-panel');
 			const btn = document.getElementById('btn-conjure');
 			
-			if (panel.style.display === 'none') {
-				panel.style.display = 'block';
+			if (!panel.classList.contains('active')) {
+				panel.classList.add('active');
 				btn.classList.add('active-toggle');
-				importPanel.style.display = 'none';
+				// close other
+				document.getElementById('import-panel').classList.remove('active');
 				document.getElementById('btn-import').classList.remove('active-toggle');
 			} else {
-				panel.style.display = 'none';
+				panel.classList.remove('active');
 				btn.classList.remove('active-toggle');
 			}
 		}
 
 		function toggleImportPanel() {
 			const panel = document.getElementById('import-panel');
-			const conjurePanel = document.getElementById('ai-conjurer-panel');
 			const btn = document.getElementById('btn-import');
 			
-			if (panel.style.display === 'none') {
-				panel.style.display = 'block';
+			if (!panel.classList.contains('active')) {
+				panel.classList.add('active');
 				btn.classList.add('active-toggle');
-				conjurePanel.style.display = 'none';
+				// close other
+				document.getElementById('ai-conjurer-panel').classList.remove('active');
 				document.getElementById('btn-conjure').classList.remove('active-toggle');
 			} else {
-				panel.style.display = 'none';
+				panel.classList.remove('active');
 				btn.classList.remove('active-toggle');
 			}
 		}
@@ -1132,13 +1268,30 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			}
 			
 			// UI Loading State
+			const magicalPhrases = [
+				"Consulting the color oracles",
+				"Extracting chromatic essence",
+				"Aligning the OKLCH constellations",
+				"Mixing spectral potions",
+				"Polishing the neon crystals",
+				"Weaving the circadian rhythms",
+				"Distilling pure aesthetic",
+				"Synchronizing color harmonics"
+			];
+			let phraseIndex = 0;
+			
 			statusDiv.style.display = 'block';
-			statusDiv.innerHTML = '✨ Please wait<span class="loading-ellipsis"></span>';
+			statusDiv.innerHTML = `✨ ${magicalPhrases[phraseIndex]}<span class="loading-ellipsis"></span>`;
 			statusDiv.style.color = 'var(--mh-color-brand-base, #62c9ff)';
 			btn.classList.add('conjuring');
 			btn.disabled = true;
 			btnText.innerText = 'Conjuring...';
 			btnIcon.classList.replace('dashicons-art', 'dashicons-update-alt');
+			
+			const loadingInterval = setInterval(() => {
+				phraseIndex = (phraseIndex + 1) % magicalPhrases.length;
+				statusDiv.innerHTML = `✨ ${magicalPhrases[phraseIndex]}<span class="loading-ellipsis"></span>`;
+			}, 3000);
 			
 			try {
 				const response = await fetch('/wp-json/xophz/v1/gemini/generate', {
@@ -1154,7 +1307,8 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 						Return ONLY a valid JSON object mapping exactly these 56 keys to stunning hex color codes. Do not include any other text or markdown outside the JSON.
 						Base Keys (28): mh_color_brand_base, mh_color_brand_hover, mh_color_brand_active, mh_color_brand_muted, mh_color_cta_base, mh_color_cta_hover, mh_color_cta_active, mh_color_cta_muted, mh_color_link, mh_color_link_hover, mh_color_link_active, mh_color_link_visited, mh_color_text_heading, mh_color_text_main, mh_color_text_muted, mh_color_text_inverse, mh_color_body, mh_color_main, mh_color_section, mh_color_card, mh_color_border_base, mh_color_border_hover, mh_color_border_focus, mh_color_border_muted, mh_color_success, mh_color_warning, mh_color_danger, mh_color_info.
 						Dark Keys (28): Duplicate the exact keys above but append "_dark" to each key name (e.g. mh_color_brand_base_dark). Provide a beautifully harmonized dark mode counterpart.
-						CRITICAL CONTRAST RULE: You MUST ensure your background colors (body, main, section, card) contrast perfectly with your text and primary colors. For example, never put white/light text on a light background, and never put dark text on a dark background. The base keys are for Light Mode (light backgrounds, dark text). The _dark keys are for Dark Mode (dark backgrounds, light text). Let your genius shine.`
+						CRITICAL CONTRAST RULE: You MUST ensure your background colors (body, main, section, card) contrast perfectly with your text and primary colors. For example, never put white/light text on a light background, and never put dark text on a dark background. The base keys are for Light Mode (light backgrounds, dark text). The _dark keys are for Dark Mode (dark backgrounds, light text).
+						CRITICAL INTERPOLATION RULE: Because the theme smoothly transitions between Light and Dark colors using OKLCH color-mixing across the day, you MUST ensure that the Light and Dark counterparts share analogous hues or the same color family! Do NOT use drastically different hues (e.g. green light mode, red dark mode) for the same token, or else the 50% transition at 6AM/6PM will become muddy and unpleasant. The dark version should simply be a darkened, shifted, or inverted luminance version of the light hue to ensure the interpolation gradient remains vibrant and elegant. Let your genius shine.`
 					})
 				});
 				
@@ -1180,10 +1334,11 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 				statusDiv.innerText = '❌ The magic fizzled: ' + err.message;
 				statusDiv.style.color = '#ef4444'; // error
 			} finally {
+				clearInterval(loadingInterval);
 				// Restore UI State
 				btn.classList.remove('conjuring');
 				btn.disabled = false;
-				btnText.innerText = 'Conjure';
+				btnText.innerText = 'Conjure Theme';
 				btnIcon.classList.replace('dashicons-update-alt', 'dashicons-art');
 			}
 		}

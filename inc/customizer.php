@@ -682,7 +682,11 @@ function xophz_magic_hat_customizer_css() {
 			?>
 			--mh-color-<?php echo esc_attr($key); ?>-light: <?php echo esc_attr( $val ); ?>;
 			--mh-color-<?php echo esc_attr($key); ?>-dark: <?php echo esc_attr( $dark_val ); ?>;
-			--mh-color-<?php echo esc_attr($key); ?>: color-mix(in srgb, var(--mh-color-<?php echo esc_attr($key); ?>-light) var(--mh-daylight, 100%), var(--mh-color-<?php echo esc_attr($key); ?>-dark));
+			<?php if ( strpos($key, 'text') === 0 || strpos($key, 'link') === 0 ) : ?>
+			--mh-color-<?php echo esc_attr($key); ?>: color-mix(in oklch, var(--mh-color-<?php echo esc_attr($key); ?>-light) var(--mh-daylight-text, var(--mh-daylight, 100%)), var(--mh-color-<?php echo esc_attr($key); ?>-dark));
+			<?php else : ?>
+			--mh-color-<?php echo esc_attr($key); ?>: color-mix(in oklch, var(--mh-color-<?php echo esc_attr($key); ?>-light) var(--mh-daylight, 100%), var(--mh-color-<?php echo esc_attr($key); ?>-dark));
+			<?php endif; ?>
 			<?php endforeach; ?>
 			
 			--mh-font-family: <?php echo esc_attr( $font_family ); ?>;
@@ -802,7 +806,13 @@ function mh_circadian_rhythm_scripts() {
 				// cos((hours - 12) * PI / 12) = 1 at 12:00 (Noon), -1 at 00:00 (Midnight)
 				var ratio = (Math.cos((hours - 12) * Math.PI / 12) + 1) / 2;
 				var percent = (ratio * 100).toFixed(2) + '%';
+				
+				// Text transitions much faster (steeper curve) to avoid grey text on grey backgrounds
+				var textRatio = Math.max(0, Math.min(1, (ratio - 0.5) * 10 + 0.5));
+				var textPercent = (textRatio * 100).toFixed(2) + '%';
+				
 				document.documentElement.style.setProperty('--mh-daylight', percent);
+				document.documentElement.style.setProperty('--mh-daylight-text', textPercent);
 			}
 			updateDaylight();
 			setInterval(updateDaylight, 60000); // Update every minute
