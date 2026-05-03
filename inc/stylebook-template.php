@@ -69,7 +69,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			display: inline-flex; 
 			align-items: center; 
 			justify-content: center; 
-			padding: var(--mh-btn-padding-y, 12px) var(--mh-btn-padding-x, 24px); 
+			padding: var(--mh-space-2, 8px) var(--mh-space-4, 16px); 
 			border-radius: var(--mh-border-radius, 4px); 
 			font-family: var(--mh-font-body); 
 			font-weight: var(--mh-btn-font-weight, 600); 
@@ -78,8 +78,8 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			cursor: pointer; 
 			text-decoration: none; 
 			transition: all 0.2s; 
-			border: var(--mh-btn-border-width, 2px) solid transparent;
-			gap: 8px;
+			border: var(--mh-border-width, 1px) solid transparent;
+			gap: var(--mh-space-1, 4px);
 		}
 
 		/* Color Modifiers */
@@ -122,14 +122,12 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 		}
 		
 		/* Cards */
-		.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px; }
-		.mh-card { background: var(--mh-color-card); border-radius: var(--mh-card-radius, 8px); box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid var(--mh-color-section); padding: 20px; }
+		.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--mh-space-4, 16px); }
+		.mh-card { background: var(--mh-color-card); border-radius: var(--mh-border-radius, 4px); box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; border: var(--mh-border-width, 1px) solid var(--mh-color-section); padding: var(--mh-space-4, 16px); }
 		
 		/* Forms */
-		.form-group { margin-bottom: 20px; }
-		.mh-label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px; color: var(--mh-color-text-main); font-family: var(--mh-font-body); }
-		.mh-input { width: 100%; padding: 12px; border: 1px solid var(--mh-color-section); border-radius: var(--mh-form-radius, 4px); font-family: var(--mh-font-body); font-size: 1rem; background: var(--mh-color-main); color: var(--mh-color-text-main); transition: all 0.2s; }
-		.mh-input:focus { outline: none; border-color: var(--mh-color-brand-base); box-shadow: 0 0 0 3px rgba(98, 201, 255, 0.2); }
+		.form-group { margin-bottom: var(--mh-space-3, 12px); }
+		label { display: block; margin-bottom: var(--mh-space-1, 4px); font-weight: 500; font-size: 14px; color: var(--mh-color-text-main); font-family: var(--mh-font-body); }
 		
 		/* Progress/Alerts */
 		.progress-bar { height: 8px; background: var(--mh-color-section); border-radius: var(--mh-border-radius, 4px); overflow: hidden; margin-bottom: 20px; }
@@ -137,9 +135,9 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 	</style>
 	<style>
 		@keyframes conjurePulse {
-			0% { box-shadow: 0 0 0 0 rgba(98, 201, 255, 0.7); }
-			70% { box-shadow: 0 0 0 10px rgba(98, 201, 255, 0); }
-			100% { box-shadow: 0 0 0 0 rgba(98, 201, 255, 0); }
+			0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--mh-color-brand-base) 70%, transparent); }
+			70% { box-shadow: 0 0 0 10px transparent; }
+			100% { box-shadow: 0 0 0 0 transparent; }
 		}
 		.conjuring {
 			animation: conjurePulse 1.5s infinite;
@@ -214,12 +212,13 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			<ul>
 				<li><a href="#section-colors" data-customizer-target="magic_hat_colors_panel">Colors</a></li>
 				<li><a href="#section-typography" data-customizer-target="magic_hat_typography">Typography</a></li>
+				<li><a href="#section-spacing" data-customizer-target="magic_hat_spacing">Spacing & Layout</a></li>
 			</ul>
 			<div class="nav-header">Components</div>
 			<ul>
 				<li><a href="#section-buttons" data-customizer-target="magic_hat_buttons">Buttons</a></li>
-				<li><a href="#section-forms" data-customizer-target="magic_hat_forms">Forms & Inputs</a></li>
-				<li><a href="#section-cards" data-customizer-target="magic_hat_cards">Cards & Grids</a></li>
+				<li><a href="#section-forms">Forms & Inputs</a></li>
+				<li><a href="#section-cards">Cards, Grids & Features</a></li>
 				<li><a href="#section-ui">UI Elements</a></li>
 				<li><a href="#section-media">Media & Galleries</a></li>
 			</ul>
@@ -391,6 +390,44 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 				</div>
 			</section>
 
+			<!-- SPACING & LAYOUT -->
+			<section id="section-spacing" class="stylebook-section">
+				<div class="section-actions">
+					<button class="action-btn primary" onclick="focusCustomizer('magic_hat_spacing')">
+						<span class="dashicons dashicons-edit"></span> Edit
+					</button>
+				</div>
+				<h2 class="section-title">Spacing & Layout</h2>
+				<p style="font-size: 14px; color: var(--mh-color-text-muted); margin-bottom: 20px;">
+					Instead of tracking padding and radiuses across dozens of components, the system uses a single unified scale. 
+					Watch how these components breathe and scale proportionally based on your Master Unit setting.
+				</p>
+				
+				<div style="background: var(--mh-color-body); padding: var(--mh-space-8, 64px); border: var(--mh-border-width, 1px) solid var(--mh-color-section); border-radius: var(--mh-border-radius, 4px);">
+					<div style="background: var(--mh-color-main); padding: var(--mh-space-6, 32px); border-radius: var(--mh-border-radius, 4px); max-width: var(--mh-content-width, 1200px); margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+						
+						<div style="margin-bottom: var(--mh-space-5, 24px);">
+							<h3 style="margin: 0 0 var(--mh-space-2, 8px) 0;">Main Container</h3>
+							<p style="margin: 0; color: var(--mh-color-text-muted);">
+								This layout uses <code>--mh-space-8</code> for body padding, <code>--mh-space-6</code> for main content padding, and <code>--mh-border-radius</code> on everything.
+							</p>
+						</div>
+
+						<div class="mh-card" style="padding: var(--mh-space-4, 16px);">
+							<h4 style="margin: 0 0 var(--mh-space-3, 12px) 0;">Inner Card</h4>
+							<p style="margin: 0 0 var(--mh-space-4, 16px) 0;">
+								Nested elements naturally adapt using smaller spacing variants like <code>--mh-space-4</code>.
+							</p>
+							<div style="display: flex; gap: var(--mh-space-3, 12px);">
+								<button class="mh-btn mh-btn-primary">Action</button>
+								<button class="mh-btn mh-btn-outline">Cancel</button>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</section>
+
 			<!-- BUTTONS -->
 			<section id="section-buttons" class="stylebook-section">
 				<div class="section-actions">
@@ -425,28 +462,23 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 
 			<!-- FORMS -->
 			<section id="section-forms" class="stylebook-section">
-				<div class="section-actions">
-					<button class="action-btn primary" onclick="focusCustomizer('magic_hat_forms')">
-						<span class="dashicons dashicons-edit"></span> Edit
-					</button>
-				</div>
 				<h2 class="section-title">Forms & Inputs</h2>
 				
 				<div style="max-width: 500px;">
 					<div class="form-group">
 						<label>Standard Text Input</label>
-						<input type="text" class="form-control" placeholder="Enter your name...">
+						<input type="text" placeholder="Enter your name...">
 					</div>
 					<div class="form-group">
 						<label>Select Dropdown</label>
-						<select class="form-control">
+						<select>
 							<option>Option 1</option>
 							<option>Option 2</option>
 						</select>
 					</div>
 					<div class="form-group">
 						<label>Textarea</label>
-						<textarea class="form-control" rows="4" placeholder="Enter your message..."></textarea>
+						<textarea rows="4" placeholder="Enter your message..."></textarea>
 					</div>
 					<div class="form-group" style="display:flex; gap:10px; align-items:center;">
 						<input type="checkbox" id="check1"> <label for="check1" style="margin:0;">I agree to the terms</label>
@@ -456,11 +488,6 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 
 			<!-- CARDS & GRIDS -->
 			<section id="section-cards" class="stylebook-section">
-				<div class="section-actions">
-					<button class="action-btn primary" onclick="focusCustomizer('magic_hat_cards')">
-						<span class="dashicons dashicons-edit"></span> Edit
-					</button>
-				</div>
 				<h2 class="section-title">Cards, Grids & Features</h2>
 				
 				<div class="card-grid">
@@ -487,8 +514,8 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					</div>
 
 					<!-- Icon Box / Feature -->
-					<div class="card" style="padding: 30px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(var(--mh-color-brand-base-rgb), 0.03);">
-						<div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(var(--mh-color-brand-base-rgb), 0.1); color: var(--mh-color-brand-base); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+					<div class="card" style="padding: 30px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; background: color-mix(in srgb, var(--mh-color-brand-base) 3%, transparent);">
+						<div style="width: 60px; height: 60px; border-radius: 50%; background: color-mix(in srgb, var(--mh-color-brand-base) 10%, transparent); color: var(--mh-color-brand-base); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
 							<span class="dashicons dashicons-admin-site-alt3" style="font-size: 30px; width: 30px; height: 30px;"></span>
 						</div>
 						<h3 class="card-title">Global Network</h3>
@@ -537,13 +564,13 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			<section id="section-media" class="stylebook-section">
 				<h2 class="section-title">Media & Galleries</h2>
 				<p style="font-size: 14px; color: #666; margin-bottom: 20px;">Standard WordPress image alignments and gallery grids.</p>
-				<div style="display: flex; gap: 20px; flex-wrap: wrap;">
-					<img src="https://picsum.photos/400/300?random=1" style="border-radius: var(--mh-card-radius, 8px); max-width: 100%; height: auto; border: 1px solid var(--mh-color-section); flex: 1; min-width: 250px; object-fit: cover;">
-					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex: 1; min-width: 250px;">
-						<img src="https://picsum.photos/200/145?random=2" style="border-radius: var(--mh-card-radius, 8px); width: 100%; height: 100%; object-fit: cover; border: 1px solid var(--mh-color-section);">
-						<img src="https://picsum.photos/200/145?random=3" style="border-radius: var(--mh-card-radius, 8px); width: 100%; height: 100%; object-fit: cover; border: 1px solid var(--mh-color-section);">
-						<img src="https://picsum.photos/200/145?random=4" style="border-radius: var(--mh-card-radius, 8px); width: 100%; height: 100%; object-fit: cover; border: 1px solid var(--mh-color-section);">
-						<img src="https://picsum.photos/200/145?random=5" style="border-radius: var(--mh-card-radius, 8px); width: 100%; height: 100%; object-fit: cover; border: 1px solid var(--mh-color-section);">
+				<div style="display: flex; gap: var(--mh-space-4, 16px); flex-wrap: wrap;">
+					<img src="https://picsum.photos/400/300?random=1" style="border-radius: var(--mh-border-radius, 4px); max-width: 100%; height: auto; border: var(--mh-border-width, 1px) solid var(--mh-color-section); flex: 1; min-width: 250px; object-fit: cover;">
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--mh-space-2, 8px); flex: 1; min-width: 250px;">
+						<img src="https://picsum.photos/200/145?random=2" style="border-radius: var(--mh-border-radius, 4px); width: 100%; height: 100%; object-fit: cover; border: var(--mh-border-width, 1px) solid var(--mh-color-section);">
+						<img src="https://picsum.photos/200/145?random=3" style="border-radius: var(--mh-border-radius, 4px); width: 100%; height: 100%; object-fit: cover; border: var(--mh-border-width, 1px) solid var(--mh-color-section);">
+						<img src="https://picsum.photos/200/145?random=4" style="border-radius: var(--mh-border-radius, 4px); width: 100%; height: 100%; object-fit: cover; border: var(--mh-border-width, 1px) solid var(--mh-color-section);">
+						<img src="https://picsum.photos/200/145?random=5" style="border-radius: var(--mh-border-radius, 4px); width: 100%; height: 100%; object-fit: cover; border: var(--mh-border-width, 1px) solid var(--mh-color-section);">
 					</div>
 				</div>
 			</section>

@@ -397,39 +397,49 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	}
 
 	// ==============================================
+	// SECTION: Spacing & Layout
+	// ==============================================
+	$wp_customize->add_section( 'magic_hat_spacing', array(
+		'title'    => __( '📏 Spacing & Layout', 'xophz-magic-hat' ),
+		'priority' => 32,
+	) );
+	
+	$wp_customize->add_setting( 'mh_space_base', array( 'default' => '8' ) );
+	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_space_base', array(
+		'label'       => __( 'Base Spacing Unit (px)', 'xophz-magic-hat' ),
+		'description' => __( 'This is the master unit. All spacing scales proportionally from this base value.', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_spacing',
+		'input_attrs' => array( 'min' => 2, 'max' => 24, 'step' => 1 ),
+	) ) );
+	
+	$wp_customize->add_setting( 'mh_content_width', array( 'default' => '1200' ) );
+	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_content_width', array(
+		'label'       => __( 'Max Content Width (px)', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_spacing',
+		'input_attrs' => array( 'min' => 600, 'max' => 2400, 'step' => 10 ),
+	) ) );
+
+	$wp_customize->add_setting( 'mh_radius_base', array( 'default' => '4' ) );
+	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_radius_base', array(
+		'label'       => __( 'Base Border Radius (px)', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_spacing',
+		'input_attrs' => array( 'min' => 0, 'max' => 50, 'step' => 1 ),
+	) ) );
+
+	$wp_customize->add_setting( 'mh_border_width', array( 'default' => '1' ) );
+	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_border_width', array(
+		'label'       => __( 'Global Border Width (px)', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_spacing',
+		'input_attrs' => array( 'min' => 0, 'max' => 10, 'step' => 1 ),
+	) ) );
+
+	// ==============================================
 	// SECTION: Buttons
 	// ==============================================
 	$wp_customize->add_section( 'magic_hat_buttons', array(
 		'title'    => __( '👆 Buttons', 'xophz-magic-hat' ),
-		'priority' => 32,
+		'priority' => 33,
 	) );
-	$wp_customize->add_setting( 'mh_button_radius', array( 'default' => '4' ) );
-	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_button_radius', array(
-		'label'       => __( 'Border Radius', 'xophz-magic-hat' ),
-		'section'     => 'magic_hat_buttons',
-		'input_attrs' => array( 'min' => 0, 'max' => 50, 'step' => 1, 'unit' => 'px' ),
-	) ) );
-
-	$wp_customize->add_setting( 'mh_button_padding_y', array( 'default' => '12' ) );
-	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_button_padding_y', array(
-		'label'       => __( 'Vertical Padding', 'xophz-magic-hat' ),
-		'section'     => 'magic_hat_buttons',
-		'input_attrs' => array( 'min' => 0, 'max' => 40, 'step' => 1, 'unit' => 'px' ),
-	) ) );
-
-	$wp_customize->add_setting( 'mh_button_padding_x', array( 'default' => '24' ) );
-	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_button_padding_x', array(
-		'label'       => __( 'Horizontal Padding', 'xophz-magic-hat' ),
-		'section'     => 'magic_hat_buttons',
-		'input_attrs' => array( 'min' => 0, 'max' => 80, 'step' => 1, 'unit' => 'px' ),
-	) ) );
-
-	$wp_customize->add_setting( 'mh_button_border_width', array( 'default' => '2' ) );
-	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_button_border_width', array(
-		'label'       => __( 'Border Width', 'xophz-magic-hat' ),
-		'section'     => 'magic_hat_buttons',
-		'input_attrs' => array( 'min' => 0, 'max' => 10, 'step' => 1, 'unit' => 'px' ),
-	) ) );
 
 	$wp_customize->add_setting( 'mh_button_font_weight', array( 'default' => '600' ) );
 	$wp_customize->add_control( 'mh_button_font_weight', array(
@@ -467,35 +477,7 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 		'input_attrs' => array( 'min' => -5, 'max' => 10, 'step' => 0.1, 'unit' => 'px' ),
 	) ) );
 
-	// ==============================================
-	// SECTION: Forms
-	// ==============================================
-	$wp_customize->add_section( 'magic_hat_forms', array(
-		'title'    => __( '📜 Forms & Inputs', 'xophz-magic-hat' ),
-		'priority' => 33,
-	) );
-	
-	$wp_customize->add_setting( 'mh_form_radius', array( 'default' => '4' ) );
-	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_form_radius', array(
-		'label'       => __( 'Input Border Radius', 'xophz-magic-hat' ),
-		'section'     => 'magic_hat_forms',
-		'input_attrs' => array( 'min' => 0, 'max' => 50, 'step' => 1, 'unit' => 'px' ),
-	) ) );
 
-	// ==============================================
-	// SECTION: Cards
-	// ==============================================
-	$wp_customize->add_section( 'magic_hat_cards', array(
-		'title'    => __( '🃏 Cards & Grids', 'xophz-magic-hat' ),
-		'priority' => 34,
-	) );
-	
-	$wp_customize->add_setting( 'mh_card_radius', array( 'default' => '8' ) );
-	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_card_radius', array(
-		'label'       => __( 'Card Border Radius', 'xophz-magic-hat' ),
-		'section'     => 'magic_hat_cards',
-		'input_attrs' => array( 'min' => 0, 'max' => 50, 'step' => 1, 'unit' => 'px' ),
-	) ) );
 
 }
 add_action( 'customize_register', 'xophz_magic_hat_customize_register' );
@@ -522,13 +504,10 @@ function xophz_magic_hat_customize_controls_scripts() {
 			var homeBtn = $(
 				'<button type="button" id="mh-toggle-home" title="Homepage" style="width: 45px; height: 46px; border: none; border-right: 1px solid #ddd; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #50575e; box-sizing: border-box; padding: 0;"><span class="dashicons dashicons-admin-home" style="font-size: 20px; width: 20px; height: 20px;"></span></button>'
 			);
-			var darkBtn = $(
-				'<button type="button" id="mh-toggle-dark" title="Toggle Dark Mode" style="width: 45px; height: 46px; border: none; border-right: 1px solid #ddd; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #50575e; box-sizing: border-box; padding: 0; font-size: 20px;"><span class="mh-dark-icon">🌙</span></button>'
-			);
 			
 			// Inject next to the Close button at the top left
 			var actionWrapper = $('<div style="position: absolute; left: 45px; top: 0; bottom: 0; display: flex; align-items: center;"></div>');
-			actionWrapper.append(homeBtn).append(styleguideBtn).append(darkBtn);
+			actionWrapper.append(homeBtn).append(styleguideBtn);
 			$('#customize-header-actions').append(actionWrapper);
 
 			$('#mh-toggle-sb').on('click', function(e) {
@@ -539,16 +518,6 @@ function xophz_magic_hat_customize_controls_scripts() {
 				e.preventDefault();
 				wp.customize.previewer.previewUrl('<?php echo esc_url( home_url( '/' ) ); ?>');
 			});
-			$('#mh-toggle-dark').on('click', function(e) {
-				e.preventDefault();
-				var icon = $(this).find('.mh-dark-icon');
-				if (icon.text() === '🌙') {
-					icon.text('☀️');
-				} else {
-					icon.text('🌙');
-				}
-				wp.customize.previewer.send('mh-toggle-darkmode');
-			});
 
 			// Anchor scrolling in Style Guide when sections are expanded
 			wp.customize.bind('ready', function() {
@@ -557,9 +526,8 @@ function xophz_magic_hat_customize_controls_scripts() {
 						var map = {
 							'magic_hat_colors': 'section-colors',
 							'magic_hat_typography': 'section-typography',
+							'magic_hat_spacing': 'section-spacing',
 							'magic_hat_buttons': 'section-buttons',
-							'magic_hat_forms': 'section-forms',
-							'magic_hat_cards': 'section-cards',
 							'nav_menus': 'section-menus',
 							'magic_hat_media': 'section-media',
 							'magic_hat_post': 'section-post',
@@ -681,7 +649,7 @@ function xophz_magic_hat_customizer_css() {
 	<style type="text/css">
 		@import url('<?php echo esc_url($font_url); ?>');
 
-		:root {
+		:root, html[data-theme="light"] {
 			--mh-font-family: <?php echo esc_attr( $font_family ); ?>;
 			--mh-font-heading: <?php echo esc_attr( $font_family ); ?>;
 			--mh-font-body: <?php echo esc_attr( $font_family ); ?>;
@@ -690,6 +658,17 @@ function xophz_magic_hat_customizer_css() {
 			--mh-heading-weight: <?php echo esc_attr( $heading_weight ); ?>;
 			--mh-heading-line-height: <?php echo esc_attr( $heading_lh ); ?>;
 			
+			--mh-space-base: <?php echo esc_attr( get_theme_mod( 'mh_space_base', '8' ) ); ?>px;
+			--mh-space-1: calc(var(--mh-space-base) * 0.5);
+			--mh-space-2: calc(var(--mh-space-base) * 1);
+			--mh-space-3: calc(var(--mh-space-base) * 1.5);
+			--mh-space-4: calc(var(--mh-space-base) * 2);
+			--mh-space-5: calc(var(--mh-space-base) * 3);
+			--mh-space-6: calc(var(--mh-space-base) * 4);
+			--mh-space-7: calc(var(--mh-space-base) * 6);
+			--mh-space-8: calc(var(--mh-space-base) * 8);
+			--mh-content-width: <?php echo esc_attr( get_theme_mod( 'mh_content_width', '1200' ) ); ?>px;
+			
 			--mh-font-size-h1: <?php echo esc_attr( get_theme_mod( 'mh_font_size_h1', 48 ) ); ?>px;
 			--mh-font-size-h2: <?php echo esc_attr( get_theme_mod( 'mh_font_size_h2', 36 ) ); ?>px;
 			--mh-font-size-h3: <?php echo esc_attr( get_theme_mod( 'mh_font_size_h3', 28 ) ); ?>px;
@@ -697,53 +676,20 @@ function xophz_magic_hat_customizer_css() {
 			--mh-font-size-h5: <?php echo esc_attr( get_theme_mod( 'mh_font_size_h5', 20 ) ); ?>px;
 			--mh-font-size-h6: <?php echo esc_attr( get_theme_mod( 'mh_font_size_h6', 16 ) ); ?>px;
 
-			<?php foreach ( $colors as $key => $val ) : ?>
-			--mh-color-<?php echo esc_attr($key); ?>: <?php echo esc_attr( $val ); ?>;
-			<?php 
-			// Only output -rgb if it's a hex color, skip if it's already rgba
-			if ( strpos($val, '#') !== false ) : ?>
-			--mh-color-<?php echo esc_attr($key); ?>-rgb: <?php echo esc_attr( mh_hex2rgb($val) ); ?>;
-			<?php endif; ?>
+			<?php foreach ( $colors as $key => $val ) : 
+				$dark_val = get_theme_mod( 'mh_color_' . str_replace('-', '_', $key) . '_dark', $val );
+			?>
+			--mh-color-<?php echo esc_attr($key); ?>-light: <?php echo esc_attr( $val ); ?>;
+			--mh-color-<?php echo esc_attr($key); ?>-dark: <?php echo esc_attr( $dark_val ); ?>;
+			--mh-color-<?php echo esc_attr($key); ?>: color-mix(in srgb, var(--mh-color-<?php echo esc_attr($key); ?>-light) var(--mh-daylight, 100%), var(--mh-color-<?php echo esc_attr($key); ?>-dark));
 			<?php endforeach; ?>
 			
 			--mh-font-family: <?php echo esc_attr( $font_family ); ?>;
-			--mh-border-radius: <?php echo esc_attr( get_theme_mod( 'mh_button_radius', '4' ) ); ?>px;
-			--mh-btn-padding-y: <?php echo esc_attr( get_theme_mod( 'mh_button_padding_y', '12' ) ); ?>px;
-			--mh-btn-padding-x: <?php echo esc_attr( get_theme_mod( 'mh_button_padding_x', '24' ) ); ?>px;
-			--mh-btn-border-width: <?php echo esc_attr( get_theme_mod( 'mh_button_border_width', '2' ) ); ?>px;
+			--mh-border-radius: <?php echo esc_attr( get_theme_mod( 'mh_radius_base', '4' ) ); ?>px;
+			--mh-border-width: <?php echo esc_attr( get_theme_mod( 'mh_border_width', '1' ) ); ?>px;
 			--mh-btn-font-weight: <?php echo esc_attr( get_theme_mod( 'mh_button_font_weight', '600' ) ); ?>;
 			--mh-btn-text-transform: <?php echo esc_attr( get_theme_mod( 'mh_button_text_transform', 'none' ) ); ?>;
 			--mh-btn-letter-spacing: <?php echo esc_attr( get_theme_mod( 'mh_button_letter_spacing', '0' ) ); ?>px;
-			--mh-form-radius: <?php echo esc_attr( get_theme_mod( 'mh_form_radius', '4' ) ); ?>px;
-			--mh-card-radius: <?php echo esc_attr( get_theme_mod( 'mh_card_radius', '8' ) ); ?>px;
-		}
-
-		/* Dark Mode Variables */
-		@media (prefers-color-scheme: dark) {
-			:root {
-				<?php foreach ( $colors as $key => $default_val ) : 
-					$theme_mod_key = 'mh_color_' . str_replace('-', '_', $key) . '_dark';
-					// Default to light mode val if dark isn't explicitly set differently
-					$dark_val = get_theme_mod( $theme_mod_key, $default_val );
-				?>
-				--mh-color-<?php echo esc_attr($key); ?>: <?php echo esc_attr( $dark_val ); ?>;
-				<?php if ( strpos($dark_val, '#') !== false ) : ?>
-				--mh-color-<?php echo esc_attr($key); ?>-rgb: <?php echo esc_attr( mh_hex2rgb($dark_val) ); ?>;
-				<?php endif; ?>
-				<?php endforeach; ?>
-			}
-		}
-		
-		body.is-dark {
-			<?php foreach ( $colors as $key => $default_val ) : 
-				$theme_mod_key = 'mh_color_' . str_replace('-', '_', $key) . '_dark';
-				$dark_val = get_theme_mod( $theme_mod_key, $default_val );
-			?>
-			--mh-color-<?php echo esc_attr($key); ?>: <?php echo esc_attr( $dark_val ); ?>;
-			<?php if ( strpos($dark_val, '#') !== false ) : ?>
-			--mh-color-<?php echo esc_attr($key); ?>-rgb: <?php echo esc_attr( mh_hex2rgb($dark_val) ); ?>;
-			<?php endif; ?>
-			<?php endforeach; ?>
 		}
 
 		body {
@@ -756,6 +702,75 @@ function xophz_magic_hat_customizer_css() {
 		}
 		.btn-primary { background: var(--mh-color-cta-base); color: var(--mh-color-text-inverse); }
 		.btn-secondary { background: var(--mh-color-cta-muted); color: var(--mh-color-text-main); }
+		
+		/* Global Element Resets */
+		button, input[type="submit"], input[type="reset"], input[type="button"] {
+			font-family: var(--mh-font-body);
+			border-radius: var(--mh-border-radius);
+			border: var(--mh-border-width) solid transparent;
+			padding: var(--mh-space-2) var(--mh-space-4);
+			transition: all 0.2s;
+			cursor: pointer;
+		}
+		
+		input[type="text"], input[type="email"], input[type="password"], input[type="search"], input[type="number"], input[type="url"], input[type="tel"], textarea, select {
+			width: 100%;
+			padding: var(--mh-space-2) var(--mh-space-3);
+			border: var(--mh-border-width) solid var(--mh-color-border-base);
+			border-radius: var(--mh-border-radius);
+			font-family: var(--mh-font-body);
+			font-size: 1rem;
+			background: var(--mh-color-main);
+			color: var(--mh-color-text-main);
+			transition: border-color 0.2s, box-shadow 0.2s;
+			box-sizing: border-box;
+			max-width: 100%;
+		}
+		
+		input::placeholder, textarea::placeholder {
+			color: var(--mh-color-text-muted);
+			opacity: 0.7;
+		}
+		
+		input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="search"]:focus, input[type="number"]:focus, input[type="url"]:focus, input[type="tel"]:focus, textarea:focus, select:focus {
+			outline: none;
+			border-color: var(--mh-color-brand-base);
+			box-shadow: 0 0 0 3px color-mix(in srgb, var(--mh-color-brand-base) 20%, transparent);
+		}
+		
+		hr {
+			border: 0;
+			border-top: var(--mh-border-width) solid var(--mh-color-border-base);
+			margin: var(--mh-space-5) 0;
+		}
+		
+		/* Layout Utilities */
+		.w-full { width: 100%; }
+		.h-full { height: 100%; }
+		.max-w-content { max-width: var(--mh-content-width); margin-left: auto; margin-right: auto; }
+		.rounded { border-radius: var(--mh-border-radius); }
+		.border { border-width: var(--mh-border-width); border-style: solid; border-color: var(--mh-color-border-muted); }
+		
+		/* Spacing Utilities (Tailwind Syntax) */
+		<?php for ($i = 1; $i <= 8; $i++) : ?>
+		.p-<?php echo $i; ?> { padding: var(--mh-space-<?php echo $i; ?>); }
+		.py-<?php echo $i; ?> { padding-top: var(--mh-space-<?php echo $i; ?>); padding-bottom: var(--mh-space-<?php echo $i; ?>); }
+		.px-<?php echo $i; ?> { padding-left: var(--mh-space-<?php echo $i; ?>); padding-right: var(--mh-space-<?php echo $i; ?>); }
+		.pt-<?php echo $i; ?> { padding-top: var(--mh-space-<?php echo $i; ?>); }
+		.pr-<?php echo $i; ?> { padding-right: var(--mh-space-<?php echo $i; ?>); }
+		.pb-<?php echo $i; ?> { padding-bottom: var(--mh-space-<?php echo $i; ?>); }
+		.pl-<?php echo $i; ?> { padding-left: var(--mh-space-<?php echo $i; ?>); }
+		
+		.m-<?php echo $i; ?> { margin: var(--mh-space-<?php echo $i; ?>); }
+		.my-<?php echo $i; ?> { margin-top: var(--mh-space-<?php echo $i; ?>); margin-bottom: var(--mh-space-<?php echo $i; ?>); }
+		.mx-<?php echo $i; ?> { margin-left: var(--mh-space-<?php echo $i; ?>); margin-right: var(--mh-space-<?php echo $i; ?>); }
+		.mt-<?php echo $i; ?> { margin-top: var(--mh-space-<?php echo $i; ?>); }
+		.mr-<?php echo $i; ?> { margin-right: var(--mh-space-<?php echo $i; ?>); }
+		.mb-<?php echo $i; ?> { margin-bottom: var(--mh-space-<?php echo $i; ?>); }
+		.ml-<?php echo $i; ?> { margin-left: var(--mh-space-<?php echo $i; ?>); }
+		
+		.gap-<?php echo $i; ?> { gap: var(--mh-space-<?php echo $i; ?>); }
+		<?php endfor; ?>
 	</style>
 	<?php
 }
@@ -774,21 +789,24 @@ function xophz_magic_hat_stylebook_template() {
 add_action( 'template_redirect', 'xophz_magic_hat_stylebook_template' );
 
 /**
- * Inject script into Customizer preview to listen for dark mode toggles
+ * 24-Hour Circadian Rhythm Calculator
  */
-function mh_customizer_preview_scripts() {
-	if ( is_customize_preview() ) {
-		?>
-		<script>
-			if ( typeof wp !== 'undefined' && wp.customize && wp.customize.preview ) {
-				wp.customize.bind('preview-ready', function() {
-					wp.customize.preview.bind('mh-toggle-darkmode', function() {
-						document.body.classList.toggle('is-dark');
-					});
-				});
+function mh_circadian_rhythm_scripts() {
+	?>
+	<script>
+		(function() {
+			function updateDaylight() {
+				var now = new Date();
+				var hours = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
+				// cos((hours - 12) * PI / 12) = 1 at 12:00 (Noon), -1 at 00:00 (Midnight)
+				var ratio = (Math.cos((hours - 12) * Math.PI / 12) + 1) / 2;
+				var percent = (ratio * 100).toFixed(2) + '%';
+				document.documentElement.style.setProperty('--mh-daylight', percent);
 			}
-		</script>
-		<?php
-	}
+			updateDaylight();
+			setInterval(updateDaylight, 60000); // Update every minute
+		})();
+	</script>
+	<?php
 }
-add_action( 'wp_footer', 'mh_customizer_preview_scripts' );
+add_action( 'wp_head', 'mh_circadian_rhythm_scripts', 5 );
