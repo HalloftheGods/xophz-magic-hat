@@ -1,0 +1,83 @@
+:root {
+  /* 1. Brand */
+  --mh-color-brand-base: #62c9ff;
+  --mh-color-brand-hover: #8be0ff;
+  --mh-color-brand-active: #40a0df;
+  --mh-color-brand-muted: #1a3a4d;
+
+  /* 2. CTA */
+  --mh-color-cta-base: #ff3366;
+  --mh-color-cta-hover: #ff668c;
+  --mh-color-cta-active: #e62050;
+  --mh-color-cta-muted: #4d1a26;
+
+  /* 3. Links */
+  --mh-color-link: #62c9ff;
+  --mh-color-link-hover: #ff3366;
+  --mh-color-link-active: #e62050;
+  --mh-color-link-visited: #9b59b6;
+
+  /* 4. Surfaces & Backgrounds */
+  --mh-color-body: #0a0b10;
+  --mh-color-main: #0f172a;
+  --mh-color-section: rgba(255, 255, 255, 0.02);
+  --mh-color-card: rgba(255, 255, 255, 0.05);
+
+  /* 5. Text */
+  --mh-color-text-heading: #ffffff;
+  --mh-color-text-main: #f8fafc;
+  --mh-color-text-muted: #94a3b8;
+  --mh-color-text-inverse: #0f172a;
+
+  /* 6. Status / System */
+  --mh-color-success: #10b981;
+  --mh-color-warning: #f59e0b;
+  --mh-color-danger: #ef4444;
+  --mh-color-info: #3b82f6;
+
+  /* 7. Typography */
+  --mh-font-heading: 'Outfit', sans-serif;
+  --mh-font-body: 'Inter', sans-serif;
+  --mh-font-mono: 'JetBrains Mono', monospace;
+
+  /* Font Sizes */
+  --mh-text-xs: 0.75rem;
+  --mh-text-sm: 0.875rem;
+  --mh-text-base: 1rem;
+  --mh-text-lg: 1.125rem;
+  --mh-text-xl: 1.25rem;
+  --mh-text-2xl: 1.5rem;
+  --mh-text-3xl: 1.875rem;
+  --mh-text-4xl: 2.25rem;
+
+  /* 8. Spacing */
+  --mh-spacing-1: 0.25rem;
+  --mh-spacing-2: 0.5rem;
+  --mh-spacing-3: 0.75rem;
+  --mh-spacing-4: 1rem;
+  --mh-spacing-6: 1.5rem;
+  --mh-spacing-8: 2rem;
+  --mh-spacing-12: 3rem;
+
+  /* 9. Glassmorphism */
+  --mh-glass-blur-sm: 4px;
+  --mh-glass-blur-md: 8px;
+  --mh-glass-blur-lg: 16px;
+  --mh-glass-bg: rgba(255, 255, 255, 0.05);
+  --mh-glass-border: rgba(255, 255, 255, 0.1);
+
+  /* 10. Borders & Radii */
+  --mh-radius-sm: 4px;
+  --mh-radius-md: 8px;
+  --mh-radius-lg: 16px;
+  --mh-radius-pill: 9999px;
+
+  /* 11. Shadows & Glows */
+  --mh-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --mh-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --mh-glow-brand: 0 0 10px var(--mh-color-brand-base);
+
+  /* 12. Transitions */
+  --mh-transition-fast: 150ms ease-out;
+  --mh-transition-normal: 300ms ease-out;
+}

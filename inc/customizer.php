@@ -123,79 +123,105 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 		}
 	}
 	
-	// Add Magic Hat Global Panel
-	$wp_customize->add_panel( 'magic_hat_options', array(
-		'title'       => __( 'Magic Hat Options', 'xophz-magic-hat' ),
-		'description' => 'Global styling options for your generated theme.',
-		'priority'    => 10,
+
+
+	// Add Theme Colors Panel (Because WP does not support nested panels)
+	$wp_customize->add_panel( 'magic_hat_colors_panel', array(
+		'title'       => __( '🎭 Site Colors', 'xophz-magic-hat' ),
+		'description' => 'Customize your core design system colors.',
+		'priority'    => 30,
 	) );
 
+	// Define the groups and their settings
+	$color_groups = array(
+		'Brand' => array(
+			'mh_color_brand_base'  => array('label' => 'Base', 'default' => '#62c9ff'),
+			'mh_color_brand_hover' => array('label' => 'Hover', 'default' => '#8be0ff'),
+			'mh_color_brand_active'=> array('label' => 'Active', 'default' => '#40a0df'),
+			'mh_color_brand_muted' => array('label' => 'Muted', 'default' => '#1a3a4d'),
+		),
+		'Action (CTA)' => array(
+			'mh_color_cta_base'    => array('label' => 'Base', 'default' => '#ff3366'),
+			'mh_color_cta_hover'   => array('label' => 'Hover', 'default' => '#ff668c'),
+			'mh_color_cta_active'  => array('label' => 'Active', 'default' => '#e62050'),
+			'mh_color_cta_muted'   => array('label' => 'Muted', 'default' => '#4d1a26'),
+		),
+		'Links' => array(
+			'mh_color_link'        => array('label' => 'Default', 'default' => '#62c9ff'),
+			'mh_color_link_hover'  => array('label' => 'Hover', 'default' => '#ff3366'),
+			'mh_color_link_active' => array('label' => 'Active', 'default' => '#e62050'),
+			'mh_color_link_visited'=> array('label' => 'Visited', 'default' => '#9b59b6'),
+		),
+		'Text' => array(
+			'mh_color_text_heading'=> array('label' => 'Heading', 'default' => '#ffffff'),
+			'mh_color_text_main'   => array('label' => 'Main', 'default' => '#f8fafc'),
+			'mh_color_text_muted'  => array('label' => 'Muted', 'default' => '#94a3b8'),
+			'mh_color_text_inverse'=> array('label' => 'Inverse', 'default' => '#0f172a'),
+		),
+		'Surfaces & Layers' => array(
+			'mh_color_body'        => array('label' => 'Body (Base)', 'default' => '#0a0b10'),
+			'mh_color_main'        => array('label' => 'Main Background', 'default' => '#0f172a'),
+			'mh_color_section'     => array('label' => 'Section', 'default' => 'rgba(255, 255, 255, 0.02)'),
+			'mh_color_card'        => array('label' => 'Card', 'default' => 'rgba(255, 255, 255, 0.05)'),
+		),
+		'Borders & Lines' => array(
+			'mh_color_border_base'  => array('label' => 'Base', 'default' => '#334155'),
+			'mh_color_border_hover' => array('label' => 'Hover', 'default' => '#475569'),
+			'mh_color_border_focus' => array('label' => 'Focus', 'default' => '#62c9ff'),
+			'mh_color_border_muted' => array('label' => 'Muted/Divider', 'default' => '#1e293b'),
+		),
+		'Status System' => array(
+			'mh_color_success'     => array('label' => 'Success', 'default' => '#10b981'),
+			'mh_color_warning'     => array('label' => 'Warning', 'default' => '#f59e0b'),
+			'mh_color_danger'      => array('label' => 'Danger', 'default' => '#ef4444'),
+			'mh_color_info'        => array('label' => 'Info', 'default' => '#3b82f6'),
+		),
+	);
+
+	$div_count = 0;
+	foreach ( $color_groups as $group_label => $settings ) {
+		$div_count++;
+		$section_id = 'mh_colors_' . sanitize_title( $group_label );
+		
+		$wp_customize->add_section( $section_id, array(
+			'title'    => $group_label,
+			'panel'    => 'magic_hat_colors_panel',
+			'priority' => 10 + $div_count,
+		) );
+
+		foreach ( $settings as $id => $data ) {
+			$wp_customize->add_setting( $id, array( 'default' => $data['default'], 'sanitize_callback' => 'sanitize_text_field', 'transport' => 'refresh' ) );
+			$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, $id, array( 'label' => $data['label'], 'section' => $section_id ) ) );
+		}
+	}
+
 	// ==============================================
-	// SECTION: Colors
+	// SECTION: Editor Settings
 	// ==============================================
-	$wp_customize->add_section( 'magic_hat_colors', array(
-		'title'    => __( 'Theme Colors', 'xophz-magic-hat' ),
-		'panel'    => 'magic_hat_options',
+	$wp_customize->add_section( 'mh_colors_editor_settings', array(
+		'title'    => __( 'Editor Settings', 'xophz-magic-hat' ),
+		'panel'    => 'magic_hat_colors_panel',
+		'priority' => 99,
 	) );
-
-	// Brand
-	$wp_customize->add_setting( 'mh_color_brand', array( 'default' => '#00E5FF', 'sanitize_callback' => 'sanitize_hex_color', 'transport' => 'refresh' ) );
-	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mh_color_brand', array( 'label' => __( 'Brand', 'xophz-magic-hat' ), 'section' => 'magic_hat_colors' ) ) );
-
-	// Text
-	$wp_customize->add_setting( 'mh_color_text', array( 'default' => '#333333', 'sanitize_callback' => 'sanitize_hex_color', 'transport' => 'refresh' ) );
-	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mh_color_text', array( 'label' => __( 'Text', 'xophz-magic-hat' ), 'section' => 'magic_hat_colors' ) ) );
-
-	// Link
-	$wp_customize->add_setting( 'mh_color_link', array( 'default' => '#0056b3', 'sanitize_callback' => 'sanitize_hex_color', 'transport' => 'refresh' ) );
-	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mh_color_link', array( 'label' => __( 'Link', 'xophz-magic-hat' ), 'section' => 'magic_hat_colors' ) ) );
-
-	// Primary CTA
-	$wp_customize->add_setting( 'mh_color_primary_cta', array( 'default' => '#007BFF', 'sanitize_callback' => 'sanitize_hex_color', 'transport' => 'refresh' ) );
-	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mh_color_primary_cta', array( 'label' => __( 'Primary CTA', 'xophz-magic-hat' ), 'section' => 'magic_hat_colors' ) ) );
-
-	// Secondary CTA
-	$wp_customize->add_setting( 'mh_color_secondary_cta', array( 'default' => '#6C757D', 'sanitize_callback' => 'sanitize_hex_color', 'transport' => 'refresh' ) );
-	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mh_color_secondary_cta', array( 'label' => __( 'Secondary CTA', 'xophz-magic-hat' ), 'section' => 'magic_hat_colors' ) ) );
-
-	// Success
-	$wp_customize->add_setting( 'mh_color_success', array( 'default' => '#28A745', 'sanitize_callback' => 'sanitize_hex_color', 'transport' => 'refresh' ) );
-	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mh_color_success', array( 'label' => __( 'Success', 'xophz-magic-hat' ), 'section' => 'magic_hat_colors' ) ) );
-
-	// Warning
-	$wp_customize->add_setting( 'mh_color_warning', array( 'default' => '#FFC107', 'sanitize_callback' => 'sanitize_hex_color', 'transport' => 'refresh' ) );
-	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mh_color_warning', array( 'label' => __( 'Warning', 'xophz-magic-hat' ), 'section' => 'magic_hat_colors' ) ) );
-
-	// Danger
-	$wp_customize->add_setting( 'mh_color_danger', array( 'default' => '#DC3545', 'sanitize_callback' => 'sanitize_hex_color', 'transport' => 'refresh' ) );
-	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mh_color_danger', array( 'label' => __( 'Danger', 'xophz-magic-hat' ), 'section' => 'magic_hat_colors' ) ) );
-
-	// Info
-	$wp_customize->add_setting( 'mh_color_info', array( 'default' => '#17A2B8', 'sanitize_callback' => 'sanitize_hex_color', 'transport' => 'refresh' ) );
-	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mh_color_info', array( 'label' => __( 'Info', 'xophz-magic-hat' ), 'section' => 'magic_hat_colors' ) ) );
-
-	// ==============================================
-	// SECTION: Backgrounds (Part of Colors)
-	// ==============================================
-
-	// Body Background Color
-	$wp_customize->add_setting( 'mh_bg_body', array( 'default' => '#f0f0f1', 'sanitize_callback' => 'sanitize_hex_color', 'transport' => 'refresh' ) );
-	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mh_bg_body', array( 'label' => __( 'Body Background', 'xophz-magic-hat' ), 'section' => 'magic_hat_colors' ) ) );
-
-	// Main Background Color
-	$wp_customize->add_setting( 'mh_bg_main', array( 'default' => '#ffffff', 'sanitize_callback' => 'sanitize_hex_color', 'transport' => 'refresh' ) );
-	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mh_bg_main', array( 'label' => __( 'Main Background', 'xophz-magic-hat' ), 'section' => 'magic_hat_colors' ) ) );
-
-	// Section Background Color
-	$wp_customize->add_setting( 'mh_bg_section', array( 'default' => '#ffffff', 'sanitize_callback' => 'sanitize_hex_color', 'transport' => 'refresh' ) );
-	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mh_bg_section', array( 'label' => __( 'Section Background', 'xophz-magic-hat' ), 'section' => 'magic_hat_colors' ) ) );
+	
+	$wp_customize->add_setting( 'mh_enforce_site_colors', array(
+		'default'           => false,
+		'sanitize_callback' => 'rest_sanitize_boolean',
+	) );
+	
+	$wp_customize->add_control( 'mh_enforce_site_colors', array(
+		'type'        => 'checkbox',
+		'section'     => 'mh_colors_editor_settings',
+		'label'       => __( 'Enforce Site Colors', 'xophz-magic-hat' ),
+		'description' => __( 'When enabled, editors can only choose from the colors defined above.', 'xophz-magic-hat' ),
+	) );
 
 	// ==============================================
 	// SECTION: Typography
 	// ==============================================
 	$wp_customize->add_section( 'magic_hat_typography', array(
-		'title'    => __( 'Typography', 'xophz-magic-hat' ),
-		'panel'    => 'magic_hat_options',
+		'title'    => __( '🪶 Typography', 'xophz-magic-hat' ),
+		'priority' => 31,
 	) );
 
 	// Base Font Family
@@ -367,37 +393,108 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	// SECTION: Buttons
 	// ==============================================
 	$wp_customize->add_section( 'magic_hat_buttons', array(
-		'title'    => __( 'Buttons', 'xophz-magic-hat' ),
-		'panel'    => 'magic_hat_options',
+		'title'    => __( '👆 Buttons', 'xophz-magic-hat' ),
+		'priority' => 32,
 	) );
 	$wp_customize->add_setting( 'mh_button_radius', array( 'default' => '4' ) );
 	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_button_radius', array(
-		'label'       => __( 'Button Border Radius', 'xophz-magic-hat' ),
+		'label'       => __( 'Border Radius', 'xophz-magic-hat' ),
 		'section'     => 'magic_hat_buttons',
 		'input_attrs' => array( 'min' => 0, 'max' => 50, 'step' => 1, 'unit' => 'px' ),
+	) ) );
+
+	$wp_customize->add_setting( 'mh_button_padding_y', array( 'default' => '12' ) );
+	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_button_padding_y', array(
+		'label'       => __( 'Vertical Padding', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_buttons',
+		'input_attrs' => array( 'min' => 0, 'max' => 40, 'step' => 1, 'unit' => 'px' ),
+	) ) );
+
+	$wp_customize->add_setting( 'mh_button_padding_x', array( 'default' => '24' ) );
+	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_button_padding_x', array(
+		'label'       => __( 'Horizontal Padding', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_buttons',
+		'input_attrs' => array( 'min' => 0, 'max' => 80, 'step' => 1, 'unit' => 'px' ),
+	) ) );
+
+	$wp_customize->add_setting( 'mh_button_border_width', array( 'default' => '2' ) );
+	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_button_border_width', array(
+		'label'       => __( 'Border Width', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_buttons',
+		'input_attrs' => array( 'min' => 0, 'max' => 10, 'step' => 1, 'unit' => 'px' ),
+	) ) );
+
+	$wp_customize->add_setting( 'mh_button_font_weight', array( 'default' => '600' ) );
+	$wp_customize->add_control( 'mh_button_font_weight', array(
+		'label'       => __( 'Font Weight', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_buttons',
+		'type'        => 'select',
+		'choices'     => array(
+			'300' => '300 - Light',
+			'400' => '400 - Normal',
+			'500' => '500 - Medium',
+			'600' => '600 - Semi-Bold',
+			'700' => '700 - Bold',
+			'800' => '800 - Extra Bold',
+			'900' => '900 - Black',
+		),
+	) );
+
+	$wp_customize->add_setting( 'mh_button_text_transform', array( 'default' => 'none' ) );
+	$wp_customize->add_control( 'mh_button_text_transform', array(
+		'label'       => __( 'Text Transform', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_buttons',
+		'type'        => 'select',
+		'choices'     => array(
+			'none'      => 'None',
+			'uppercase' => 'UPPERCASE',
+			'lowercase' => 'lowercase',
+			'capitalize'=> 'Capitalize',
+		),
+	) );
+
+	$wp_customize->add_setting( 'mh_button_letter_spacing', array( 'default' => '0' ) );
+	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_button_letter_spacing', array(
+		'label'       => __( 'Letter Spacing', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_buttons',
+		'input_attrs' => array( 'min' => -5, 'max' => 10, 'step' => 0.1, 'unit' => 'px' ),
 	) ) );
 
 	// ==============================================
 	// SECTION: Forms
 	// ==============================================
 	$wp_customize->add_section( 'magic_hat_forms', array(
-		'title'    => __( 'Forms & Inputs', 'xophz-magic-hat' ),
-		'panel'    => 'magic_hat_options',
+		'title'    => __( '📜 Forms & Inputs', 'xophz-magic-hat' ),
+		'priority' => 33,
 	) );
+	
+	$wp_customize->add_setting( 'mh_form_radius', array( 'default' => '4' ) );
+	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_form_radius', array(
+		'label'       => __( 'Input Border Radius', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_forms',
+		'input_attrs' => array( 'min' => 0, 'max' => 50, 'step' => 1, 'unit' => 'px' ),
+	) ) );
 
 	// ==============================================
 	// SECTION: Cards
 	// ==============================================
 	$wp_customize->add_section( 'magic_hat_cards', array(
-		'title'    => __( 'Cards & Grids', 'xophz-magic-hat' ),
-		'panel'    => 'magic_hat_options',
+		'title'    => __( '🃏 Cards & Grids', 'xophz-magic-hat' ),
+		'priority' => 34,
 	) );
+	
+	$wp_customize->add_setting( 'mh_card_radius', array( 'default' => '8' ) );
+	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_card_radius', array(
+		'label'       => __( 'Card Border Radius', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_cards',
+		'input_attrs' => array( 'min' => 0, 'max' => 50, 'step' => 1, 'unit' => 'px' ),
+	) ) );
 
 }
 add_action( 'customize_register', 'xophz_magic_hat_customize_register' );
 
 /**
- * Inject Global Stylebook Toggle into Customizer Sidebar
+ * Inject Global Style Guide Toggle into Customizer Sidebar
  */
 function xophz_magic_hat_customize_controls_scripts() {
 	?>
@@ -409,17 +506,20 @@ function xophz_magic_hat_customize_controls_scripts() {
 	</style>
 	<script>
 		jQuery(document).ready(function($) {
-			var stylebookBtn = $(
-				'<div id="mh-global-stylebook-toggle" style="position: absolute; bottom: 0; left: 0; width: 100%; background: #fff; border-top: 1px solid #ddd; padding: 15px; box-sizing: border-box; z-index: 500000; display: flex; gap: 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.05);">' + 
-					'<button type="button" class="button button-primary" id="mh-toggle-sb" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;"><span class="dashicons dashicons-visibility" style="margin-top: 2px;"></span> Stylebook</button>' +
-					'<button type="button" class="button" id="mh-toggle-home" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;"><span class="dashicons dashicons-admin-home" style="margin-top: 2px;"></span> Homepage</button>' +
-				'</div>'
+			// Add hover styles matching the native Customizer X button
+			$('head').append('<style>#mh-toggle-sb:hover, #mh-toggle-home:hover { background: #f0f0f1; color: #2271b1 !important; }</style>');
+			
+			var styleguideBtn = $(
+				'<button type="button" id="mh-toggle-sb" title="Stylebook" style="width: 45px; height: 46px; border: none; border-right: 1px solid #ddd; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #50575e; box-sizing: border-box; padding: 0;">🎩</button>'
+			);
+			var homeBtn = $(
+				'<button type="button" id="mh-toggle-home" title="Homepage" style="width: 45px; height: 46px; border: none; border-right: 1px solid #ddd; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #50575e; box-sizing: border-box; padding: 0;"><span class="dashicons dashicons-admin-home" style="font-size: 20px; width: 20px; height: 20px;"></span></button>'
 			);
 			
-			$('#customize-controls').append(stylebookBtn);
-			
-			// Add padding to the bottom of the sidebar to prevent overlap with our new sticky footer
-			$('#customize-theme-controls .wp-full-overlay-sidebar-content').css('padding-bottom', '80px');
+			// Inject next to the Close button at the top left
+			var actionWrapper = $('<div style="position: absolute; left: 45px; top: 0; bottom: 0; display: flex; align-items: center;"></div>');
+			actionWrapper.append(homeBtn).append(styleguideBtn);
+			$('#customize-header-actions').append(actionWrapper);
 
 			$('#mh-toggle-sb').on('click', function(e) {
 				e.preventDefault();
@@ -430,14 +530,20 @@ function xophz_magic_hat_customize_controls_scripts() {
 				wp.customize.previewer.previewUrl('<?php echo esc_url( home_url( '/' ) ); ?>');
 			});
 
-			// Anchor scrolling in Stylebook when sections are expanded
+			// Anchor scrolling in Style Guide when sections are expanded
 			wp.customize.bind('ready', function() {
 				wp.customize.state('expandedSection').bind(function(section) {
 					if (section) {
 						var map = {
 							'magic_hat_colors': 'section-colors',
 							'magic_hat_typography': 'section-typography',
-							'magic_hat_buttons': 'section-buttons'
+							'magic_hat_buttons': 'section-buttons',
+							'magic_hat_forms': 'section-forms',
+							'magic_hat_cards': 'section-cards',
+							'nav_menus': 'section-menus',
+							'magic_hat_media': 'section-media',
+							'magic_hat_post': 'section-post',
+							'magic_hat_comments': 'section-comments'
 						};
 						if (map[section.id]) {
 							wp.customize.previewer.send('mh-scroll-to', map[section.id]);
@@ -445,8 +551,32 @@ function xophz_magic_hat_customize_controls_scripts() {
 					}
 				});
 			});
+
+
+
 		});
 	</script>
+	<style>
+		/* Magic Hat Styles Panel Styling */
+		#accordion-panel-magic_hat_options > h3.accordion-section-title {
+			background: linear-gradient(135deg, #1e1e2f 0%, #10101b 100%);
+			color: #fff !important;
+			border-left: 4px solid #62c9ff;
+			box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+			transition: all 0.3s ease;
+		}
+		#accordion-panel-magic_hat_options > h3.accordion-section-title:hover {
+			background: linear-gradient(135deg, #2a2a3f 0%, #1a1a2b 100%);
+			color: #62c9ff !important;
+			border-left-color: #ff3366;
+		}
+		#accordion-panel-magic_hat_options > h3.accordion-section-title:after {
+			color: rgba(255, 255, 255, 0.7);
+		}
+		#accordion-panel-magic_hat_options > h3.accordion-section-title:hover:after {
+			color: #fff;
+		}
+	</style>
 	<?php
 }
 add_action( 'customize_controls_print_footer_scripts', 'xophz_magic_hat_customize_controls_scripts' );
@@ -481,21 +611,43 @@ function xophz_magic_hat_customizer_css() {
 	
 	// Fetch Colors
 	$colors = array(
-		'brand'         => get_theme_mod( 'mh_color_brand', '#00E5FF' ),
-		'text'          => get_theme_mod( 'mh_color_text', '#333333' ),
-		'link'          => get_theme_mod( 'mh_color_link', '#0056b3' ),
-		'primary-cta'   => get_theme_mod( 'mh_color_primary_cta', '#007BFF' ),
-		'secondary-cta' => get_theme_mod( 'mh_color_secondary_cta', '#6C757D' ),
-		'success'       => get_theme_mod( 'mh_color_success', '#28A745' ),
-		'warning'       => get_theme_mod( 'mh_color_warning', '#FFC107' ),
-		'danger'        => get_theme_mod( 'mh_color_danger', '#DC3545' ),
-		'info'          => get_theme_mod( 'mh_color_info', '#17A2B8' ),
+		'brand-base'    => get_theme_mod( 'mh_color_brand_base', '#62c9ff' ),
+		'brand-hover'   => get_theme_mod( 'mh_color_brand_hover', '#8be0ff' ),
+		'brand-active'  => get_theme_mod( 'mh_color_brand_active', '#40a0df' ),
+		'brand-muted'   => get_theme_mod( 'mh_color_brand_muted', '#1a3a4d' ),
+		
+		'cta-base'      => get_theme_mod( 'mh_color_cta_base', '#ff3366' ),
+		'cta-hover'     => get_theme_mod( 'mh_color_cta_hover', '#ff668c' ),
+		'cta-active'    => get_theme_mod( 'mh_color_cta_active', '#e62050' ),
+		'cta-muted'     => get_theme_mod( 'mh_color_cta_muted', '#4d1a26' ),
+		'link'          => get_theme_mod( 'mh_color_link', '#62c9ff' ),
+		'link-hover'    => get_theme_mod( 'mh_color_link_hover', '#ff3366' ),
+		'link-active'   => get_theme_mod( 'mh_color_link_active', '#e62050' ),
+		'link-visited'  => get_theme_mod( 'mh_color_link_visited', '#9b59b6' ),
+		'body'          => get_theme_mod( 'mh_color_body', '#0a0b10' ),
+		'main'          => get_theme_mod( 'mh_color_main', '#0f172a' ),
+		'section'       => get_theme_mod( 'mh_color_section', 'rgba(255, 255, 255, 0.02)' ),
+		'card'          => get_theme_mod( 'mh_color_card', 'rgba(255, 255, 255, 0.05)' ),
+		'border-base'   => get_theme_mod( 'mh_color_border_base', '#334155' ),
+		'border-hover'  => get_theme_mod( 'mh_color_border_hover', '#475569' ),
+		'border-focus'  => get_theme_mod( 'mh_color_border_focus', '#62c9ff' ),
+		'border-muted'  => get_theme_mod( 'mh_color_border_muted', '#1e293b' ),
+		'text-main'     => get_theme_mod( 'mh_color_text_main', '#f8fafc' ),
+		'text-muted'    => get_theme_mod( 'mh_color_text_muted', '#94a3b8' ),
+		'text-inverse'  => get_theme_mod( 'mh_color_text_inverse', '#0f172a' ),
+		'success'       => get_theme_mod( 'mh_color_success', '#10b981' ),
+		'warning'       => get_theme_mod( 'mh_color_warning', '#f59e0b' ),
+		'danger'        => get_theme_mod( 'mh_color_danger', '#ef4444' ),
+		'info'          => get_theme_mod( 'mh_color_info', '#3b82f6' ),
 	);
 	?>
 	<style type="text/css">
 		@import url('<?php echo esc_url($font_url); ?>');
 
 		:root {
+			--mh-font-family: <?php echo esc_attr( $font_family ); ?>;
+			--mh-font-heading: <?php echo esc_attr( $font_family ); ?>;
+			--mh-font-body: <?php echo esc_attr( $font_family ); ?>;
 			--mh-font-size: <?php echo esc_attr( $font_size ); ?>px;
 			--mh-line-height: <?php echo esc_attr( $line_height ); ?>;
 			--mh-heading-weight: <?php echo esc_attr( $heading_weight ); ?>;
@@ -508,30 +660,36 @@ function xophz_magic_hat_customizer_css() {
 			--mh-font-size-h5: <?php echo esc_attr( get_theme_mod( 'mh_font_size_h5', 20 ) ); ?>px;
 			--mh-font-size-h6: <?php echo esc_attr( get_theme_mod( 'mh_font_size_h6', 16 ) ); ?>px;
 
-			<?php foreach ( $colors as $key => $hex ) : ?>
-			--mh-color-<?php echo esc_attr($key); ?>: <?php echo esc_attr( $hex ); ?>;
-			--mh-color-<?php echo esc_attr($key); ?>-rgb: <?php echo esc_attr( mh_hex2rgb($hex) ); ?>;
+			<?php foreach ( $colors as $key => $val ) : ?>
+			--mh-color-<?php echo esc_attr($key); ?>: <?php echo esc_attr( $val ); ?>;
+			<?php 
+			// Only output -rgb if it's a hex color, skip if it's already rgba
+			if ( strpos($val, '#') !== false ) : ?>
+			--mh-color-<?php echo esc_attr($key); ?>-rgb: <?php echo esc_attr( mh_hex2rgb($val) ); ?>;
+			<?php endif; ?>
 			<?php endforeach; ?>
 			
 			--mh-font-family: <?php echo esc_attr( $font_family ); ?>;
-			--mh-font-size: <?php echo esc_attr( get_theme_mod( 'mh_font_size', '16' ) ); ?>px;
-			--mh-line-height: <?php echo esc_attr( get_theme_mod( 'mh_line_height', '1.6' ) ); ?>;
 			--mh-border-radius: <?php echo esc_attr( get_theme_mod( 'mh_button_radius', '4' ) ); ?>px;
-			
-			--mh-bg-body: <?php echo esc_attr( get_theme_mod( 'mh_bg_body', '#f0f0f1' ) ); ?>;
-			--mh-bg-main: <?php echo esc_attr( get_theme_mod( 'mh_bg_main', '#ffffff' ) ); ?>;
-			--mh-bg-section: <?php echo esc_attr( get_theme_mod( 'mh_bg_section', '#ffffff' ) ); ?>;
+			--mh-btn-padding-y: <?php echo esc_attr( get_theme_mod( 'mh_button_padding_y', '12' ) ); ?>px;
+			--mh-btn-padding-x: <?php echo esc_attr( get_theme_mod( 'mh_button_padding_x', '24' ) ); ?>px;
+			--mh-btn-border-width: <?php echo esc_attr( get_theme_mod( 'mh_button_border_width', '2' ) ); ?>px;
+			--mh-btn-font-weight: <?php echo esc_attr( get_theme_mod( 'mh_button_font_weight', '600' ) ); ?>;
+			--mh-btn-text-transform: <?php echo esc_attr( get_theme_mod( 'mh_button_text_transform', 'none' ) ); ?>;
+			--mh-btn-letter-spacing: <?php echo esc_attr( get_theme_mod( 'mh_button_letter_spacing', '0' ) ); ?>px;
+			--mh-form-radius: <?php echo esc_attr( get_theme_mod( 'mh_form_radius', '4' ) ); ?>px;
+			--mh-card-radius: <?php echo esc_attr( get_theme_mod( 'mh_card_radius', '8' ) ); ?>px;
 		}
 		body {
-			background-color: var(--mh-bg-body);
+			background-color: var(--mh-color-body);
 			font-family: var(--mh-font-family);
-			color: var(--mh-color-text);
+			color: var(--mh-color-text-main);
 		}
 		a {
 			color: var(--mh-color-link);
 		}
-		.btn-primary { background: var(--mh-color-primary-cta); color: #fff; }
-		.btn-secondary { background: var(--mh-color-secondary-cta); color: #fff; }
+		.btn-primary { background: var(--mh-color-cta-base); color: var(--mh-color-text-inverse); }
+		.btn-secondary { background: var(--mh-color-cta-muted); color: var(--mh-color-text-main); }
 	</style>
 	<?php
 }
@@ -541,6 +699,10 @@ add_action( 'wp_head', 'xophz_magic_hat_customizer_css' );
  * Virtual Page: Render the Stylebook
  */
 function xophz_magic_hat_stylebook_template() {
-	require_once get_template_directory() . '/inc/stylebook-template.php';
+	if ( isset( $_GET['magic_hat_stylebook'] ) && $_GET['magic_hat_stylebook'] == '1' ) {
+		nocache_headers();
+		require_once get_template_directory() . '/inc/stylebook-template.php';
+		exit;
+	}
 }
 add_action( 'template_redirect', 'xophz_magic_hat_stylebook_template' );
