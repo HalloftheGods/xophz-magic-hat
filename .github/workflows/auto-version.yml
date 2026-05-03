@@ -14,3 +14,10 @@ jobs:
     uses: HalloftheGods/.github/.github/workflows/wp-theme-update.yml@main
     with:
       version_string: ${{ needs.get-version.outputs.version_string }}
+
+  build-theme-zip:
+    needs: [get-version, update-theme]
+    uses: HalloftheGods/.github/.github/workflows/build-theme-zip.yml@main
+    with:
+      theme_slug: ${{ github.event.repository.name }}
+      version: ${{ needs.get-version.outputs.version_string }}
