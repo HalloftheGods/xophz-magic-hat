@@ -45,13 +45,16 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 		/* Colors */
 		.palette-container { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 40px; }
 		.palette-column { display: flex; flex-direction: column; flex: 1; min-width: 120px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; border: 1px solid var(--mh-color-section); }
-		.palette-header { background: var(--mh-color-main); padding: 10px; font-size: 11px; text-transform: uppercase; color: var(--mh-color-text-muted); font-weight: bold; text-align: center; border-bottom: 1px solid var(--mh-color-section); cursor: pointer; transition: all 0.2s; }
-		.palette-header:hover { background: var(--mh-color-section); color: var(--mh-color-text-main); }
-		.color-swatch { height: 80px; display: flex; flex-direction: column; justify-content: flex-end; padding: 10px; font-size: 11px; font-weight: 600; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.3); border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: opacity 0.2s; }
+		.palette-header { background: #ffffff; color: #000000; padding: 10px; font-size: 11px; text-transform: uppercase; font-weight: bold; text-align: center; border-bottom: 1px solid rgba(0,0,0,0.1); cursor: pointer; transition: all 0.2s; }
+		.palette-header:hover { background: #f5f5f5; color: #000000; }
+		.swatch-row { display: flex; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.1); }
+		.swatch-row:last-child { border-bottom: none; }
+		.color-swatch { flex: 1; height: 80px; display: flex; flex-direction: column; justify-content: flex-end; padding: 8px; font-size: 10px; font-weight: 600; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.3); cursor: pointer; transition: opacity 0.2s; position: relative; }
+		.color-swatch:first-child { border-right: 1px solid rgba(255,255,255,0.1); }
 		.color-swatch:hover { opacity: 0.85; }
-		.color-swatch:last-child { border-bottom: none; }
-		.swatch-light { color: #333; text-shadow: none; border-bottom: 1px solid rgba(0,0,0,0.05); }
-		
+		.swatch-light { color: #333; text-shadow: none; }
+		.palette-container.show-dark-swatches .color-swatch:nth-child(1) { display: none; }
+		.palette-container:not(.show-dark-swatches) .color-swatch:nth-child(2) { display: none; }
 		/* Typography */
 		.type-preview h1, .type-preview h2, .type-preview h3, .type-preview h4, .type-preview h5, .type-preview h6 { font-weight: var(--mh-heading-weight, 600); line-height: var(--mh-heading-line-height, 1.2); color: var(--mh-color-text-heading); margin: 0 0 10px 0; font-family: var(--mh-font-heading); }
 		.type-preview h1 { font-size: var(--mh-text-4xl, 2.25rem); }
@@ -252,6 +255,9 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			<!-- COLORS -->
 			<section id="section-colors" class="stylebook-section active">
 				<div class="section-actions">
+					<button class="action-btn" onclick="toggleDarkModeSwatches()" id="btn-toggle-dark" style="margin-right: 15px;">
+						<span class="dashicons dashicons-editor-contrast"></span> Dark Mode
+					</button>
 					<button class="action-btn" onclick="toggleImportPanel()" id="btn-import">
 						<span class="dashicons dashicons-upload"></span> Import
 					</button>
@@ -299,64 +305,148 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					<!-- Brand Column -->
 					<div class="palette-column">
 						<div class="palette-header" onclick="focusCustomizer('mh_colors_brand')">Brand</div>
-						<div class="color-swatch" style="background: var(--mh-color-brand-base);" onclick="focusCustomizerControl('mh_color_brand_base')">Base</div>
-						<div class="color-swatch" style="background: var(--mh-color-brand-hover);" onclick="focusCustomizerControl('mh_color_brand_hover')">Hover</div>
-						<div class="color-swatch" style="background: var(--mh-color-brand-active);" onclick="focusCustomizerControl('mh_color_brand_active')">Active</div>
-						<div class="color-swatch" style="background: var(--mh-color-brand-muted);" onclick="focusCustomizerControl('mh_color_brand_muted')">Muted</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-brand-base-light);" onclick="focusCustomizerControl('mh_color_brand_base')">Base</div>
+							<div class="color-swatch" style="background: var(--mh-color-brand-base-dark);" onclick="focusCustomizerControl('mh_color_brand_base_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-brand-hover-light);" onclick="focusCustomizerControl('mh_color_brand_hover')">Hover</div>
+							<div class="color-swatch" style="background: var(--mh-color-brand-hover-dark);" onclick="focusCustomizerControl('mh_color_brand_hover_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-brand-active-light);" onclick="focusCustomizerControl('mh_color_brand_active')">Active</div>
+							<div class="color-swatch" style="background: var(--mh-color-brand-active-dark);" onclick="focusCustomizerControl('mh_color_brand_active_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-brand-muted-light);" onclick="focusCustomizerControl('mh_color_brand_muted')">Muted</div>
+							<div class="color-swatch" style="background: var(--mh-color-brand-muted-dark);" onclick="focusCustomizerControl('mh_color_brand_muted_dark')"></div>
+						</div>
 					</div>
 
 					<!-- CTA Column -->
 					<div class="palette-column">
 						<div class="palette-header" onclick="focusCustomizer('mh_colors_action-cta')">Action</div>
-						<div class="color-swatch" style="background: var(--mh-color-cta-base);" onclick="focusCustomizerControl('mh_color_cta_base')">Base</div>
-						<div class="color-swatch" style="background: var(--mh-color-cta-hover);" onclick="focusCustomizerControl('mh_color_cta_hover')">Hover</div>
-						<div class="color-swatch" style="background: var(--mh-color-cta-active);" onclick="focusCustomizerControl('mh_color_cta_active')">Active</div>
-						<div class="color-swatch" style="background: var(--mh-color-cta-muted);" onclick="focusCustomizerControl('mh_color_cta_muted')">Muted</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-cta-base-light);" onclick="focusCustomizerControl('mh_color_cta_base')">Base</div>
+							<div class="color-swatch" style="background: var(--mh-color-cta-base-dark);" onclick="focusCustomizerControl('mh_color_cta_base_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-cta-hover-light);" onclick="focusCustomizerControl('mh_color_cta_hover')">Hover</div>
+							<div class="color-swatch" style="background: var(--mh-color-cta-hover-dark);" onclick="focusCustomizerControl('mh_color_cta_hover_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-cta-active-light);" onclick="focusCustomizerControl('mh_color_cta_active')">Active</div>
+							<div class="color-swatch" style="background: var(--mh-color-cta-active-dark);" onclick="focusCustomizerControl('mh_color_cta_active_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-cta-muted-light);" onclick="focusCustomizerControl('mh_color_cta_muted')">Muted</div>
+							<div class="color-swatch" style="background: var(--mh-color-cta-muted-dark);" onclick="focusCustomizerControl('mh_color_cta_muted_dark')"></div>
+						</div>
 					</div>
 
 					<!-- Link Column -->
 					<div class="palette-column">
 						<div class="palette-header" onclick="focusCustomizer('mh_colors_links')">Links</div>
-						<div class="color-swatch" style="background: var(--mh-color-link);" onclick="focusCustomizerControl('mh_color_link')">Default</div>
-						<div class="color-swatch" style="background: var(--mh-color-link-hover);" onclick="focusCustomizerControl('mh_color_link_hover')">Hover</div>
-						<div class="color-swatch" style="background: var(--mh-color-link-active);" onclick="focusCustomizerControl('mh_color_link_active')">Active</div>
-						<div class="color-swatch" style="background: var(--mh-color-link-visited);" onclick="focusCustomizerControl('mh_color_link_visited')">Visited</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-link-light);" onclick="focusCustomizerControl('mh_color_link')">Default</div>
+							<div class="color-swatch" style="background: var(--mh-color-link-dark);" onclick="focusCustomizerControl('mh_color_link_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-link-hover-light);" onclick="focusCustomizerControl('mh_color_link_hover')">Hover</div>
+							<div class="color-swatch" style="background: var(--mh-color-link-hover-dark);" onclick="focusCustomizerControl('mh_color_link_hover_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-link-active-light);" onclick="focusCustomizerControl('mh_color_link_active')">Active</div>
+							<div class="color-swatch" style="background: var(--mh-color-link-active-dark);" onclick="focusCustomizerControl('mh_color_link_active_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-link-visited-light);" onclick="focusCustomizerControl('mh_color_link_visited')">Visited</div>
+							<div class="color-swatch" style="background: var(--mh-color-link-visited-dark);" onclick="focusCustomizerControl('mh_color_link_visited_dark')"></div>
+						</div>
 					</div>
 
 					<!-- Text Column -->
 					<div class="palette-column">
 						<div class="palette-header" onclick="focusCustomizer('mh_colors_text')">Text</div>
-						<div class="color-swatch" style="background: var(--mh-color-text-heading);" onclick="focusCustomizerControl('mh_color_text_heading')">Heading</div>
-						<div class="color-swatch" style="background: var(--mh-color-text-main);" onclick="focusCustomizerControl('mh_color_text_main')">Main</div>
-						<div class="color-swatch" style="background: var(--mh-color-text-muted);" onclick="focusCustomizerControl('mh_color_text_muted')">Muted</div>
-						<div class="color-swatch" style="background: var(--mh-color-text-inverse);" onclick="focusCustomizerControl('mh_color_text_inverse')">Inverse</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-text-heading-light);" onclick="focusCustomizerControl('mh_color_text_heading')">Heading</div>
+							<div class="color-swatch" style="background: var(--mh-color-text-heading-dark);" onclick="focusCustomizerControl('mh_color_text_heading_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-text-main-light);" onclick="focusCustomizerControl('mh_color_text_main')">Main</div>
+							<div class="color-swatch" style="background: var(--mh-color-text-main-dark);" onclick="focusCustomizerControl('mh_color_text_main_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-text-muted-light);" onclick="focusCustomizerControl('mh_color_text_muted')">Muted</div>
+							<div class="color-swatch" style="background: var(--mh-color-text-muted-dark);" onclick="focusCustomizerControl('mh_color_text_muted_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-text-inverse-light);" onclick="focusCustomizerControl('mh_color_text_inverse')">Inverse</div>
+							<div class="color-swatch" style="background: var(--mh-color-text-inverse-dark);" onclick="focusCustomizerControl('mh_color_text_inverse_dark')"></div>
+						</div>
 					</div>
 
 					<!-- Layers Column -->
 					<div class="palette-column">
 						<div class="palette-header" onclick="focusCustomizer('mh_colors_surfaces-layers')">Layers</div>
-						<div class="color-swatch" style="background: var(--mh-color-body);" onclick="focusCustomizerControl('mh_color_body')">Body (Base)</div>
-						<div class="color-swatch" style="background: var(--mh-color-main);" onclick="focusCustomizerControl('mh_color_main')">Main</div>
-						<div class="color-swatch" style="background: var(--mh-color-section);" onclick="focusCustomizerControl('mh_color_section')">Section</div>
-						<div class="color-swatch" style="background: var(--mh-color-card);" onclick="focusCustomizerControl('mh_color_card')">Card</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-body-light);" onclick="focusCustomizerControl('mh_color_body')">Body</div>
+							<div class="color-swatch" style="background: var(--mh-color-body-dark);" onclick="focusCustomizerControl('mh_color_body_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-main-light);" onclick="focusCustomizerControl('mh_color_main')">Main</div>
+							<div class="color-swatch" style="background: var(--mh-color-main-dark);" onclick="focusCustomizerControl('mh_color_main_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-section-light);" onclick="focusCustomizerControl('mh_color_section')">Section</div>
+							<div class="color-swatch" style="background: var(--mh-color-section-dark);" onclick="focusCustomizerControl('mh_color_section_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-card-light);" onclick="focusCustomizerControl('mh_color_card')">Card</div>
+							<div class="color-swatch" style="background: var(--mh-color-card-dark);" onclick="focusCustomizerControl('mh_color_card_dark')"></div>
+						</div>
 					</div>
 
 					<!-- Borders Column -->
 					<div class="palette-column">
 						<div class="palette-header" onclick="focusCustomizer('mh_colors_borders-lines')">Borders</div>
-						<div class="color-swatch" style="background: var(--mh-color-border-base);" onclick="focusCustomizerControl('mh_color_border_base')">Base</div>
-						<div class="color-swatch" style="background: var(--mh-color-border-hover);" onclick="focusCustomizerControl('mh_color_border_hover')">Hover</div>
-						<div class="color-swatch" style="background: var(--mh-color-border-focus);" onclick="focusCustomizerControl('mh_color_border_focus')">Focus</div>
-						<div class="color-swatch" style="background: var(--mh-color-border-muted);" onclick="focusCustomizerControl('mh_color_border_muted')">Muted</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-border-base-light);" onclick="focusCustomizerControl('mh_color_border_base')">Base</div>
+							<div class="color-swatch" style="background: var(--mh-color-border-base-dark);" onclick="focusCustomizerControl('mh_color_border_base_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-border-hover-light);" onclick="focusCustomizerControl('mh_color_border_hover')">Hover</div>
+							<div class="color-swatch" style="background: var(--mh-color-border-hover-dark);" onclick="focusCustomizerControl('mh_color_border_hover_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-border-focus-light);" onclick="focusCustomizerControl('mh_color_border_focus')">Focus</div>
+							<div class="color-swatch" style="background: var(--mh-color-border-focus-dark);" onclick="focusCustomizerControl('mh_color_border_focus_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-border-muted-light);" onclick="focusCustomizerControl('mh_color_border_muted')">Muted</div>
+							<div class="color-swatch" style="background: var(--mh-color-border-muted-dark);" onclick="focusCustomizerControl('mh_color_border_muted_dark')"></div>
+						</div>
 					</div>
 
 					<!-- System Column -->
 					<div class="palette-column">
 						<div class="palette-header" onclick="focusCustomizer('mh_colors_status-system')">System</div>
-						<div class="color-swatch" style="background: var(--mh-color-success);" onclick="focusCustomizerControl('mh_color_success')">Success</div>
-						<div class="color-swatch" style="background: var(--mh-color-warning);" onclick="focusCustomizerControl('mh_color_warning')">Warning</div>
-						<div class="color-swatch" style="background: var(--mh-color-danger);" onclick="focusCustomizerControl('mh_color_danger')">Danger</div>
-						<div class="color-swatch" style="background: var(--mh-color-info);" onclick="focusCustomizerControl('mh_color_info')">Info</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-success-light);" onclick="focusCustomizerControl('mh_color_success')">Success</div>
+							<div class="color-swatch" style="background: var(--mh-color-success-dark);" onclick="focusCustomizerControl('mh_color_success_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-warning-light);" onclick="focusCustomizerControl('mh_color_warning')">Warning</div>
+							<div class="color-swatch" style="background: var(--mh-color-warning-dark);" onclick="focusCustomizerControl('mh_color_warning_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-danger-light);" onclick="focusCustomizerControl('mh_color_danger')">Danger</div>
+							<div class="color-swatch" style="background: var(--mh-color-danger-dark);" onclick="focusCustomizerControl('mh_color_danger_dark')"></div>
+						</div>
+						<div class="swatch-row">
+							<div class="color-swatch" style="background: var(--mh-color-info-light);" onclick="focusCustomizerControl('mh_color_info')">Info</div>
+							<div class="color-swatch" style="background: var(--mh-color-info-dark);" onclick="focusCustomizerControl('mh_color_info_dark')"></div>
+						</div>
 					</div>
 
 				</div>
@@ -672,6 +762,13 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 	<?php wp_footer(); ?>
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
+			// Copy text to dark swatches
+			document.querySelectorAll('.swatch-row').forEach(function(row) {
+				if (row.children.length === 2 && row.children[0].innerText) {
+					row.children[1].innerText = row.children[0].innerText;
+				}
+			});
+
 			// --- Dynamic Swatch Text Contrast ---
 			function updateSwatchTextColors() {
 				var swatches = document.querySelectorAll('.color-swatch');
@@ -693,8 +790,9 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					}
 				});
 			}
-			// Run once on load. If Customizer causes a refresh, it runs again.
+			// Run once on load, and then continuously to catch Customizer live-preview updates.
 			updateSwatchTextColors();
+			setInterval(updateSwatchTextColors, 500);
 
 			var container = document.querySelector('.stylebook-content');
 			
@@ -891,6 +989,21 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			}
 		}
 
+		function toggleDarkModeSwatches() {
+			var container = document.querySelector('.palette-container');
+			container.classList.toggle('show-dark-swatches');
+			var isDark = container.classList.contains('show-dark-swatches');
+			
+			var btn = document.getElementById('btn-toggle-dark');
+			if (isDark) {
+				btn.innerHTML = '<span class="dashicons dashicons-lightbulb"></span> Light Mode';
+				btn.classList.add('active-toggle');
+			} else {
+				btn.innerHTML = '<span class="dashicons dashicons-editor-contrast"></span> Dark Mode';
+				btn.classList.remove('active-toggle');
+			}
+		}
+
 		// --- Export / Import ---
 		const COLOR_KEYS = [
 			'mh_color_brand_base', 'mh_color_brand_hover', 'mh_color_brand_active', 'mh_color_brand_muted',
@@ -1037,7 +1150,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					body: JSON.stringify({
 						prompt: "Generate a color palette for this brand/vibe: " + promptText,
 						system_instruction: `You are the most artistic, colorfully talented, and visionary UI/UX designer in the world. You possess a transcendent understanding of color theory, emotional resonance, and spatial contrast. You know color relationships better than anyone alive. 
-						When the user describes a vibe or brand, you must envision a breathtaking, cohesive, and perfectly balanced color system.
+						When the user describes a vibe or brand, you must envision a breathtaking, cohesive, and perfectly balanced color system. Keep in mind that we use a "breathing theme" (Circadian Rhythm) that animates and beautifully transitions through the day—from dawn, to noon, to twilight, and midnight.
 						Return ONLY a valid JSON object mapping exactly these 56 keys to stunning hex color codes. Do not include any other text or markdown outside the JSON.
 						Base Keys (28): mh_color_brand_base, mh_color_brand_hover, mh_color_brand_active, mh_color_brand_muted, mh_color_cta_base, mh_color_cta_hover, mh_color_cta_active, mh_color_cta_muted, mh_color_link, mh_color_link_hover, mh_color_link_active, mh_color_link_visited, mh_color_text_heading, mh_color_text_main, mh_color_text_muted, mh_color_text_inverse, mh_color_body, mh_color_main, mh_color_section, mh_color_card, mh_color_border_base, mh_color_border_hover, mh_color_border_focus, mh_color_border_muted, mh_color_success, mh_color_warning, mh_color_danger, mh_color_info.
 						Dark Keys (28): Duplicate the exact keys above but append "_dark" to each key name (e.g. mh_color_brand_base_dark). Provide a beautifully harmonized dark mode counterpart.
