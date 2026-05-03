@@ -823,6 +823,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			'mh_color_border_base', 'mh_color_border_hover', 'mh_color_border_focus', 'mh_color_border_muted',
 			'mh_color_success', 'mh_color_warning', 'mh_color_danger', 'mh_color_info'
 		];
+		const FULL_COLOR_KEYS = [...COLOR_KEYS, ...COLOR_KEYS.map(k => k + '_dark')];
 
 		function generatePaletteName(colors) {
 			let str = JSON.stringify(colors);
@@ -846,7 +847,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 		function exportPalette() {
 			if ( window.parent && window.parent.wp && window.parent.wp.customize ) {
 				const colors = {};
-				COLOR_KEYS.forEach(key => {
+				FULL_COLOR_KEYS.forEach(key => {
 					if(window.parent.wp.customize(key)) {
 						colors[key] = window.parent.wp.customize(key).get();
 					}
@@ -945,9 +946,10 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 						prompt: "Generate a color palette for this brand/vibe: " + promptText,
 						system_instruction: `You are the most artistic, colorfully talented, and visionary UI/UX designer in the world. You possess a transcendent understanding of color theory, emotional resonance, and spatial contrast. You know color relationships better than anyone alive. 
 						When the user describes a vibe or brand, you must envision a breathtaking, cohesive, and perfectly balanced color system.
-						Return ONLY a valid JSON object mapping exactly these 28 keys to stunning hex color codes. Do not include any other text or markdown outside the JSON.
-						Keys: mh_color_brand_base, mh_color_brand_hover, mh_color_brand_active, mh_color_brand_muted, mh_color_cta_base, mh_color_cta_hover, mh_color_cta_active, mh_color_cta_muted, mh_color_link, mh_color_link_hover, mh_color_link_active, mh_color_link_visited, mh_color_text_heading, mh_color_text_main, mh_color_text_muted, mh_color_text_inverse, mh_color_body, mh_color_main, mh_color_section, mh_color_card, mh_color_border_base, mh_color_border_hover, mh_color_border_focus, mh_color_border_muted, mh_color_success, mh_color_warning, mh_color_danger, mh_color_info.
-						Ensure your background colors (body, main) contrast perfectly with your text and primary colors. Let your genius shine.`
+						Return ONLY a valid JSON object mapping exactly these 56 keys to stunning hex color codes. Do not include any other text or markdown outside the JSON.
+						Base Keys (28): mh_color_brand_base, mh_color_brand_hover, mh_color_brand_active, mh_color_brand_muted, mh_color_cta_base, mh_color_cta_hover, mh_color_cta_active, mh_color_cta_muted, mh_color_link, mh_color_link_hover, mh_color_link_active, mh_color_link_visited, mh_color_text_heading, mh_color_text_main, mh_color_text_muted, mh_color_text_inverse, mh_color_body, mh_color_main, mh_color_section, mh_color_card, mh_color_border_base, mh_color_border_hover, mh_color_border_focus, mh_color_border_muted, mh_color_success, mh_color_warning, mh_color_danger, mh_color_info.
+						Dark Keys (28): Duplicate the exact keys above but append "_dark" to each key name (e.g. mh_color_brand_base_dark). Provide a beautifully harmonized dark mode counterpart.
+						CRITICAL CONTRAST RULE: You MUST ensure your background colors (body, main, section, card) contrast perfectly with your text and primary colors. For example, never put white/light text on a light background, and never put dark text on a dark background. The base keys are for Light Mode (light backgrounds, dark text). The _dark keys are for Dark Mode (dark backgrounds, light text). Let your genius shine.`
 					})
 				});
 				

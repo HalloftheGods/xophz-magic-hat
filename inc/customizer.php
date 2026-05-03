@@ -190,8 +190,15 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 		) );
 
 		foreach ( $settings as $id => $data ) {
+			// Light Mode
 			$wp_customize->add_setting( $id, array( 'default' => $data['default'], 'sanitize_callback' => 'sanitize_text_field', 'transport' => 'refresh' ) );
-			$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, $id, array( 'label' => $data['label'], 'section' => $section_id ) ) );
+			$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, $id, array( 'label' => $data['label'] . ' (Light)', 'section' => $section_id ) ) );
+
+			// Dark Mode
+			$dark_id = $id . '_dark';
+			$dark_default = isset($data['default_dark']) ? $data['default_dark'] : $data['default'];
+			$wp_customize->add_setting( $dark_id, array( 'default' => $dark_default, 'sanitize_callback' => 'sanitize_text_field', 'transport' => 'refresh' ) );
+			$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, $dark_id, array( 'label' => $data['label'] . ' (Dark)', 'section' => $section_id ) ) );
 		}
 	}
 
@@ -507,7 +514,7 @@ function xophz_magic_hat_customize_controls_scripts() {
 	<script>
 		jQuery(document).ready(function($) {
 			// Add hover styles matching the native Customizer X button
-			$('head').append('<style>#mh-toggle-sb:hover, #mh-toggle-home:hover { background: #f0f0f1; color: #2271b1 !important; }</style>');
+			$('head').append('<style>#mh-toggle-sb:hover, #mh-toggle-home:hover, #mh-toggle-dark:hover { background: #f0f0f1; color: #2271b1 !important; }</style>');
 			
 			var styleguideBtn = $(
 				'<button type="button" id="mh-toggle-sb" title="Stylebook" style="width: 45px; height: 46px; border: none; border-right: 1px solid #ddd; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #50575e; box-sizing: border-box; padding: 0;">🎩</button>'
@@ -515,10 +522,13 @@ function xophz_magic_hat_customize_controls_scripts() {
 			var homeBtn = $(
 				'<button type="button" id="mh-toggle-home" title="Homepage" style="width: 45px; height: 46px; border: none; border-right: 1px solid #ddd; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #50575e; box-sizing: border-box; padding: 0;"><span class="dashicons dashicons-admin-home" style="font-size: 20px; width: 20px; height: 20px;"></span></button>'
 			);
+			var darkBtn = $(
+				'<button type="button" id="mh-toggle-dark" title="Toggle Dark Mode" style="width: 45px; height: 46px; border: none; border-right: 1px solid #ddd; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #50575e; box-sizing: border-box; padding: 0; font-size: 20px;"><span class="mh-dark-icon">🌙</span></button>'
+			);
 			
 			// Inject next to the Close button at the top left
 			var actionWrapper = $('<div style="position: absolute; left: 45px; top: 0; bottom: 0; display: flex; align-items: center;"></div>');
-			actionWrapper.append(homeBtn).append(styleguideBtn);
+			actionWrapper.append(homeBtn).append(styleguideBtn).append(darkBtn);
 			$('#customize-header-actions').append(actionWrapper);
 
 			$('#mh-toggle-sb').on('click', function(e) {
@@ -528,6 +538,16 @@ function xophz_magic_hat_customize_controls_scripts() {
 			$('#mh-toggle-home').on('click', function(e) {
 				e.preventDefault();
 				wp.customize.previewer.previewUrl('<?php echo esc_url( home_url( '/' ) ); ?>');
+			});
+			$('#mh-toggle-dark').on('click', function(e) {
+				e.preventDefault();
+				var icon = $(this).find('.mh-dark-icon');
+				if (icon.text() === '🌙') {
+					icon.text('☀️');
+				} else {
+					icon.text('🌙');
+				}
+				wp.customize.previewer.send('mh-toggle-darkmode');
 			});
 
 			// Anchor scrolling in Style Guide when sections are expanded
@@ -575,6 +595,23 @@ function xophz_magic_hat_customize_controls_scripts() {
 		}
 		#accordion-panel-magic_hat_options > h3.accordion-section-title:hover:after {
 			color: #fff;
+		}
+		
+		/* Side-by-side Color Controls */
+		li[id^="customize-control-mh_color_"] {
+			width: 48%;
+			display: inline-block;
+			vertical-align: top;
+			clear: none !important;
+		}
+		li[id^="customize-control-mh_color_"]:nth-of-type(odd) {
+			margin-right: 2%;
+		}
+		li[id^="customize-control-mh_color_"] .customize-control-title {
+			font-size: 11px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 	</style>
 	<?php
@@ -680,6 +717,35 @@ function xophz_magic_hat_customizer_css() {
 			--mh-form-radius: <?php echo esc_attr( get_theme_mod( 'mh_form_radius', '4' ) ); ?>px;
 			--mh-card-radius: <?php echo esc_attr( get_theme_mod( 'mh_card_radius', '8' ) ); ?>px;
 		}
+
+		/* Dark Mode Variables */
+		@media (prefers-color-scheme: dark) {
+			:root {
+				<?php foreach ( $colors as $key => $default_val ) : 
+					$theme_mod_key = 'mh_color_' . str_replace('-', '_', $key) . '_dark';
+					// Default to light mode val if dark isn't explicitly set differently
+					$dark_val = get_theme_mod( $theme_mod_key, $default_val );
+				?>
+				--mh-color-<?php echo esc_attr($key); ?>: <?php echo esc_attr( $dark_val ); ?>;
+				<?php if ( strpos($dark_val, '#') !== false ) : ?>
+				--mh-color-<?php echo esc_attr($key); ?>-rgb: <?php echo esc_attr( mh_hex2rgb($dark_val) ); ?>;
+				<?php endif; ?>
+				<?php endforeach; ?>
+			}
+		}
+		
+		body.is-dark {
+			<?php foreach ( $colors as $key => $default_val ) : 
+				$theme_mod_key = 'mh_color_' . str_replace('-', '_', $key) . '_dark';
+				$dark_val = get_theme_mod( $theme_mod_key, $default_val );
+			?>
+			--mh-color-<?php echo esc_attr($key); ?>: <?php echo esc_attr( $dark_val ); ?>;
+			<?php if ( strpos($dark_val, '#') !== false ) : ?>
+			--mh-color-<?php echo esc_attr($key); ?>-rgb: <?php echo esc_attr( mh_hex2rgb($dark_val) ); ?>;
+			<?php endif; ?>
+			<?php endforeach; ?>
+		}
+
 		body {
 			background-color: var(--mh-color-body);
 			font-family: var(--mh-font-family);
@@ -706,3 +772,23 @@ function xophz_magic_hat_stylebook_template() {
 	}
 }
 add_action( 'template_redirect', 'xophz_magic_hat_stylebook_template' );
+
+/**
+ * Inject script into Customizer preview to listen for dark mode toggles
+ */
+function mh_customizer_preview_scripts() {
+	if ( is_customize_preview() ) {
+		?>
+		<script>
+			if ( typeof wp !== 'undefined' && wp.customize && wp.customize.preview ) {
+				wp.customize.bind('preview-ready', function() {
+					wp.customize.preview.bind('mh-toggle-darkmode', function() {
+						document.body.classList.toggle('is-dark');
+					});
+				});
+			}
+		</script>
+		<?php
+	}
+}
+add_action( 'wp_footer', 'mh_customizer_preview_scripts' );
