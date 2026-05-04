@@ -49,7 +49,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 		.palette-header:hover { background: #f5f5f5; color: #000000; }
 		.swatch-row { display: flex; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.1); }
 		.swatch-row:last-child { border-bottom: none; }
-		.color-swatch { flex: 1; height: 80px; display: flex; flex-direction: column; justify-content: flex-end; padding: 8px; font-size: 10px; font-weight: 600; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.3); cursor: pointer; transition: opacity 0.2s; position: relative; border-radius: 4px; }
+		.color-swatch { flex: 1; height: 50px; display: flex; flex-direction: column; justify-content: flex-end; padding: 8px; font-size: 10px; font-weight: 600; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.3); cursor: pointer; transition: opacity 0.2s; position: relative; }
 		.color-swatch:hover { opacity: 0.85; }
 		.swatch-light { color: #333; text-shadow: none; }
 		/* Typography */
@@ -312,7 +312,70 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 						<span class="dashicons dashicons-art"></span> Conjure
 					</button>
 				</div>
-				<h2 class="section-title">Site Colors</h2>
+				<h2 class="section-title" style="margin-bottom: 20px; border-bottom: none; padding-bottom: 0;">Site Colors</h2>
+				
+				<div style="background: var(--mh-color-card); border: var(--mh-border-width, 1px) solid var(--mh-color-section); border-radius: var(--mh-border-radius, 4px); padding: var(--mh-space-4, 16px); margin-bottom: 25px;">
+					<div style="display: flex; align-items: center; gap: var(--mh-space-3, 12px); margin-bottom: var(--mh-space-2, 8px);">
+						<span id="daylight-icon" style="font-size: 20px;">🌙</span>
+						<input type="range" id="daylight-slider" min="0" max="1440" step="1" style="flex: 1; accent-color: var(--mh-color-brand-base); cursor: pointer;">
+						<span id="daylight-time" style="font-size: 14px; font-weight: 600; min-width: 60px; text-align: right; color: var(--mh-color-text-main); font-family: var(--mh-font-body);">12:00 PM</span>
+					</div>
+					<div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--mh-color-text-muted); padding: 0 2px;">
+						<span>🌙 Midnight</span>
+						<span>🌅 6 AM</span>
+						<span>☀️ Noon</span>
+						<span>🌅 6 PM</span>
+						<span>🌙 Midnight</span>
+					</div>
+					<div id="daylight-bar" style="height: 6px; border-radius: 3px; margin-top: var(--mh-space-2, 8px); background: linear-gradient(to right, #0a0b2e, #1a1a4e, #4a6fa5, #87ceeb, #ffd700, #87ceeb, #4a6fa5, #1a1a4e, #0a0b2e); opacity: 0.6;"></div>
+				</div>
+				<script>
+					(function() {
+						var slider = document.getElementById('daylight-slider');
+						var timeLabel = document.getElementById('daylight-time');
+						var icon = document.getElementById('daylight-icon');
+
+						var now = new Date();
+						var currentMinutes = now.getHours() * 60 + now.getMinutes();
+						slider.value = currentMinutes;
+
+						function formatTime(totalMinutes) {
+							var h = Math.floor(totalMinutes / 60) % 24;
+							var m = Math.floor(totalMinutes % 60);
+							var ampm = h >= 12 ? 'PM' : 'AM';
+							var displayH = h % 12 || 12;
+							return displayH + ':' + (m < 10 ? '0' : '') + m + ' ' + ampm;
+						}
+
+						function updateFromSlider() {
+							var minutes = parseInt(slider.value);
+							var hours = minutes / 60;
+							var ratio = (Math.cos((hours - 12) * Math.PI / 12) + 1) / 2;
+							
+							var phasePercent;
+							if (ratio >= 0.5) {
+								phasePercent = ((ratio - 0.5) * 200).toFixed(2) + '%';
+								document.documentElement.classList.remove('phase-night');
+								document.documentElement.classList.add('phase-day');
+							} else {
+								phasePercent = (ratio * 200).toFixed(2) + '%';
+								document.documentElement.classList.remove('phase-day');
+								document.documentElement.classList.add('phase-night');
+							}
+							
+							document.documentElement.style.setProperty('--mh-phase-primary', phasePercent);
+							document.documentElement.style.setProperty('--mh-daylight', (ratio * 100).toFixed(2) + '%');
+							timeLabel.textContent = formatTime(minutes);
+
+							var isDay = ratio > 0.6;
+							var isTwilight = ratio > 0.3 && ratio <= 0.6;
+							icon.textContent = isDay ? '☀️' : (isTwilight ? '🌅' : '🌙');
+						}
+
+						slider.addEventListener('input', updateFromSlider);
+						updateFromSlider();
+					})();
+				</script>
 				
 				<!-- Import/Export Modal -->
 				<div id="import-panel" class="mh-modal-overlay" onclick="if(event.target===this) toggleImportPanel()">
@@ -482,69 +545,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 
 				</div>
 				
-				<div class="subsection-title">Circadian Rhythm Preview</div>
-				<div style="background: var(--mh-color-card); border: var(--mh-border-width, 1px) solid var(--mh-color-section); border-radius: var(--mh-border-radius, 4px); padding: var(--mh-space-4, 16px);">
-					<div style="display: flex; align-items: center; gap: var(--mh-space-3, 12px); margin-bottom: var(--mh-space-2, 8px);">
-						<span id="daylight-icon" style="font-size: 20px;">🌙</span>
-						<input type="range" id="daylight-slider" min="0" max="1440" step="1" style="flex: 1; accent-color: var(--mh-color-brand-base); cursor: pointer;">
-						<span id="daylight-time" style="font-size: 14px; font-weight: 600; min-width: 60px; text-align: right; color: var(--mh-color-text-main); font-family: var(--mh-font-body);">12:00 PM</span>
-					</div>
-					<div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--mh-color-text-muted); padding: 0 2px;">
-						<span>🌙 Midnight</span>
-						<span>🌅 6 AM</span>
-						<span>☀️ Noon</span>
-						<span>🌅 6 PM</span>
-						<span>🌙 Midnight</span>
-					</div>
-					<div id="daylight-bar" style="height: 6px; border-radius: 3px; margin-top: var(--mh-space-2, 8px); background: linear-gradient(to right, #0a0b2e, #1a1a4e, #4a6fa5, #87ceeb, #ffd700, #87ceeb, #4a6fa5, #1a1a4e, #0a0b2e); opacity: 0.6;"></div>
-				</div>
-				<script>
-					(function() {
-						var slider = document.getElementById('daylight-slider');
-						var timeLabel = document.getElementById('daylight-time');
-						var icon = document.getElementById('daylight-icon');
-
-						var now = new Date();
-						var currentMinutes = now.getHours() * 60 + now.getMinutes();
-						slider.value = currentMinutes;
-
-						function formatTime(totalMinutes) {
-							var h = Math.floor(totalMinutes / 60) % 24;
-							var m = Math.floor(totalMinutes % 60);
-							var ampm = h >= 12 ? 'PM' : 'AM';
-							var displayH = h % 12 || 12;
-							return displayH + ':' + (m < 10 ? '0' : '') + m + ' ' + ampm;
-						}
-
-						function updateFromSlider() {
-							var minutes = parseInt(slider.value);
-							var hours = minutes / 60;
-							var ratio = (Math.cos((hours - 12) * Math.PI / 12) + 1) / 2;
-							
-							var phasePercent;
-							if (ratio >= 0.5) {
-								phasePercent = ((ratio - 0.5) * 200).toFixed(2) + '%';
-								document.documentElement.classList.remove('phase-night');
-								document.documentElement.classList.add('phase-day');
-							} else {
-								phasePercent = (ratio * 200).toFixed(2) + '%';
-								document.documentElement.classList.remove('phase-day');
-								document.documentElement.classList.add('phase-night');
-							}
-							
-							document.documentElement.style.setProperty('--mh-phase-primary', phasePercent);
-							document.documentElement.style.setProperty('--mh-daylight', (ratio * 100).toFixed(2) + '%');
-							timeLabel.textContent = formatTime(minutes);
-
-							var isDay = ratio > 0.6;
-							var isTwilight = ratio > 0.3 && ratio <= 0.6;
-							icon.textContent = isDay ? '☀️' : (isTwilight ? '🌅' : '🌙');
-						}
-
-						slider.addEventListener('input', updateFromSlider);
-						updateFromSlider();
-					})();
-				</script>
+				<!-- Slider moved to top -->
 			</section>
 
 			<!-- TYPOGRAPHY -->
