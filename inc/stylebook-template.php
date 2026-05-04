@@ -49,12 +49,9 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 		.palette-header:hover { background: #f5f5f5; color: #000000; }
 		.swatch-row { display: flex; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.1); }
 		.swatch-row:last-child { border-bottom: none; }
-		.color-swatch { flex: 1; height: 80px; display: flex; flex-direction: column; justify-content: flex-end; padding: 8px; font-size: 10px; font-weight: 600; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.3); cursor: pointer; transition: opacity 0.2s; position: relative; }
-		.color-swatch:first-child { border-right: 1px solid rgba(255,255,255,0.1); }
+		.color-swatch { flex: 1; height: 80px; display: flex; flex-direction: column; justify-content: flex-end; padding: 8px; font-size: 10px; font-weight: 600; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.3); cursor: pointer; transition: opacity 0.2s; position: relative; border-radius: 4px; }
 		.color-swatch:hover { opacity: 0.85; }
 		.swatch-light { color: #333; text-shadow: none; }
-		.palette-container.show-dark-swatches .color-swatch:nth-child(1) { display: none; }
-		.palette-container:not(.show-dark-swatches) .color-swatch:nth-child(2) { display: none; }
 		/* Typography */
 		.type-preview h1, .type-preview h2, .type-preview h3, .type-preview h4, .type-preview h5, .type-preview h6 { font-weight: var(--mh-heading-weight, 600); line-height: var(--mh-heading-line-height, 1.2); color: var(--mh-color-text-heading); margin: 0 0 10px 0; font-family: var(--mh-font-heading); }
 		.type-preview h1 { font-size: var(--mh-text-4xl, 2.25rem); }
@@ -305,9 +302,6 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			<!-- COLORS -->
 			<section id="section-colors" class="stylebook-section active">
 				<div class="section-actions">
-					<button class="action-btn" onclick="toggleDarkModeSwatches()" id="btn-toggle-dark" style="margin-right: 15px;">
-						<span class="dashicons dashicons-editor-contrast"></span> Dark Mode
-					</button>
 					<button class="action-btn" onclick="toggleImportPanel()" id="btn-import">
 						<span class="dashicons dashicons-upload"></span> Import
 					</button>
@@ -340,7 +334,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 						<h3 style="margin-top: 0; margin-bottom: 10px; font-size: 18px; display: flex; align-items: center; gap: 8px; color: var(--mh-color-text-heading);">
 							<span class="dashicons dashicons-superhero"></span> AI Palette Conjurer
 						</h3>
-						<p style="margin-top: 0; margin-bottom: 15px; font-size: 14px; color: var(--mh-color-text-muted);">Describe your desired brand or vibe, and the Conjurer will generate a complete 56-token OKLCH color system for you.</p>
+						<p style="margin-top: 0; margin-bottom: 15px; font-size: 14px; color: var(--mh-color-text-muted);">Describe your desired brand or vibe, and the Conjurer will generate a complete 84-token OKLCH color system for you.</p>
 						<div style="display: flex; gap: 10px; flex-direction: column;">
 							<input type="text" id="ai-palette-prompt" placeholder="e.g. Cyberpunk neon hacker, minimalist luxury spa..." style="width: 100%; padding: 12px 15px; border-radius: 4px; border: 1px solid var(--mh-color-border-base); font-family: inherit; background: var(--mh-color-main); color: var(--mh-color-text-main);">
 							<button id="ai-conjure-btn" onclick="conjureAIPalette()" style="background: var(--mh-color-brand-base, #62c9ff); color: #fff; border: none; padding: 12px 20px; border-radius: 4px; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;">
@@ -355,6 +349,15 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 						</div>
 					</div>
 				</div>
+				<div class="swatch-mode-tabs" style="display: flex; gap: 0; margin-bottom: 20px; border-bottom: 2px solid var(--mh-color-border-base);">
+					<button class="mode-tab active" data-mode="light" onclick="setEditMode('light')" style="flex: 1; padding: 12px 20px; background: transparent; border: none; border-bottom: 2px solid transparent; margin-bottom: -2px; cursor: pointer; color: var(--mh-color-text-muted); font-weight: 600; font-family: inherit; font-size: 14px; transition: all 0.2s;">☀️ Light</button>
+					<button class="mode-tab" data-mode="twilight" onclick="setEditMode('twilight')" style="flex: 1; padding: 12px 20px; background: transparent; border: none; border-bottom: 2px solid transparent; margin-bottom: -2px; cursor: pointer; color: var(--mh-color-text-muted); font-weight: 600; font-family: inherit; font-size: 14px; transition: all 0.2s;">🌅 Twilight</button>
+					<button class="mode-tab" data-mode="dark" onclick="setEditMode('dark')" style="flex: 1; padding: 12px 20px; background: transparent; border: none; border-bottom: 2px solid transparent; margin-bottom: -2px; cursor: pointer; color: var(--mh-color-text-muted); font-weight: 600; font-family: inherit; font-size: 14px; transition: all 0.2s;">🌙 Dark</button>
+				</div>
+				<style>
+					.mode-tab:hover { color: var(--mh-color-text-main) !important; background: rgba(255,255,255,0.02); }
+					.mode-tab.active { color: var(--mh-color-brand-base) !important; border-bottom-color: var(--mh-color-brand-base) !important; background: rgba(255,255,255,0.05); }
+				</style>
 				
 				<div class="palette-container">
 					
@@ -362,20 +365,16 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					<div class="palette-column">
 						<div class="palette-header" onclick="focusCustomizer('mh_colors_brand')">Brand</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-brand-base-light);" onclick="focusCustomizerControl('mh_color_brand_base')">Base</div>
-							<div class="color-swatch" style="background: var(--mh-color-brand-base-dark);" onclick="focusCustomizerControl('mh_color_brand_base_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-brand-base);" onclick="handleSwatchClick('mh_color_brand_base')">Base</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-brand-hover-light);" onclick="focusCustomizerControl('mh_color_brand_hover')">Hover</div>
-							<div class="color-swatch" style="background: var(--mh-color-brand-hover-dark);" onclick="focusCustomizerControl('mh_color_brand_hover_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-brand-hover);" onclick="handleSwatchClick('mh_color_brand_hover')">Hover</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-brand-active-light);" onclick="focusCustomizerControl('mh_color_brand_active')">Active</div>
-							<div class="color-swatch" style="background: var(--mh-color-brand-active-dark);" onclick="focusCustomizerControl('mh_color_brand_active_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-brand-active);" onclick="handleSwatchClick('mh_color_brand_active')">Active</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-brand-muted-light);" onclick="focusCustomizerControl('mh_color_brand_muted')">Muted</div>
-							<div class="color-swatch" style="background: var(--mh-color-brand-muted-dark);" onclick="focusCustomizerControl('mh_color_brand_muted_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-brand-muted);" onclick="handleSwatchClick('mh_color_brand_muted')">Muted</div>
 						</div>
 					</div>
 
@@ -383,20 +382,16 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					<div class="palette-column">
 						<div class="palette-header" onclick="focusCustomizer('mh_colors_action-cta')">Action</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-cta-base-light);" onclick="focusCustomizerControl('mh_color_cta_base')">Base</div>
-							<div class="color-swatch" style="background: var(--mh-color-cta-base-dark);" onclick="focusCustomizerControl('mh_color_cta_base_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-cta-base);" onclick="handleSwatchClick('mh_color_cta_base')">Base</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-cta-hover-light);" onclick="focusCustomizerControl('mh_color_cta_hover')">Hover</div>
-							<div class="color-swatch" style="background: var(--mh-color-cta-hover-dark);" onclick="focusCustomizerControl('mh_color_cta_hover_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-cta-hover);" onclick="handleSwatchClick('mh_color_cta_hover')">Hover</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-cta-active-light);" onclick="focusCustomizerControl('mh_color_cta_active')">Active</div>
-							<div class="color-swatch" style="background: var(--mh-color-cta-active-dark);" onclick="focusCustomizerControl('mh_color_cta_active_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-cta-active);" onclick="handleSwatchClick('mh_color_cta_active')">Active</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-cta-muted-light);" onclick="focusCustomizerControl('mh_color_cta_muted')">Muted</div>
-							<div class="color-swatch" style="background: var(--mh-color-cta-muted-dark);" onclick="focusCustomizerControl('mh_color_cta_muted_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-cta-muted);" onclick="handleSwatchClick('mh_color_cta_muted')">Muted</div>
 						</div>
 					</div>
 
@@ -404,20 +399,16 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					<div class="palette-column">
 						<div class="palette-header" onclick="focusCustomizer('mh_colors_links')">Links</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-link-light);" onclick="focusCustomizerControl('mh_color_link')">Default</div>
-							<div class="color-swatch" style="background: var(--mh-color-link-dark);" onclick="focusCustomizerControl('mh_color_link_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-link);" onclick="handleSwatchClick('mh_color_link')">Default</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-link-hover-light);" onclick="focusCustomizerControl('mh_color_link_hover')">Hover</div>
-							<div class="color-swatch" style="background: var(--mh-color-link-hover-dark);" onclick="focusCustomizerControl('mh_color_link_hover_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-link-hover);" onclick="handleSwatchClick('mh_color_link_hover')">Hover</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-link-active-light);" onclick="focusCustomizerControl('mh_color_link_active')">Active</div>
-							<div class="color-swatch" style="background: var(--mh-color-link-active-dark);" onclick="focusCustomizerControl('mh_color_link_active_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-link-active);" onclick="handleSwatchClick('mh_color_link_active')">Active</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-link-visited-light);" onclick="focusCustomizerControl('mh_color_link_visited')">Visited</div>
-							<div class="color-swatch" style="background: var(--mh-color-link-visited-dark);" onclick="focusCustomizerControl('mh_color_link_visited_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-link-visited);" onclick="handleSwatchClick('mh_color_link_visited')">Visited</div>
 						</div>
 					</div>
 
@@ -425,20 +416,16 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					<div class="palette-column">
 						<div class="palette-header" onclick="focusCustomizer('mh_colors_text')">Text</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-text-heading-light);" onclick="focusCustomizerControl('mh_color_text_heading')">Heading</div>
-							<div class="color-swatch" style="background: var(--mh-color-text-heading-dark);" onclick="focusCustomizerControl('mh_color_text_heading_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-text-heading);" onclick="handleSwatchClick('mh_color_text_heading')">Heading</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-text-main-light);" onclick="focusCustomizerControl('mh_color_text_main')">Main</div>
-							<div class="color-swatch" style="background: var(--mh-color-text-main-dark);" onclick="focusCustomizerControl('mh_color_text_main_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-text-main);" onclick="handleSwatchClick('mh_color_text_main')">Main</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-text-muted-light);" onclick="focusCustomizerControl('mh_color_text_muted')">Muted</div>
-							<div class="color-swatch" style="background: var(--mh-color-text-muted-dark);" onclick="focusCustomizerControl('mh_color_text_muted_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-text-muted);" onclick="handleSwatchClick('mh_color_text_muted')">Muted</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-text-inverse-light);" onclick="focusCustomizerControl('mh_color_text_inverse')">Inverse</div>
-							<div class="color-swatch" style="background: var(--mh-color-text-inverse-dark);" onclick="focusCustomizerControl('mh_color_text_inverse_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-text-inverse);" onclick="handleSwatchClick('mh_color_text_inverse')">Inverse</div>
 						</div>
 					</div>
 
@@ -446,20 +433,16 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					<div class="palette-column">
 						<div class="palette-header" onclick="focusCustomizer('mh_colors_surfaces-layers')">Layers</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-body-light);" onclick="focusCustomizerControl('mh_color_body')">Body</div>
-							<div class="color-swatch" style="background: var(--mh-color-body-dark);" onclick="focusCustomizerControl('mh_color_body_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-body);" onclick="handleSwatchClick('mh_color_body')">Body</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-main-light);" onclick="focusCustomizerControl('mh_color_main')">Main</div>
-							<div class="color-swatch" style="background: var(--mh-color-main-dark);" onclick="focusCustomizerControl('mh_color_main_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-main);" onclick="handleSwatchClick('mh_color_main')">Main</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-section-light);" onclick="focusCustomizerControl('mh_color_section')">Section</div>
-							<div class="color-swatch" style="background: var(--mh-color-section-dark);" onclick="focusCustomizerControl('mh_color_section_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-section);" onclick="handleSwatchClick('mh_color_section')">Section</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-card-light);" onclick="focusCustomizerControl('mh_color_card')">Card</div>
-							<div class="color-swatch" style="background: var(--mh-color-card-dark);" onclick="focusCustomizerControl('mh_color_card_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-card);" onclick="handleSwatchClick('mh_color_card')">Card</div>
 						</div>
 					</div>
 
@@ -467,20 +450,16 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					<div class="palette-column">
 						<div class="palette-header" onclick="focusCustomizer('mh_colors_borders-lines')">Borders</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-border-base-light);" onclick="focusCustomizerControl('mh_color_border_base')">Base</div>
-							<div class="color-swatch" style="background: var(--mh-color-border-base-dark);" onclick="focusCustomizerControl('mh_color_border_base_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-border-base);" onclick="handleSwatchClick('mh_color_border_base')">Base</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-border-hover-light);" onclick="focusCustomizerControl('mh_color_border_hover')">Hover</div>
-							<div class="color-swatch" style="background: var(--mh-color-border-hover-dark);" onclick="focusCustomizerControl('mh_color_border_hover_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-border-hover);" onclick="handleSwatchClick('mh_color_border_hover')">Hover</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-border-focus-light);" onclick="focusCustomizerControl('mh_color_border_focus')">Focus</div>
-							<div class="color-swatch" style="background: var(--mh-color-border-focus-dark);" onclick="focusCustomizerControl('mh_color_border_focus_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-border-focus);" onclick="handleSwatchClick('mh_color_border_focus')">Focus</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-border-muted-light);" onclick="focusCustomizerControl('mh_color_border_muted')">Muted</div>
-							<div class="color-swatch" style="background: var(--mh-color-border-muted-dark);" onclick="focusCustomizerControl('mh_color_border_muted_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-border-muted);" onclick="handleSwatchClick('mh_color_border_muted')">Muted</div>
 						</div>
 					</div>
 
@@ -488,20 +467,16 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					<div class="palette-column">
 						<div class="palette-header" onclick="focusCustomizer('mh_colors_status-system')">System</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-success-light);" onclick="focusCustomizerControl('mh_color_success')">Success</div>
-							<div class="color-swatch" style="background: var(--mh-color-success-dark);" onclick="focusCustomizerControl('mh_color_success_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-success);" onclick="handleSwatchClick('mh_color_success')">Success</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-warning-light);" onclick="focusCustomizerControl('mh_color_warning')">Warning</div>
-							<div class="color-swatch" style="background: var(--mh-color-warning-dark);" onclick="focusCustomizerControl('mh_color_warning_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-warning);" onclick="handleSwatchClick('mh_color_warning')">Warning</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-danger-light);" onclick="focusCustomizerControl('mh_color_danger')">Danger</div>
-							<div class="color-swatch" style="background: var(--mh-color-danger-dark);" onclick="focusCustomizerControl('mh_color_danger_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-danger);" onclick="handleSwatchClick('mh_color_danger')">Danger</div>
 						</div>
 						<div class="swatch-row">
-							<div class="color-swatch" style="background: var(--mh-color-info-light);" onclick="focusCustomizerControl('mh_color_info')">Info</div>
-							<div class="color-swatch" style="background: var(--mh-color-info-dark);" onclick="focusCustomizerControl('mh_color_info_dark')"></div>
+							<div class="color-swatch" style="background: var(--mh-color-info);" onclick="handleSwatchClick('mh_color_info')">Info</div>
 						</div>
 					</div>
 
@@ -545,14 +520,20 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 							var minutes = parseInt(slider.value);
 							var hours = minutes / 60;
 							var ratio = (Math.cos((hours - 12) * Math.PI / 12) + 1) / 2;
-							var percent = (ratio * 100).toFixed(2) + '%';
 							
-							// Text transitions much faster to maintain contrast
-							var textRatio = Math.max(0, Math.min(1, (ratio - 0.5) * 10 + 0.5));
-							var textPercent = (textRatio * 100).toFixed(2) + '%';
+							var phasePercent;
+							if (ratio >= 0.5) {
+								phasePercent = ((ratio - 0.5) * 200).toFixed(2) + '%';
+								document.documentElement.classList.remove('phase-night');
+								document.documentElement.classList.add('phase-day');
+							} else {
+								phasePercent = (ratio * 200).toFixed(2) + '%';
+								document.documentElement.classList.remove('phase-day');
+								document.documentElement.classList.add('phase-night');
+							}
 							
-							document.documentElement.style.setProperty('--mh-daylight', percent);
-							document.documentElement.style.setProperty('--mh-daylight-text', textPercent);
+							document.documentElement.style.setProperty('--mh-phase-primary', phasePercent);
+							document.documentElement.style.setProperty('--mh-daylight', (ratio * 100).toFixed(2) + '%');
 							timeLabel.textContent = formatTime(minutes);
 
 							var isDay = ratio > 0.6;
@@ -731,36 +712,44 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			<section id="section-ui" class="stylebook-section">
 				<h2 class="section-title">UI Elements</h2>
 
-				<div class="subsection-title">Alerts & Notifications (Transparency Layering)</div>
-				<p style="font-size: 14px; color: var(--mh-color-text-muted); margin-bottom: 20px;">These alerts use <code>color-mix()</code> to create 10% opacity backgrounds from your solid status colors.</p>
-				
-				<div class="alert alert-success">
-					<span class="dashicons dashicons-yes-alt"></span> System operations completed successfully.
-				</div>
-				<div class="alert alert-warning">
-					<span class="dashicons dashicons-warning"></span> You are approaching your storage limit.
-				</div>
-				<div class="alert alert-danger">
-					<span class="dashicons dashicons-dismiss"></span> Critical error! Unable to connect to the database.
-				</div>
-				<div class="alert alert-info">
-					<span class="dashicons dashicons-info"></span> A new version of the theme is available for download.
-				</div>
-				
-				<div class="subsection-title" style="margin-top: 40px;">Accordion / Toggle</div>
-				<div class="accordion">
-					<div class="accordion-item" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'"><span>What is Magic Wand?</span> <span>+</span></div>
-					<div style="display:none; background: var(--mh-color-section); padding: var(--mh-space-3, 12px) var(--mh-space-4, 16px); font-size: 14px; color: var(--mh-color-text-muted);">It is a visual compiler for WordPress that generates child themes instantly.</div>
-					
-					<div class="accordion-item" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'"><span>Does it support custom posts?</span> <span>+</span></div>
-					<div style="display:none; background: var(--mh-color-section); padding: var(--mh-space-3, 12px) var(--mh-space-4, 16px); font-size: 14px; color: var(--mh-color-text-muted);">Yes, it fully supports all custom post types and taxonomies with dynamic tokens.</div>
-				</div>
+				<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
+					<!-- Left Column -->
+					<div>
+						<div class="subsection-title">Alerts & Notifications</div>
+						<p style="font-size: 14px; color: var(--mh-color-text-muted); margin-bottom: 20px;">Using <code>color-mix()</code> for 10% opacity backgrounds.</p>
+						
+						<div class="alert alert-success">
+							<span class="dashicons dashicons-yes-alt"></span> System operations completed successfully.
+						</div>
+						<div class="alert alert-warning">
+							<span class="dashicons dashicons-warning"></span> You are approaching your storage limit.
+						</div>
+						<div class="alert alert-danger">
+							<span class="dashicons dashicons-dismiss"></span> Critical error! Unable to connect to the database.
+						</div>
+						<div class="alert alert-info">
+							<span class="dashicons dashicons-info"></span> A new version of the theme is available for download.
+						</div>
+					</div>
 
-				<div class="subsection-title" style="margin-top: 40px;">Progress Bars</div>
-				<div class="progress-bar"><div class="progress-fill"></div></div>
-				
-				<div class="subsection-title" style="margin-top: 40px;">Dividers & Spacers</div>
-				<hr style="border: none; border-top: 2px dashed var(--mh-color-border-base); margin: var(--mh-space-5, 24px) 0;">
+					<!-- Right Column -->
+					<div>
+						<div class="subsection-title">Accordion / Toggle</div>
+						<div class="accordion">
+							<div class="accordion-item" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'"><span>What is Magic Wand?</span> <span>+</span></div>
+							<div style="display:none; background: var(--mh-color-section); padding: var(--mh-space-3, 12px) var(--mh-space-4, 16px); font-size: 14px; color: var(--mh-color-text-muted);">It is a visual compiler for WordPress that generates child themes instantly.</div>
+							
+							<div class="accordion-item" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'"><span>Does it support custom posts?</span> <span>+</span></div>
+							<div style="display:none; background: var(--mh-color-section); padding: var(--mh-space-3, 12px) var(--mh-space-4, 16px); font-size: 14px; color: var(--mh-color-text-muted);">Yes, it fully supports all custom post types and taxonomies with dynamic tokens.</div>
+						</div>
+
+						<div class="subsection-title" style="margin-top: 30px;">Progress Bars</div>
+						<div class="progress-bar"><div class="progress-fill"></div></div>
+						
+						<div class="subsection-title" style="margin-top: 30px;">Dividers & Spacers</div>
+						<hr style="border: none; border-top: 2px dashed var(--mh-color-border-base); margin: 15px 0;">
+					</div>
+				</div>
 			</section>
 
 			<!-- MEDIA & GALLERIES -->
@@ -824,12 +813,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 	<?php wp_footer(); ?>
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
-			// Copy text to dark swatches
-			document.querySelectorAll('.swatch-row').forEach(function(row) {
-				if (row.children.length === 2 && row.children[0].innerText) {
-					row.children[1].innerText = row.children[0].innerText;
-				}
-			});
+
 
 			// --- Developer Quality of Life: Copy CSS Variables ---
 			window.showStylebookToast = function(msg) {
@@ -1125,19 +1109,38 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			}
 		}
 
-		function toggleDarkModeSwatches() {
-			var container = document.querySelector('.palette-container');
-			container.classList.toggle('show-dark-swatches');
-			var isDark = container.classList.contains('show-dark-swatches');
+		window.currentEditMode = 'light';
+		function setEditMode(mode) {
+			window.currentEditMode = mode;
 			
-			var btn = document.getElementById('btn-toggle-dark');
-			if (isDark) {
-				btn.innerHTML = '<span class="dashicons dashicons-lightbulb"></span> Light Mode';
-				btn.classList.add('active-toggle');
-			} else {
-				btn.innerHTML = '<span class="dashicons dashicons-editor-contrast"></span> Dark Mode';
-				btn.classList.remove('active-toggle');
+			// Update Tabs UI
+			document.querySelectorAll('.mode-tab').forEach(tab => {
+				if(tab.getAttribute('data-mode') === mode) {
+					tab.classList.add('active');
+				} else {
+					tab.classList.remove('active');
+				}
+			});
+			
+			// Snap the circadian slider to visually match the mode
+			const slider = document.getElementById('daylight-slider');
+			if(slider) {
+				if(mode === 'light') slider.value = 720;      // 12:00 PM
+				else if(mode === 'twilight') slider.value = 1080; // 6:00 PM
+				else if(mode === 'dark') slider.value = 0;      // Midnight
+				// Trigger the input event to update the CSS engine
+				slider.dispatchEvent(new Event('input'));
 			}
+		}
+
+		function handleSwatchClick(baseKey) {
+			let customizerKey = baseKey;
+			if (window.currentEditMode === 'twilight') {
+				customizerKey += '_twilight';
+			} else if (window.currentEditMode === 'dark') {
+				customizerKey += '_dark';
+			}
+			focusCustomizerControl(customizerKey);
 		}
 
 		// --- Export / Import ---
@@ -1303,12 +1306,13 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					body: JSON.stringify({
 						prompt: "Generate a color palette for this brand/vibe: " + promptText,
 						system_instruction: `You are the most artistic, colorfully talented, and visionary UI/UX designer in the world. You possess a transcendent understanding of color theory, emotional resonance, and spatial contrast. You know color relationships better than anyone alive. 
-						When the user describes a vibe or brand, you must envision a breathtaking, cohesive, and perfectly balanced color system. Keep in mind that we use a "breathing theme" (Circadian Rhythm) that animates and beautifully transitions through the day—from dawn, to noon, to twilight, and midnight.
-						Return ONLY a valid JSON object mapping exactly these 56 keys to stunning hex color codes. Do not include any other text or markdown outside the JSON.
-						Base Keys (28): mh_color_brand_base, mh_color_brand_hover, mh_color_brand_active, mh_color_brand_muted, mh_color_cta_base, mh_color_cta_hover, mh_color_cta_active, mh_color_cta_muted, mh_color_link, mh_color_link_hover, mh_color_link_active, mh_color_link_visited, mh_color_text_heading, mh_color_text_main, mh_color_text_muted, mh_color_text_inverse, mh_color_body, mh_color_main, mh_color_section, mh_color_card, mh_color_border_base, mh_color_border_hover, mh_color_border_focus, mh_color_border_muted, mh_color_success, mh_color_warning, mh_color_danger, mh_color_info.
-						Dark Keys (28): Duplicate the exact keys above but append "_dark" to each key name (e.g. mh_color_brand_base_dark). Provide a beautifully harmonized dark mode counterpart.
-						CRITICAL CONTRAST RULE: You MUST ensure your background colors (body, main, section, card) contrast perfectly with your text and primary colors. For example, never put white/light text on a light background, and never put dark text on a dark background. The base keys are for Light Mode (light backgrounds, dark text). The _dark keys are for Dark Mode (dark backgrounds, light text).
-						CRITICAL INTERPOLATION RULE: Because the theme smoothly transitions between Light and Dark colors using OKLCH color-mixing across the day, you MUST ensure that the Light and Dark counterparts share analogous hues or the same color family! Do NOT use drastically different hues (e.g. green light mode, red dark mode) for the same token, or else the 50% transition at 6AM/6PM will become muddy and unpleasant. The dark version should simply be a darkened, shifted, or inverted luminance version of the light hue to ensure the interpolation gradient remains vibrant and elegant. Let your genius shine.`
+						When the user describes a vibe or brand, you must envision a breathtaking, cohesive, and perfectly balanced color system. Keep in mind that we use a "breathing theme" (Circadian Rhythm) that animates and beautifully transitions through the day—from noon (Light Mode), to sunset/twilight (Twilight Mode), to midnight (Dark Mode).
+						Return ONLY a valid JSON object mapping exactly these 84 keys to stunning hex color codes. Do not include any other text or markdown outside the JSON.
+						Base Keys (28, Noon/Light Mode): mh_color_brand_base, mh_color_brand_hover, mh_color_brand_active, mh_color_brand_muted, mh_color_cta_base, mh_color_cta_hover, mh_color_cta_active, mh_color_cta_muted, mh_color_link, mh_color_link_hover, mh_color_link_active, mh_color_link_visited, mh_color_text_heading, mh_color_text_main, mh_color_text_muted, mh_color_text_inverse, mh_color_body, mh_color_main, mh_color_section, mh_color_card, mh_color_border_base, mh_color_border_hover, mh_color_border_focus, mh_color_border_muted, mh_color_success, mh_color_warning, mh_color_danger, mh_color_info.
+						Twilight Keys (28, Sunset/Dawn): Duplicate the exact keys above but append "_twilight" to each key name (e.g. mh_color_brand_base_twilight). Provide a beautiful, highly saturated "Golden Hour" or "Neon Dusk" intermediary palette!
+						Dark Keys (28, Midnight/Dark Mode): Duplicate the exact keys above but append "_dark" to each key name (e.g. mh_color_brand_base_dark). Provide a beautifully harmonized dark mode counterpart.
+						CRITICAL CONTRAST RULE: You MUST ensure your background colors (body, main, section, card) contrast perfectly with your text and primary colors across ALL THREE PHASES. For example, never put light text on a light background. Light Mode uses light backgrounds/dark text. Dark Mode uses dark backgrounds/light text. For Twilight Mode, YOU MUST DECIDE if the background is dark or light, and assign the text colors accordingly to guarantee maximum contrast!
+						CRITICAL INTERPOLATION RULE: Because the theme smoothly transitions across these 3 phases using OKLCH color-mixing, ensure that the hues evolve beautifully and logically. Let your genius shine.`
 					})
 				});
 				

@@ -194,6 +194,11 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 			$wp_customize->add_setting( $id, array( 'default' => $data['default'], 'sanitize_callback' => 'sanitize_text_field', 'transport' => 'refresh' ) );
 			$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, $id, array( 'label' => $data['label'] . ' (Light)', 'section' => $section_id ) ) );
 
+			// Twilight Mode
+			$twi_id = $id . '_twilight';
+			$wp_customize->add_setting( $twi_id, array( 'default' => $data['default'], 'sanitize_callback' => 'sanitize_text_field', 'transport' => 'refresh' ) );
+			$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, $twi_id, array( 'label' => $data['label'] . ' (Twilight)', 'section' => $section_id ) ) );
+
 			// Dark Mode
 			$dark_id = $id . '_dark';
 			$dark_default = isset($data['default_dark']) ? $data['default_dark'] : $data['default'];
@@ -565,21 +570,36 @@ function xophz_magic_hat_customize_controls_scripts() {
 			color: #fff;
 		}
 		
-		/* Side-by-side Color Controls */
-		li[id^="customize-control-mh_color_"] {
-			width: 48%;
-			display: inline-block;
-			vertical-align: top;
+		/* 3-Column Color Controls via CSS Grid */
+		.accordion-section-content {
+			display: grid !important;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 12px 6px;
+			align-content: flex-start;
+		}
+		.accordion-section-content > li {
+			grid-column: 1 / -1; /* By default, items take full width */
+			margin: 0 !important;
+		}
+		.accordion-section-content > li[id^="customize-control-mh_color_"] {
+			grid-column: span 1; /* Color controls take 1 column */
+			width: 100% !important;
 			clear: none !important;
 		}
-		li[id^="customize-control-mh_color_"]:nth-of-type(odd) {
-			margin-right: 2%;
-		}
 		li[id^="customize-control-mh_color_"] .customize-control-title {
-			font-size: 11px;
+			font-size: 10px;
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
+		}
+		
+		/* Change "Select Color" to "Choose" to fit 3-column layout */
+		li[id^="customize-control-mh_color_"] .wp-color-result-text {
+			font-size: 0 !important;
+		}
+		li[id^="customize-control-mh_color_"] .wp-color-result-text:before {
+			content: "Choose";
+			font-size: 11px;
 		}
 	</style>
 	<?php
@@ -678,15 +698,15 @@ function xophz_magic_hat_customizer_css() {
 			--mh-font-size-h6: <?php echo esc_attr( get_theme_mod( 'mh_font_size_h6', 16 ) ); ?>px;
 
 			<?php foreach ( $colors as $key => $val ) : 
+				$twi_val  = get_theme_mod( 'mh_color_' . str_replace('-', '_', $key) . '_twilight', $val );
 				$dark_val = get_theme_mod( 'mh_color_' . str_replace('-', '_', $key) . '_dark', $val );
 			?>
 			--mh-color-<?php echo esc_attr($key); ?>-light: <?php echo esc_attr( $val ); ?>;
+			--mh-color-<?php echo esc_attr($key); ?>-twi: <?php echo esc_attr( $twi_val ); ?>;
 			--mh-color-<?php echo esc_attr($key); ?>-dark: <?php echo esc_attr( $dark_val ); ?>;
-			<?php if ( strpos($key, 'text') === 0 || strpos($key, 'link') === 0 ) : ?>
-			--mh-color-<?php echo esc_attr($key); ?>: color-mix(in oklch, var(--mh-color-<?php echo esc_attr($key); ?>-light) var(--mh-daylight-text, var(--mh-daylight, 100%)), var(--mh-color-<?php echo esc_attr($key); ?>-dark));
-			<?php else : ?>
-			--mh-color-<?php echo esc_attr($key); ?>: color-mix(in oklch, var(--mh-color-<?php echo esc_attr($key); ?>-light) var(--mh-daylight, 100%), var(--mh-color-<?php echo esc_attr($key); ?>-dark));
-			<?php endif; ?>
+			
+			/* Fallback to Light */
+			--mh-color-<?php echo esc_attr($key); ?>: var(--mh-color-<?php echo esc_attr($key); ?>-light);
 			<?php endforeach; ?>
 			
 			--mh-font-family: <?php echo esc_attr( $font_family ); ?>;
@@ -695,6 +715,18 @@ function xophz_magic_hat_customizer_css() {
 			--mh-btn-font-weight: <?php echo esc_attr( get_theme_mod( 'mh_button_font_weight', '600' ) ); ?>;
 			--mh-btn-text-transform: <?php echo esc_attr( get_theme_mod( 'mh_button_text_transform', 'none' ) ); ?>;
 			--mh-btn-letter-spacing: <?php echo esc_attr( get_theme_mod( 'mh_button_letter_spacing', '0' ) ); ?>px;
+		}
+
+		:root.phase-day, html[data-theme="light"].phase-day {
+			<?php foreach ( $colors as $key => $val ) : ?>
+			--mh-color-<?php echo esc_attr($key); ?>: color-mix(in oklch, var(--mh-color-<?php echo esc_attr($key); ?>-light) var(--mh-phase-primary, 100%), var(--mh-color-<?php echo esc_attr($key); ?>-twi));
+			<?php endforeach; ?>
+		}
+		
+		:root.phase-night, html[data-theme="dark"].phase-night {
+			<?php foreach ( $colors as $key => $val ) : ?>
+			--mh-color-<?php echo esc_attr($key); ?>: color-mix(in oklch, var(--mh-color-<?php echo esc_attr($key); ?>-twi) var(--mh-phase-primary, 100%), var(--mh-color-<?php echo esc_attr($key); ?>-dark));
+			<?php endforeach; ?>
 		}
 
 		body {
@@ -805,14 +837,21 @@ function mh_circadian_rhythm_scripts() {
 				var hours = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
 				// cos((hours - 12) * PI / 12) = 1 at 12:00 (Noon), -1 at 00:00 (Midnight)
 				var ratio = (Math.cos((hours - 12) * Math.PI / 12) + 1) / 2;
-				var percent = (ratio * 100).toFixed(2) + '%';
+				var phasePercent;
+				if (ratio >= 0.5) {
+					// Day Phase: Mix Light (100%) and Twilight (0%)
+					phasePercent = ((ratio - 0.5) * 200).toFixed(2) + '%';
+					document.documentElement.classList.remove('phase-night');
+					document.documentElement.classList.add('phase-day');
+				} else {
+					// Night Phase: Mix Twilight (100%) and Dark (0%)
+					phasePercent = (ratio * 200).toFixed(2) + '%';
+					document.documentElement.classList.remove('phase-day');
+					document.documentElement.classList.add('phase-night');
+				}
 				
-				// Text transitions much faster (steeper curve) to avoid grey text on grey backgrounds
-				var textRatio = Math.max(0, Math.min(1, (ratio - 0.5) * 10 + 0.5));
-				var textPercent = (textRatio * 100).toFixed(2) + '%';
-				
-				document.documentElement.style.setProperty('--mh-daylight', percent);
-				document.documentElement.style.setProperty('--mh-daylight-text', textPercent);
+				document.documentElement.style.setProperty('--mh-phase-primary', phasePercent);
+				document.documentElement.style.setProperty('--mh-daylight', (ratio * 100).toFixed(2) + '%');
 			}
 			updateDaylight();
 			setInterval(updateDaylight, 60000); // Update every minute
