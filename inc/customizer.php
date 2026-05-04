@@ -3,6 +3,13 @@
  * Xophz Magic Hat Theme Customizer
  */
 
+/**
+ * Check if the current Customizer preview is the Stylebook
+ */
+function mh_is_stylebook_preview() {
+	return ( isset( $_GET['magic_hat_stylebook'] ) && $_GET['magic_hat_stylebook'] == '1' );
+}
+
 function xophz_magic_hat_customize_register( $wp_customize ) {
 
 	// Custom Range Slider Control
@@ -123,13 +130,64 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 		}
 	}
 	
+	// Custom Page Builder Control
+	class Magic_Hat_Page_Builder_Control extends WP_Customize_Control {
+		public $type = 'mh-page-builder-control';
 
+		public function render_content() {
+			$is_active = class_exists('Xophz_Compass_Magic_Wand');
+			?>
+			<style>
+				#mh_page_rows { list-style: none; margin: 0; padding: 0; }
+				#mh_page_rows .empty { color: #b0b0b0; font-size: 11px; text-transform: uppercase; font-weight: 600; letter-spacing: 1.5px; padding: 18px 10px; text-align: center; border: 1px dashed #d5d5d5; border-radius: 3px; background: #f9f9f9; }
+				#mh_page_rows .mh-section-item { background: #fff; border: 1px solid #e2e2e2; margin-bottom: 6px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; border-radius: 3px; cursor: move; transition: border-color 0.15s; }
+				#mh_page_rows .mh-section-item:hover { border-color: #c3a486; }
+				.mh-add-section-wrap { margin-top: 10px; }
+				.mh-add-section-wrap .mh-add-section { width: 100%; padding: 8px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; font-size: 11px; border-radius: 3px; border: none; cursor: pointer; transition: opacity 0.2s; }
+				.mh-add-section-wrap .mh-add-section:hover { opacity: 0.85; }
+			</style>
+			<ul id="mh_page_rows">
+				<li class="empty"><?php _e( 'No sections added', 'xophz-magic-hat' ); ?></li>
+			</ul>
+			
+			<?php if ( ! $is_active ) : ?>
+				<div style="margin-top: 8px; padding: 8px 10px; background: #fef2f2; border-left: 3px solid #dc3232; border-radius: 2px;">
+					<p style="margin: 0; color: #dc3232; font-weight: 600; font-size: 11px;"><?php _e('Magic Wand Required', 'xophz-magic-hat'); ?></p>
+					<p style="margin: 3px 0 0; font-size: 11px; color: #888; line-height: 1.3;"><?php _e('Activate the companion plugin to unlock this.', 'xophz-magic-hat'); ?></p>
+				</div>
+			<?php endif; ?>
+
+			<div class="mh-add-section-wrap">
+				<button type="button" class="button button-primary mh-add-section" style="<?php echo $is_active ? 'background: #c3a486; border-color: #c3a486; color: #fff;' : 'opacity: 0.4; cursor: not-allowed;'; ?>" <?php disabled( ! $is_active ); ?>><?php _e( '+ Add Section', 'xophz-magic-hat' ); ?></button>
+			</div>
+
+			<input type="hidden" id="mh_page_sections_input" <?php $this->link(); ?> value="<?php echo esc_attr( $this->value() ); ?>">
+			<?php
+		}
+	}
+
+	$wp_customize->add_section( 'mh_page_builder', array(
+		'title'    => __( '🏗️ Page Builder', 'xophz-magic-hat' ),
+		'priority' => 10,
+	) );
+
+	// Setting to store JSON data for the page sections
+	$wp_customize->add_setting( 'mh_page_sections', array(
+		'default'           => '[]',
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'refresh',
+	) );
+	
+	$wp_customize->add_control( new Magic_Hat_Page_Builder_Control( $wp_customize, 'mh_page_sections', array(
+		'section' => 'mh_page_builder',
+	) ) );
 
 	// Add Theme Colors Panel (Because WP does not support nested panels)
 	$wp_customize->add_panel( 'magic_hat_colors_panel', array(
-		'title'       => __( '🎭 Site Colors', 'xophz-magic-hat' ),
-		'description' => 'Customize your core design system colors.',
-		'priority'    => 30,
+		'title'           => __( '🎭 Site Colors', 'xophz-magic-hat' ),
+		'description'     => 'Customize your core design system colors.',
+		'priority'        => 30,
+		'active_callback' => 'mh_is_stylebook_preview',
 	) );
 
 	// Define the groups and their settings
@@ -232,8 +290,9 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	// SECTION: Typography
 	// ==============================================
 	$wp_customize->add_section( 'magic_hat_typography', array(
-		'title'    => __( '🪶 Typography', 'xophz-magic-hat' ),
-		'priority' => 31,
+		'title'           => __( '🪶 Typography', 'xophz-magic-hat' ),
+		'priority'        => 31,
+		'active_callback' => 'mh_is_stylebook_preview',
 	) );
 
 	// Base Font Family
@@ -405,8 +464,9 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	// SECTION: Spacing & Layout
 	// ==============================================
 	$wp_customize->add_section( 'magic_hat_spacing', array(
-		'title'    => __( '📏 Spacing & Layout', 'xophz-magic-hat' ),
-		'priority' => 32,
+		'title'           => __( '📏 Spacing & Layout', 'xophz-magic-hat' ),
+		'priority'        => 32,
+		'active_callback' => 'mh_is_stylebook_preview',
 	) );
 	
 	$wp_customize->add_setting( 'mh_space_base', array( 'default' => '8' ) );
@@ -442,8 +502,9 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	// SECTION: Buttons
 	// ==============================================
 	$wp_customize->add_section( 'magic_hat_buttons', array(
-		'title'    => __( '👆 Buttons', 'xophz-magic-hat' ),
-		'priority' => 33,
+		'title'           => __( '👆 Buttons', 'xophz-magic-hat' ),
+		'priority'        => 33,
+		'active_callback' => 'mh_is_stylebook_preview',
 	) );
 
 	$wp_customize->add_setting( 'mh_button_font_weight', array( 'default' => '600' ) );
@@ -860,3 +921,47 @@ function mh_circadian_rhythm_scripts() {
 	<?php
 }
 add_action( 'wp_head', 'mh_circadian_rhythm_scripts', 5 );
+
+/**
+ * Page Builder Preview: Add Section Button
+ */
+add_filter('the_content', function ($content) {
+	global $post;
+	if (is_customize_preview() && $post && $post->post_type === 'page') {
+		
+		// If Magic Wand isn't active, show the floating install prompt
+		if ( ! class_exists('Xophz_Compass_Magic_Wand') ) {
+			include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+			if ( file_exists( WP_PLUGIN_DIR . '/xophz-compass-magic-wand/xophz-compass-magic-wand.php' ) ) {
+				$action_url = wp_nonce_url( self_admin_url('plugins.php?action=activate&plugin=xophz-compass-magic-wand/xophz-compass-magic-wand.php&plugin_status=all&paged=1&s'), 'activate-plugin_xophz-compass-magic-wand/xophz-compass-magic-wand.php' );
+				$btn_text = __('Activate now', 'xophz-magic-hat');
+			} else {
+				$action_url = wp_nonce_url( self_admin_url('update.php?action=install-plugin&plugin=xophz-compass-magic-wand'), 'install-plugin_xophz-compass-magic-wand' );
+				$btn_text = __('Install now', 'xophz-magic-hat');
+			}
+			
+			$prompt = '
+			<div id="mh-plugin-prompt" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; padding: 40px; border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 999999; max-width: 450px; text-align: center; font-family: sans-serif;">
+				<button type="button" onclick="document.getElementById(\'mh-plugin-prompt\').style.display=\'none\';" style="position: absolute; top: 10px; right: 15px; background: transparent; border: none; font-size: 24px; cursor: pointer; color: #50575e;">&times;</button>
+				<h3 style="margin-top: 0; font-size: 16px; color: #3c434a; font-weight: 400; line-height: 1.5; margin-bottom: 25px;">' . esc_html__('Please Install the Magic Wand Companion Plugin to Enable All the Theme Features', 'xophz-magic-hat') . '</h3>
+				<a href="' . esc_url($action_url) . '" class="button" style="display: inline-block; text-decoration: none; background: #c3a486; border: 1px solid #c3a486; color: #fff; padding: 10px 30px; font-weight: 600; text-transform: uppercase; font-size: 13px; border-radius: 3px;">' . esc_html($btn_text) . '</a>
+			</div>';
+			$content .= $prompt;
+		}
+
+		// Add Section block in content
+		$is_active = class_exists('Xophz_Compass_Magic_Wand');
+		$add_section = '
+		<div class="mh-add-section-preview" style="margin-top: 40px; padding: 60px 0; border: 2px dashed var(--mh-color-border-muted, #ccc); text-align: center; background: rgba(255,255,255,0.8);">';
+			if ( $is_active ) {
+				$add_section .= '<button type="button" class="mh-add-section" onclick="if(typeof parent.mhOpenAddSectionPanel === \'function\') { parent.mhOpenAddSectionPanel(); } else { parent.wp.customize.section(\'mh_page_builder\').focus(); }" style="background: #c3a486; border: none; color: #fff; padding: 12px 30px; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">' . __('Add Section', 'xophz-magic-hat') . '</button>';
+			} else {
+				$add_section .= '<button type="button" class="btn-primary" style="background: #c3a486; border-color: #c3a486; text-transform: uppercase; letter-spacing: 1px;" onclick="if(window.parent && window.parent.wp && window.parent.wp.customize){ window.parent.wp.customize.section(\'mh_page_builder\').focus(); }">
+				' . esc_html__('ADD SECTION', 'xophz-magic-hat') . '
+			</button>';
+			}
+		$add_section .= '</div>';
+		$content .= $add_section;
+	}
+	return $content;
+}, PHP_INT_MAX);

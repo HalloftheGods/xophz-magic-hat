@@ -17,6 +17,12 @@ add_theme_support( 'title-tag' );
 // Support post thumbnails
 add_theme_support( 'post-thumbnails' );
 
+// Register Navigation Menus
+register_nav_menus( array(
+    'primary' => __( 'Primary Menu', 'xophz-magic-hat' ),
+    'footer'  => __( 'Footer Menu', 'xophz-magic-hat' ),
+) );
+
 // Load Customizer Settings
 require_once get_template_directory() . '/inc/customizer.php';
 
