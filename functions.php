@@ -17,11 +17,115 @@ add_theme_support( 'title-tag' );
 // Support post thumbnails
 add_theme_support( 'post-thumbnails' );
 
-// Register Navigation Menus
-register_nav_menus( array(
-    'primary' => __( 'Primary Menu', 'xophz-magic-hat' ),
-    'footer'  => __( 'Footer Menu', 'xophz-magic-hat' ),
-) );
+function xophz_magic_hat_register_menus() {
+    register_nav_menus( array(
+        'primary'  => __( 'Primary Menu', 'xophz-magic-hat' ),
+        'footer_1' => __( 'Footer Menu 1 (Explore)', 'xophz-magic-hat' ),
+        'footer_2' => __( 'Footer Menu 2 (Resources)', 'xophz-magic-hat' ),
+        'footer_3' => __( 'Footer Menu 3 (Legal)', 'xophz-magic-hat' ),
+        'footer_4' => __( 'Footer Menu 4 (Contact)', 'xophz-magic-hat' ),
+    ) );
+}
+add_action( 'after_setup_theme', 'xophz_magic_hat_register_menus' );
+
+function xophz_magic_hat_create_default_menus() {
+    if ( get_option( 'mh_default_menus_created' ) && get_option( 'mh_contact_menu_created' ) ) {
+        return;
+    }
+
+    $menus = array(
+        'Primary Menu' => array(
+            'location' => 'primary',
+            'items' => array('About', 'Services', 'Portfolio', 'Team'),
+        ),
+        'Explore' => array(
+            'location' => 'footer_1',
+            'items' => array('About Us', 'Features', 'Our Work', 'Pricing'),
+        ),
+        'Resources' => array(
+            'location' => 'footer_2',
+            'items' => array('Help Center', 'Documentation', 'Community', 'Blog'),
+        ),
+        'Legal' => array(
+            'location' => 'footer_3',
+            'items' => array('Privacy Policy', 'Terms of Service', 'Cookie Policy'),
+        ),
+        'Contact' => array(
+            'location' => 'footer_4',
+            'custom_items' => array(
+                array('title' => 'hello@youmeos.com', 'url' => 'mailto:hello@youmeos.com'),
+                array('title' => '+1 (234) 567-890', 'url' => 'tel:+1234567890'),
+                array('title' => 'Support Desk', 'url' => '#'),
+            ),
+        ),
+    );
+
+    $locations = get_theme_mod('nav_menu_locations', array());
+    $menu_created = false;
+
+    foreach ($menus as $menu_name => $menu_data) {
+        $menu_exists = wp_get_nav_menu_object($menu_name);
+
+        if (!$menu_exists) {
+            $menu_id = wp_create_nav_menu($menu_name);
+            if (!is_wp_error($menu_id)) {
+                if (isset($menu_data['custom_items'])) {
+                    foreach ($menu_data['custom_items'] as $item) {
+                        wp_update_nav_menu_item($menu_id, 0, array(
+                            'menu-item-title'  => $item['title'],
+                            'menu-item-url'    => $item['url'],
+                            'menu-item-status' => 'publish',
+                            'menu-item-type'   => 'custom',
+                        ));
+                    }
+                } elseif (isset($menu_data['items'])) {
+                    foreach ($menu_data['items'] as $title) {
+                        $page_id = mh_get_or_create_page($title);
+                        wp_update_nav_menu_item($menu_id, 0, array(
+                            'menu-item-title'     => $title,
+                            'menu-item-object-id' => $page_id,
+                            'menu-item-object'    => 'page',
+                            'menu-item-type'      => 'post_type',
+                            'menu-item-status'    => 'publish',
+                        ));
+                    }
+                }
+                $is_unassigned = ! isset( $locations[$menu_data['location']] ) || $locations[$menu_data['location']] == 0;
+                if ( $is_unassigned ) {
+                    $locations[$menu_data['location']] = $menu_id;
+                    $menu_created = true;
+                }
+            }
+        } else if (!isset($locations[$menu_data['location']]) || $locations[$menu_data['location']] == 0) {
+            $locations[$menu_data['location']] = $menu_exists->term_id;
+            $menu_created = true;
+        }
+    }
+
+    if ($menu_created) {
+        set_theme_mod('nav_menu_locations', $locations);
+    }
+    
+    update_option( 'mh_default_menus_created', true );
+    update_option( 'mh_contact_menu_created', true );
+}
+
+function mh_get_or_create_page( $title ) {
+    $slug = sanitize_title( $title );
+    $existing = get_page_by_path( $slug );
+    if ( $existing ) {
+        return $existing->ID;
+    }
+    return wp_insert_post( array(
+        'post_title'   => $title,
+        'post_name'    => $slug,
+        'post_status'  => 'publish',
+        'post_type'    => 'page',
+        'post_content' => '',
+    ) );
+}
+
+add_action('init', 'xophz_magic_hat_create_default_menus');
 
 // Load Customizer Settings
 require_once get_template_directory() . '/inc/customizer.php';
