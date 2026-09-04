@@ -11,13 +11,31 @@
 // remove_action('wp_head', 'print_emoji_detection_script', 7);
 // remove_action('wp_print_styles', 'print_emoji_styles');
 
-// Support title tag
-add_theme_support( 'title-tag' );
+function xophz_magic_hat_setup() {
+    // Support title tag
+    add_theme_support( 'title-tag' );
 
-// Support post thumbnails
-add_theme_support( 'post-thumbnails' );
+    // Support post thumbnails
+    add_theme_support( 'post-thumbnails' );
 
-function xophz_magic_hat_register_menus() {
+    // Support align wide for Gutenberg blocks
+    add_theme_support( 'align-wide' );
+
+    // Support core block styles
+    add_theme_support( 'wp-block-styles' );
+
+    // Support block templates and template parts (Full Site Editing)
+    add_theme_support( 'block-templates' );
+    add_theme_support( 'block-template-parts' );
+
+    // Support editor styles
+    add_theme_support( 'editor-styles' );
+    add_editor_style( 'assets/css/variables.css' );
+
+    // Support selective refresh in Customizer
+    add_theme_support( 'customize-selective-refresh-widgets' );
+
+    // Register navigation menus
     register_nav_menus( array(
         'primary'  => __( 'Primary Menu', 'xophz-magic-hat' ),
         'footer_1' => __( 'Footer Menu 1 (Explore)', 'xophz-magic-hat' ),
@@ -26,7 +44,7 @@ function xophz_magic_hat_register_menus() {
         'footer_4' => __( 'Footer Menu 4 (Contact)', 'xophz-magic-hat' ),
     ) );
 }
-add_action( 'after_setup_theme', 'xophz_magic_hat_register_menus' );
+add_action( 'after_setup_theme', 'xophz_magic_hat_setup' );
 
 function xophz_magic_hat_create_default_menus() {
     if ( get_option( 'mh_default_menus_created' ) && get_option( 'mh_contact_menu_created' ) ) {
@@ -127,8 +145,9 @@ function mh_get_or_create_page( $title ) {
 
 add_action('init', 'xophz_magic_hat_create_default_menus');
 
-// Load Customizer Settings
+// Load Customizer Settings & AI Architect Engine
 require_once get_template_directory() . '/inc/customizer.php';
+require_once get_template_directory() . '/inc/class-magic-hat-ai-architect.php';
 
 // Enqueue Theme Styles
 function xophz_magic_hat_enqueue_styles() {
@@ -139,6 +158,33 @@ function xophz_magic_hat_enqueue_styles() {
     wp_enqueue_style( 'magic-hat-style', get_stylesheet_uri(), array('magic-hat-variables'), wp_get_theme()->get('Version') );
 }
 add_action( 'wp_enqueue_scripts', 'xophz_magic_hat_enqueue_styles' );
+
+/**
+ * Enqueue scripts for Customizer Live Preview
+ */
+function xophz_magic_hat_customize_preview_init() {
+    wp_enqueue_script(
+        'magic-hat-customize-preview-ai',
+        get_template_directory_uri() . '/assets/js/customizer-preview-ai.js',
+        array( 'customize-preview', 'jquery' ),
+        wp_get_theme()->get( 'Version' ),
+        true
+    );
+}
+add_action( 'customize_preview_init', 'xophz_magic_hat_customize_preview_init' );
+
+/**
+ * Ensure Appearance > Customize is always present in WP Admin
+ */
+function xophz_magic_hat_add_customize_menu() {
+    add_theme_page(
+        __( 'Customize', 'xophz-magic-hat' ),
+        __( 'Customize', 'xophz-magic-hat' ),
+        'edit_theme_options',
+        'customize.php'
+    );
+}
+add_action( 'admin_menu', 'xophz_magic_hat_add_customize_menu' );
 
 /**
  * Sync Magic Hat Customizer Colors with Gutenberg Editor Palette

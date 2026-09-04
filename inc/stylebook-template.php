@@ -566,7 +566,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					<div class="subsection-title">Blockquote & Pullquote</div>
 					<blockquote>
 						"Good design is obvious. Great design is transparent."
-						<cite style="display:block; font-size: 0.8rem; margin-top: 10px; font-style: normal;">— Joe Sparano</cite>
+						<cite style="display:block; font-size: 0.8rem; margin-top: 10px; font-style: normal;">- Joe Sparano</cite>
 					</blockquote>
 
 					<div class="subsection-title">Lists</div>
@@ -1298,16 +1298,17 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			}, 3000);
 			
 			try {
-				const response = await fetch('/wp-json/xophz/v1/gemini/generate', {
+				const response = await fetch('/wp-json/xophz/v1/magic-hat/ai-generate', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
 						'X-WP-Nonce': stylebook_rest_nonce
 					},
 					body: JSON.stringify({
+						type: 'palette',
 						prompt: "Generate a color palette for this brand/vibe: " + promptText,
 						system_instruction: `You are the most artistic, colorfully talented, and visionary UI/UX designer in the world. You possess a transcendent understanding of color theory, emotional resonance, and spatial contrast. You know color relationships better than anyone alive. 
-						When the user describes a vibe or brand, you must envision a breathtaking, cohesive, and perfectly balanced color system. Keep in mind that we use a "breathing theme" (Circadian Rhythm) that animates and beautifully transitions through the day—from noon (Light Mode), to sunset/twilight (Twilight Mode), to midnight (Dark Mode).
+						When the user describes a vibe or brand, you must envision a breathtaking, cohesive, and perfectly balanced color system. Keep in mind that we use a "breathing theme" (Circadian Rhythm) that animates and beautifully transitions through the day: from noon (Light Mode), to sunset/twilight (Twilight Mode), to midnight (Dark Mode).
 						Return ONLY a valid JSON object mapping exactly these 84 keys to stunning hex color codes. Do not include any other text or markdown outside the JSON.
 						Base Keys (28, Noon/Light Mode): mh_color_brand_base, mh_color_brand_hover, mh_color_brand_active, mh_color_brand_muted, mh_color_cta_base, mh_color_cta_hover, mh_color_cta_active, mh_color_cta_muted, mh_color_link, mh_color_link_hover, mh_color_link_active, mh_color_link_visited, mh_color_text_heading, mh_color_text_main, mh_color_text_muted, mh_color_text_inverse, mh_color_body, mh_color_main, mh_color_section, mh_color_card, mh_color_border_base, mh_color_border_hover, mh_color_border_focus, mh_color_border_muted, mh_color_success, mh_color_warning, mh_color_danger, mh_color_info.
 						Twilight Keys (28, Sunset/Dawn): Duplicate the exact keys above but append "_twilight" to each key name (e.g. mh_color_brand_base_twilight). Provide a beautiful, highly saturated "Golden Hour" or "Neon Dusk" intermediary palette!
