@@ -1,0 +1,999 @@
+/**
+ * Magic Hat Section Styles: CTA, Contact & Subscribe
+ *
+ * Category 5: Call-to-action banners, lead capture forms, newsletter subscription, and interactive maps.
+ * Design Tokens: Uses --mh-color-brand-*, --mh-color-cta-*, --mh-color-surface-*,
+ * --mh-color-text-*, --mh-color-border-*, and standard typography, radius, shadow,
+ * and spacing tokens from variables.css.
+ *
+ * Rebrands and modernizes legacy One Page Express styles (lines 2444-2519 & 2661-2748,
+ * tablet 4152-4169 & 4238-4278, desktop 4828-4854 & 4901-4935) into token-driven CSS.
+ *
+ * @package Xophz_Magic_Hat
+ * @since   26.5.33
+ */
+
+/* ==========================================================================
+   1. Shared Foundations for Category 5 Sections
+   ========================================================================== */
+
+.mh-section-cta,
+.mh-section-contact,
+.mh-section-subscribe {
+	width: 100%;
+	position: relative;
+	box-sizing: border-box;
+}
+
+.mh-section-full-width {
+	width: 100%;
+	max-width: 100%;
+}
+
+/* Flexbox and Grid container helpers for section interiors */
+.mh-section .gridContainer,
+.cta-blue-section .gridContainer,
+.contact-section .gridContainer,
+.contact-section-formsection .gridContainer,
+.subscribe-2cols-section .gridContainer,
+.subscribe-centered-section .gridContainer,
+.subscribe-social-section .gridContainer {
+	width: 100%;
+	max-width: 1200px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: var(--mh-spacing-4);
+	padding-right: var(--mh-spacing-4);
+	box-sizing: border-box;
+}
+
+.mh-section .flexbox-list,
+.cta-blue-section .flexbox-list {
+	display: flex;
+	flex-wrap: wrap;
+	box-sizing: border-box;
+}
+
+.mh-section .flexbox-list-align-center,
+.cta-blue-section .flexbox-list-align-center {
+	align-items: center;
+}
+
+/* ==========================================================================
+   2. Call to Action (CTA) Sections
+   ========================================================================== */
+
+/* High-Impact Accent Banner (Core) */
+.mh-section-cta {
+	background-color: var(--mh-color-brand-base);
+	color: var(--mh-color-text-inverse);
+	padding: var(--mh-spacing-10) var(--mh-spacing-6);
+	text-align: center;
+}
+
+.mh-section-cta h2,
+.mh-section-cta .wp-block-heading {
+	color: var(--mh-color-text-inverse);
+	font-family: var(--mh-font-heading);
+	margin-bottom: var(--mh-spacing-3);
+}
+
+.mh-section-cta p {
+	color: var(--mh-color-text-inverse);
+	font-family: var(--mh-font-body);
+	margin-bottom: var(--mh-spacing-6);
+}
+
+/* Classic CTA Blue Section */
+.mh-section-cta-blue,
+.cta-blue-section {
+	background-color: var(--mh-color-brand-base);
+	color: var(--mh-color-text-inverse);
+	padding: var(--mh-spacing-8) 0;
+	position: relative;
+}
+
+.cta-blue-textcol {
+	flex: 1 1 100%;
+	margin-bottom: var(--mh-spacing-4);
+	text-align: center;
+}
+
+.cta-blue-text {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-2xl);
+	font-weight: 600;
+	line-height: 1.3;
+	color: var(--mh-color-text-inverse);
+	margin: 0;
+}
+
+.cta-blue-text .element2 {
+	font-weight: 800;
+	color: var(--mh-color-text-inverse);
+}
+
+.cta-blue-btncol {
+	flex: 0 0 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* Additional CTA Variants: Gray, Red, Large */
+.cta-gray-section {
+	background-color: var(--mh-color-section);
+	color: var(--mh-color-text-heading);
+	padding: var(--mh-spacing-8) 0;
+}
+
+.cta-gray-textcol {
+	color: var(--mh-color-text-heading);
+}
+
+.cta-gray-text {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-2xl);
+	color: var(--mh-color-text-heading);
+	margin: 0;
+}
+
+.cta-red-section {
+	background-color: var(--mh-color-cta-base);
+	color: var(--mh-color-text-inverse);
+	padding: var(--mh-spacing-8) 0;
+}
+
+.cta-red-textcol {
+	color: var(--mh-color-text-inverse);
+}
+
+.cta-red-text {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-2xl);
+	color: var(--mh-color-text-inverse);
+	margin: 0;
+}
+
+.cta-large-blue-section {
+	background-color: var(--mh-color-brand-base);
+	color: var(--mh-color-text-inverse);
+	padding: var(--mh-spacing-12) 0;
+	text-align: center;
+}
+
+.cta-large-red-section {
+	background-color: var(--mh-color-cta-base);
+	color: var(--mh-color-text-inverse);
+	padding: var(--mh-spacing-12) 0;
+	text-align: center;
+}
+
+.cta-large-blue-centercol,
+.cta-large-red-centercol {
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.cta-large-blue-heading,
+.cta-large-blue-boldtext,
+.cta-large-red-heading {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-3xl);
+	font-weight: 700;
+	line-height: 1.25;
+	color: var(--mh-color-text-inverse);
+	margin-bottom: var(--mh-spacing-4);
+}
+
+/* Centered Gradient CTA Banner */
+.mh-section-cta-centered-bg,
+.cta-centered-bg-section {
+	background: linear-gradient(135deg, var(--mh-color-brand-active) 0%, var(--mh-color-brand-base) 100%);
+	padding: var(--mh-spacing-12) 0;
+	text-align: center;
+	color: var(--mh-color-text-inverse);
+}
+
+.mh-section-cta-centered-bg h2,
+.cta-centered-bg-section h2 {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-3xl);
+	font-weight: 700;
+	color: var(--mh-color-text-inverse);
+	margin-bottom: var(--mh-spacing-3);
+}
+
+.mh-section-cta-centered-bg .large_text,
+.cta-centered-bg-section .large_text {
+	font-family: var(--mh-font-body);
+	font-size: var(--mh-text-lg);
+	line-height: 1.6;
+	color: var(--mh-color-text-inverse);
+	opacity: 0.9;
+	max-width: 640px;
+	margin: 0 auto var(--mh-spacing-8);
+}
+
+.mh-cta-centered-buttons {
+	display: flex;
+	gap: var(--mh-spacing-4);
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+/* Inline Action Bar Grid */
+.mh-section-cta-centered-grid,
+.cta-centered-section-grid {
+	background-color: var(--mh-color-brand-base);
+	color: var(--mh-color-text-inverse);
+	padding: var(--mh-spacing-8) 0;
+}
+
+.mh-section-cta-centered-grid h2,
+.cta-centered-section-grid h2 {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-2xl);
+	font-weight: 700;
+	color: var(--mh-color-text-inverse);
+	margin-bottom: var(--mh-spacing-2);
+}
+
+.mh-section-cta-centered-grid .large_text,
+.cta-centered-section-grid .large_text {
+	font-family: var(--mh-font-body);
+	font-size: var(--mh-text-base);
+	color: var(--mh-color-text-inverse);
+	opacity: 0.9;
+	margin: 0;
+}
+
+.mh-cta-action-col {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+/* ==========================================================================
+   3. Contact Sections
+   ========================================================================== */
+
+/* Split Contact & Details (Core) */
+.mh-section-contact,
+.contact-section {
+	background-color: var(--mh-color-body);
+	color: var(--mh-color-text-main);
+	padding: var(--mh-spacing-10) 0;
+}
+
+.contact-section h2,
+.mh-section-contact h2 {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-3xl);
+	color: var(--mh-color-text-heading);
+	margin-bottom: var(--mh-spacing-3);
+}
+
+.contact-section p.large_text {
+	font-size: var(--mh-text-lg);
+	color: var(--mh-color-text-muted);
+	margin-bottom: var(--mh-spacing-6);
+}
+
+/* Single-Column Contact Form Section */
+.mh-section-contact-form,
+.contact-section-formsection {
+	padding: var(--mh-spacing-10) 0;
+	background-color: var(--mh-color-section);
+	color: var(--mh-color-text-heading);
+}
+
+.contact-textrow {
+	margin-bottom: var(--mh-spacing-6);
+	text-align: center;
+}
+
+.contact-textcol {
+	max-width: 680px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.contact-textcol h2 {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-3xl);
+	color: var(--mh-color-text-heading);
+	margin-bottom: var(--mh-spacing-2);
+}
+
+.contact-textcol p {
+	color: var(--mh-color-text-muted);
+	font-size: var(--mh-text-base);
+	line-height: 1.6;
+}
+
+.contact-formcol {
+	max-width: 680px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: var(--mh-color-card);
+	padding: var(--mh-spacing-8);
+	border-radius: var(--mh-radius-md);
+	border: 1px solid var(--mh-color-border-muted);
+	box-shadow: var(--mh-shadow-sm);
+}
+
+/* Two-Column Contact Section */
+.mh-section-contact-2cols,
+.contact-2columns-section {
+	padding: var(--mh-spacing-10) 0;
+	background-color: var(--mh-color-body);
+}
+
+.contact-info-col {
+	padding-right: var(--mh-spacing-6);
+	margin-bottom: var(--mh-spacing-6);
+}
+
+.mh-contact-item {
+	display: flex;
+	align-items: center;
+	gap: var(--mh-spacing-3);
+	font-size: var(--mh-text-base);
+	color: var(--mh-color-text-main);
+	margin-bottom: var(--mh-spacing-3);
+}
+
+.mh-contact-item i.fa {
+	color: var(--mh-color-brand-base);
+	font-size: var(--mh-text-lg);
+	width: 24px;
+	text-align: center;
+	flex-shrink: 0;
+}
+
+.contact-form-col {
+	background-color: var(--mh-color-card);
+	padding: var(--mh-spacing-8);
+	border-radius: var(--mh-radius-md);
+	border: 1px solid var(--mh-color-border-muted);
+	box-shadow: var(--mh-shadow-sm);
+}
+
+/* Three-Column Contact Cards Section */
+.mh-section-contact-3cols,
+.contact-3-section {
+	padding: var(--mh-spacing-10) 0;
+	background-color: var(--mh-color-section);
+}
+
+.section-title-col {
+	text-align: center;
+	margin-bottom: var(--mh-spacing-8);
+}
+
+.section-title-col h2 {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-3xl);
+	color: var(--mh-color-text-heading);
+	margin-bottom: var(--mh-spacing-2);
+}
+
+.section-title-col .large_text {
+	color: var(--mh-color-text-muted);
+	font-size: var(--mh-text-lg);
+}
+
+.mh-contact-card {
+	background-color: var(--mh-color-card);
+	border: 1px solid var(--mh-color-border-muted);
+	border-radius: var(--mh-radius-md);
+	padding: var(--mh-spacing-8) var(--mh-spacing-6);
+	text-align: center;
+	box-shadow: var(--mh-shadow-sm);
+	transition: transform var(--mh-transition-normal), box-shadow var(--mh-transition-normal);
+	height: 100%;
+	box-sizing: border-box;
+}
+
+.mh-contact-card:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--mh-shadow-md);
+}
+
+.mh-contact-icon {
+	font-size: var(--mh-text-3xl);
+	color: var(--mh-color-brand-base);
+	margin-bottom: var(--mh-spacing-4);
+	display: inline-block;
+}
+
+.mh-contact-card h3 {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-xl);
+	color: var(--mh-color-text-heading);
+	margin-bottom: var(--mh-spacing-2);
+}
+
+.mh-contact-card p {
+	color: var(--mh-color-text-muted);
+	font-size: var(--mh-text-sm);
+	line-height: 1.6;
+	margin: 0;
+}
+
+.contact-box {
+	margin-bottom: var(--mh-spacing-6);
+}
+
+/* ==========================================================================
+   4. Interactive and Full Width Maps
+   ========================================================================== */
+
+/* Contact Map Section (Form + Map container) */
+.mh-section-contact-map,
+.contact-map-section {
+	padding: var(--mh-spacing-10) 0;
+	background-color: var(--mh-color-body);
+}
+
+.mh-mock-map-box {
+	background-color: var(--mh-color-border-muted);
+	border-radius: var(--mh-radius-md);
+	height: 360px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: var(--mh-color-text-muted);
+	border: 1px solid var(--mh-color-border);
+	position: relative;
+	overflow: hidden;
+	box-shadow: var(--mh-shadow-sm);
+	transition: box-shadow var(--mh-transition-normal);
+}
+
+.mh-mock-map-box:hover {
+	box-shadow: var(--mh-shadow-md);
+}
+
+.mh-mock-map-icon {
+	font-size: var(--mh-text-4xl);
+	color: var(--mh-color-text-muted);
+	margin-bottom: var(--mh-spacing-3);
+}
+
+.mh-mock-map-title {
+	font-family: var(--mh-font-heading);
+	font-weight: 700;
+	font-size: var(--mh-text-base);
+	color: var(--mh-color-text-heading);
+}
+
+.mh-mock-map-subtitle {
+	font-size: var(--mh-text-sm);
+	color: var(--mh-color-text-muted);
+	margin-top: var(--mh-spacing-1);
+}
+
+/* Full Width Map Section */
+.mh-section-map-full,
+.google-maps-section {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+}
+
+.mh-mock-map-full {
+	background: linear-gradient(135deg, var(--mh-color-border-muted) 0%, var(--mh-color-border) 100%);
+	height: 450px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: var(--mh-color-text-main);
+	text-align: center;
+	padding: var(--mh-spacing-6);
+	box-sizing: border-box;
+}
+
+.mh-mock-map-pin {
+	font-size: 3rem;
+	color: var(--mh-color-brand-base);
+	margin-bottom: var(--mh-spacing-3);
+	animation: mhMapPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes mhMapPulse {
+	0%, 100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-8px);
+	}
+}
+
+/* ==========================================================================
+   5. Newsletter & Subscribe Sections
+   ========================================================================== */
+
+/* Split Newsletter Subscribe (2 Columns) */
+.mh-section-subscribe-2cols,
+.subscribe-2cols-section {
+	padding: var(--mh-spacing-10) 0;
+	background-color: var(--mh-color-text-heading);
+	color: var(--mh-color-text-inverse);
+}
+
+.subscribe-2cols-section h2 {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-2xl);
+	color: var(--mh-color-text-inverse);
+	margin-bottom: var(--mh-spacing-2);
+}
+
+.mh-subscribe-lead {
+	color: var(--mh-color-border-muted);
+	font-size: var(--mh-text-base);
+	line-height: 1.5;
+	margin: 0;
+}
+
+/* Centered Newsletter Subscribe */
+.mh-section-subscribe-centered,
+.subscribe-centered-section {
+	padding: var(--mh-spacing-12) 0;
+	text-align: center;
+	background-color: var(--mh-color-section);
+	color: var(--mh-color-text-main);
+}
+
+.subscribe-centered-section h2 {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-3xl);
+	color: var(--mh-color-text-heading);
+	margin-bottom: var(--mh-spacing-3);
+}
+
+.mh-subscribe-desc {
+	font-size: var(--mh-text-lg);
+	color: var(--mh-color-text-muted);
+	max-width: 560px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: var(--mh-spacing-6);
+}
+
+.mh-privacy-notice {
+	color: var(--mh-color-text-muted);
+	font-size: var(--mh-text-xs);
+	display: block;
+	margin-top: var(--mh-spacing-3);
+}
+
+/* Subscribe & Social Community */
+.mh-section-subscribe-social,
+.subscribe-social-section {
+	padding: var(--mh-spacing-12) 0;
+	text-align: center;
+	background-color: var(--mh-color-brand-base);
+	color: var(--mh-color-text-inverse);
+}
+
+.subscribe-social-section h2 {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-3xl);
+	color: var(--mh-color-text-inverse);
+	margin-bottom: var(--mh-spacing-3);
+}
+
+.mh-social-icons {
+	display: flex;
+	gap: var(--mh-spacing-4);
+	justify-content: center;
+	align-items: center;
+	margin-top: var(--mh-spacing-6);
+}
+
+.mh-social-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: var(--mh-radius-pill);
+	background-color: var(--mh-color-brand-active);
+	color: var(--mh-color-text-inverse);
+	font-size: var(--mh-text-lg);
+	text-decoration: none;
+	transition: background-color var(--mh-transition-fast), transform var(--mh-transition-fast);
+}
+
+.mh-social-link:hover {
+	background-color: var(--mh-color-brand-hover);
+	transform: translateY(-2px);
+	color: var(--mh-color-text-inverse);
+}
+
+/* ==========================================================================
+   6. Universal Form Controls (Native & Contact Form 7)
+   ========================================================================== */
+
+.mh-form-group {
+	margin-bottom: var(--mh-spacing-4);
+	text-align: left;
+}
+
+.mh-form-label {
+	display: block;
+	margin-bottom: var(--mh-spacing-1);
+	font-size: var(--mh-text-sm);
+	font-weight: 500;
+	color: var(--mh-color-text-heading);
+}
+
+.mh-form-input,
+.mh-form-textarea,
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form textarea,
+.wpcf7-form input[type="text"],
+.wpcf7-form input[type="email"],
+.wpcf7-form textarea {
+	width: 100%;
+	padding: var(--mh-spacing-3) var(--mh-spacing-4);
+	font-family: var(--mh-font-body);
+	font-size: var(--mh-text-base);
+	color: var(--mh-color-text-heading);
+	background-color: var(--mh-color-body);
+	border: 1px solid var(--mh-color-border-muted);
+	border-radius: var(--mh-radius-sm);
+	box-sizing: border-box;
+	transition: border-color var(--mh-transition-fast), box-shadow var(--mh-transition-fast);
+}
+
+.mh-form-input:focus,
+.mh-form-textarea:focus,
+.contact-form input[type="text"]:focus,
+.contact-form input[type="email"]:focus,
+.contact-form textarea:focus,
+.wpcf7-form input[type="text"]:focus,
+.wpcf7-form input[type="email"]:focus,
+.wpcf7-form textarea:focus {
+	outline: none;
+	border-color: var(--mh-color-brand-base);
+	box-shadow: var(--mh-glow-brand);
+}
+
+.mh-form-textarea,
+.contact-form textarea,
+.wpcf7-form textarea {
+	resize: vertical;
+	min-height: 120px;
+}
+
+.mh-form-submit {
+	margin-top: var(--mh-spacing-4);
+}
+
+/* Subscribe Inline Form */
+.mh-subscribe-form {
+	display: flex;
+	gap: var(--mh-spacing-2);
+	align-items: center;
+	width: 100%;
+}
+
+.mh-subscribe-form.mh-form-centered {
+	max-width: 480px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.mh-subscribe-input {
+	flex: 1 1 auto;
+	padding: var(--mh-spacing-3) var(--mh-spacing-4);
+	border-radius: var(--mh-radius-sm);
+	border: 1px solid var(--mh-color-border);
+	background-color: var(--mh-color-body);
+	color: var(--mh-color-text-heading);
+	font-family: var(--mh-font-body);
+	font-size: var(--mh-text-base);
+	box-sizing: border-box;
+	transition: border-color var(--mh-transition-fast), box-shadow var(--mh-transition-fast);
+}
+
+.mh-subscribe-input:focus {
+	outline: none;
+	border-color: var(--mh-color-brand-base);
+	box-shadow: var(--mh-glow-brand);
+}
+
+.subscribe-2cols-section .mh-subscribe-input {
+	background-color: var(--mh-color-text-main);
+	border-color: var(--mh-color-text-muted);
+	color: var(--mh-color-text-inverse);
+}
+
+.subscribe-2cols-section .mh-subscribe-input:focus {
+	border-color: var(--mh-color-brand-hover);
+}
+
+/* Contact Form 7 Feedback Elements */
+.wpcf7-response-output {
+	padding: var(--mh-spacing-3) var(--mh-spacing-4);
+	border-radius: var(--mh-radius-sm);
+	font-size: var(--mh-text-sm);
+	margin-top: var(--mh-spacing-4);
+	border: 1px solid var(--mh-color-border-muted);
+}
+
+.wpcf7-not-valid-tip {
+	color: var(--mh-color-danger);
+	font-size: var(--mh-text-xs);
+	margin-top: var(--mh-spacing-1);
+	display: block;
+}
+
+/* ==========================================================================
+   7. Buttons and Action Triggers
+   ========================================================================== */
+
+.button,
+.mh-btn-primary,
+.wpcf7-submit,
+.button.blue {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--mh-color-brand-base);
+	color: var(--mh-color-text-inverse);
+	border: none;
+	padding: var(--mh-spacing-3) var(--mh-spacing-6);
+	border-radius: var(--mh-radius-sm);
+	font-family: var(--mh-font-body);
+	font-weight: 600;
+	font-size: var(--mh-text-base);
+	cursor: pointer;
+	text-decoration: none;
+	transition: background-color var(--mh-transition-fast), transform var(--mh-transition-fast);
+	box-sizing: border-box;
+}
+
+.button:hover,
+.mh-btn-primary:hover,
+.wpcf7-submit:hover,
+.button.blue:hover {
+	background-color: var(--mh-color-brand-hover);
+	color: var(--mh-color-text-inverse);
+	transform: translateY(-1px);
+}
+
+.button:active,
+.mh-btn-primary:active,
+.wpcf7-submit:active,
+.button.blue:active {
+	background-color: var(--mh-color-brand-active);
+}
+
+.button.big {
+	padding: var(--mh-spacing-4) var(--mh-spacing-8);
+	font-size: var(--mh-text-lg);
+}
+
+.button.yellow {
+	background-color: var(--mh-color-warning);
+	color: var(--mh-color-text-heading);
+	font-weight: 700;
+}
+
+.button.yellow:hover {
+	background-color: var(--mh-color-warning);
+	filter: brightness(1.08);
+	color: var(--mh-color-text-heading);
+}
+
+.mh-btn-white {
+	background-color: var(--mh-color-body);
+	color: var(--mh-color-brand-base);
+	border: none;
+	padding: var(--mh-spacing-3) var(--mh-spacing-6);
+	border-radius: var(--mh-radius-sm);
+	font-weight: 700;
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color var(--mh-transition-fast), box-shadow var(--mh-transition-fast);
+}
+
+.mh-btn-white:hover {
+	background-color: var(--mh-color-section);
+	box-shadow: var(--mh-shadow-md);
+	color: var(--mh-color-brand-base);
+}
+
+.mh-btn-outline-white {
+	background-color: transparent;
+	color: var(--mh-color-text-inverse);
+	border: 2px solid var(--mh-color-text-inverse);
+	padding: calc(var(--mh-spacing-3) - 2px) var(--mh-spacing-6);
+	border-radius: var(--mh-radius-sm);
+	font-weight: 600;
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color var(--mh-transition-fast), color var(--mh-transition-fast);
+}
+
+.mh-btn-outline-white:hover {
+	background-color: var(--mh-color-text-inverse);
+	color: var(--mh-color-brand-base);
+}
+
+.mh-btn-dark {
+	background-color: var(--mh-color-text-heading);
+	color: var(--mh-color-text-inverse);
+	border: none;
+	padding: var(--mh-spacing-3) var(--mh-spacing-6);
+	border-radius: var(--mh-radius-sm);
+	font-weight: 700;
+	cursor: pointer;
+	transition: background-color var(--mh-transition-fast);
+}
+
+.mh-btn-dark:hover {
+	background-color: var(--mh-color-text-main);
+	color: var(--mh-color-text-inverse);
+}
+
+/* ==========================================================================
+   8. Responsive Overrides: Tablet (min-width: 768px)
+   ========================================================================== */
+
+@media only screen and (min-width: 768px) {
+	/* CTA Blue Tablet Overrides (lines 4238-4278) */
+	.mh-section .flexbox-list.flexbox-list-align-center.row,
+	.cta-blue-section .flexbox-list.flexbox-list-align-center.row {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.cta-blue-textcol {
+		flex: 1 1 auto;
+		text-align: left;
+		margin-bottom: 0;
+	}
+
+	.cta-blue-btncol {
+		flex: 0 0 auto;
+		margin-left: var(--mh-spacing-6);
+		justify-content: flex-end;
+	}
+
+	/* Contact Tablet Overrides (lines 4152-4169) */
+	.mh-section-contact-2cols .row,
+	.contact-2columns-section .row {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.contact-info-col {
+		flex: 0 0 41.666667%;
+		max-width: 41.666667%;
+		padding-right: var(--mh-spacing-8);
+		margin-bottom: 0;
+	}
+
+	.contact-form-col {
+		flex: 0 0 58.333333%;
+		max-width: 58.333333%;
+	}
+
+	.mh-section-contact-3cols .row,
+	.contact-3-section .row {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+
+	.contact-3-section .contact-box {
+		flex: 0 0 33.333333%;
+		max-width: 33.333333%;
+		padding: 0 var(--mh-spacing-3);
+		box-sizing: border-box;
+		margin-bottom: 0;
+	}
+
+	.mh-section-contact-map .row,
+	.contact-map-section .row {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.contact-map-section .col-sm-6 {
+		flex: 0 0 50%;
+		max-width: 50%;
+		padding: 0 var(--mh-spacing-3);
+		box-sizing: border-box;
+	}
+
+	/* Subscribe Tablet Overrides */
+	.subscribe-2cols-section .row {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.subscribe-2cols-section .col-sm-6 {
+		flex: 0 0 50%;
+		max-width: 50%;
+		box-sizing: border-box;
+	}
+
+	.cta-centered-section-grid .row {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.cta-centered-section-grid .col-sm-8 {
+		flex: 0 0 66.666667%;
+		max-width: 66.666667%;
+		box-sizing: border-box;
+	}
+
+	.cta-centered-section-grid .col-sm-4 {
+		flex: 0 0 33.333333%;
+		max-width: 33.333333%;
+		box-sizing: border-box;
+	}
+}
+
+/* ==========================================================================
+   9. Responsive Overrides: Desktop (min-width: 1024px)
+   ========================================================================== */
+
+@media only screen and (min-width: 1024px) {
+	/* Contact Desktop Overrides (lines 4828-4854) */
+	.mh-section-contact,
+	.contact-section,
+	.mh-section-contact-form,
+	.contact-section-formsection,
+	.mh-section-contact-2cols,
+	.contact-2columns-section,
+	.mh-section-contact-3cols,
+	.contact-3-section {
+		padding: var(--mh-spacing-12) 0;
+	}
+
+	.contact-formcol {
+		padding: var(--mh-spacing-10);
+	}
+
+	.contact-form-col {
+		padding: var(--mh-spacing-10);
+	}
+
+	/* CTA Desktop Overrides (lines 4901-4935) */
+	.mh-section-cta-blue,
+	.cta-blue-section {
+		padding: var(--mh-spacing-10) 0;
+	}
+
+	.cta-blue-text {
+		font-size: var(--mh-text-3xl);
+	}
+
+	.mh-mock-map-box {
+		height: 420px;
+	}
+
+	.mh-mock-map-full {
+		height: 520px;
+	}
+}

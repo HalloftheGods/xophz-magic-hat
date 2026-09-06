@@ -1,0 +1,1001 @@
+/**
+ * Magic Hat Section Styles: Pricing, Portfolio, Gallery & Clients
+ *
+ * Category 6: Pricing tables, project portfolios, photo galleries, client logo strips, and WooCommerce products.
+ * Design Tokens: Uses --mh-color-brand-*, --mh-color-surface-*, --mh-color-border-*,
+ * --mh-color-text-*, --mh-shadow-*, --mh-radius-*, and standard typography and spacing tokens from variables.css.
+ *
+ * @package Xophz_Magic_Hat
+ */
+
+/* ==========================================================================
+   1. Universal Section Wrappers & Layout Infrastructure
+   ========================================================================== */
+
+.mh-section-pricing,
+.mh-section-pricing-bw,
+.mh-section-pricing-colors,
+.mh-section-pricing-double,
+.mh-section-pricing-simple,
+.mh-section-clients-strip,
+.mh-section-clients-grid,
+.mh-section-portfolio-cards,
+.mh-section-portfolio-full,
+.mh-section-gallery-full,
+.mh-section-gallery-grid,
+.mh-section-woocommerce {
+	position: relative;
+	box-sizing: border-box;
+	width: 100%;
+}
+
+.mh-section .gridContainer,
+.pricing-black-white-section .gridContainer,
+.pricing-colors-section .gridContainer,
+.pricing-double-colors-section .gridContainer,
+.pricing-simple-section .gridContainer,
+.clients-grid-section .gridContainer,
+.portfolio-cards-section .gridContainer,
+.gallery-section .gridContainer,
+.woocommerce-section .gridContainer {
+	max-width: var(--mh-content-width, 1200px);
+	margin: 0 auto;
+	padding: 0 var(--mh-spacing-6);
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.flexbox-list {
+	display: flex;
+	flex-wrap: wrap;
+	box-sizing: border-box;
+}
+
+.row {
+	display: flex;
+	flex-wrap: wrap;
+	margin-right: calc(-1 * var(--mh-spacing-3));
+	margin-left: calc(-1 * var(--mh-spacing-3));
+	box-sizing: border-box;
+}
+
+.row.center-xs {
+	justify-content: center;
+}
+
+.row.middle-xs {
+	align-items: center;
+}
+
+.section-title-col {
+	text-align: center;
+	margin-bottom: var(--mh-spacing-8);
+	box-sizing: border-box;
+}
+
+.section-title-col h2,
+.dynamic-color h2 {
+	font-family: var(--mh-font-heading);
+	font-size: clamp(1.875rem, 4vw, 2.5rem);
+	font-weight: 800;
+	line-height: 1.2;
+	color: var(--mh-color-text-heading);
+	margin: 0 0 var(--mh-spacing-3);
+	letter-spacing: -0.01em;
+}
+
+.large_text,
+.section-title-col p,
+.dynamic-color p {
+	font-family: var(--mh-font-body);
+	font-size: var(--mh-text-lg);
+	line-height: 1.6;
+	color: var(--mh-color-text-muted);
+	max-width: 680px;
+	margin: 0 auto;
+}
+
+/* ==========================================================================
+   2. Pure CSS Mock Media & Client Logo Containers
+   ========================================================================== */
+
+.mh-mock-client-box {
+	background: var(--mh-color-section);
+	border: 1px solid var(--mh-color-border-muted);
+	border-radius: var(--mh-radius-sm);
+	height: 54px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--mh-color-text-muted);
+	padding: 0 var(--mh-spacing-4);
+	box-sizing: border-box;
+	filter: grayscale(100%);
+	opacity: 0.7;
+	transition: all var(--mh-transition-normal);
+	cursor: pointer;
+	width: 100%;
+}
+
+.mh-mock-client-box:hover {
+	filter: grayscale(0%);
+	opacity: 1;
+	transform: translateY(-2px);
+	border-color: var(--mh-color-brand-base);
+	background: var(--mh-color-card);
+	box-shadow: var(--mh-shadow-md);
+}
+
+.mh-mock-client-box i,
+.mh-mock-client-box svg {
+	font-size: 18px;
+	margin-right: var(--mh-spacing-2);
+	color: var(--mh-color-border);
+	transition: color var(--mh-transition-fast);
+}
+
+.mh-mock-client-box:hover i,
+.mh-mock-client-box:hover svg {
+	color: var(--mh-color-brand-base);
+}
+
+.mh-mock-client-box span {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-xs);
+	font-weight: 700;
+	color: var(--mh-color-text-muted);
+	letter-spacing: 0.5px;
+	transition: color var(--mh-transition-fast);
+}
+
+.mh-mock-client-box:hover span {
+	color: var(--mh-color-brand-base);
+}
+
+.mh-mock-media-box {
+	background: var(--mh-color-section);
+	border: 1px solid var(--mh-color-border-muted);
+	border-radius: var(--mh-radius-md);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 200px;
+	color: var(--mh-color-text-muted);
+	padding: var(--mh-spacing-6);
+	text-align: center;
+	box-sizing: border-box;
+	transition: border-color var(--mh-transition-normal), box-shadow var(--mh-transition-normal), transform var(--mh-transition-normal);
+	width: 100%;
+}
+
+.mh-mock-media-box:hover {
+	border-color: var(--mh-color-brand-muted);
+	box-shadow: var(--mh-shadow-sm);
+	transform: translateY(-2px);
+}
+
+.mh-mock-media-box i,
+.mh-mock-media-box svg {
+	font-size: var(--mh-text-3xl);
+	margin-bottom: var(--mh-spacing-2);
+	color: var(--mh-color-border);
+	transition: color var(--mh-transition-fast);
+}
+
+.mh-mock-media-box:hover i,
+.mh-mock-media-box:hover svg {
+	color: var(--mh-color-brand-base);
+}
+
+.mh-mock-media-box span {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-xs);
+	font-weight: 600;
+	color: var(--mh-color-text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   3. Modern Pricing Tables & Cards
+   ========================================================================== */
+
+.pricing-black-white-section,
+.pricing-colors-section,
+.pricing-double-colors-section,
+.pricing-simple-section,
+.mh-pricing-table {
+	padding: var(--mh-spacing-12) 0;
+	box-sizing: border-box;
+}
+
+.pricing-black-white-section {
+	background: var(--mh-color-section);
+}
+
+.pricing-double-colors-section {
+	background: var(--mh-color-section);
+}
+
+.mh-pricing-grid {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: stretch;
+}
+
+.mh-pricing-card {
+	background: var(--mh-color-card);
+	border: 1px solid var(--mh-color-border-muted);
+	border-radius: var(--mh-radius-md);
+	padding: var(--mh-spacing-8) var(--mh-spacing-6);
+	text-align: center;
+	transition: all var(--mh-transition-normal);
+	position: relative;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100%;
+}
+
+.mh-pricing-card:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--mh-shadow-lg);
+	border-color: var(--mh-color-border);
+}
+
+/* Featured / Popular Card Highlight */
+.mh-pricing-card.mh-pricing-popular,
+.mh-pricing-popular {
+	border: 2px solid var(--mh-color-brand-base);
+	transform: translateY(-6px);
+	box-shadow: var(--mh-shadow-lg);
+}
+
+.mh-pricing-card.mh-pricing-popular:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 20px 25px -5px color-mix(in srgb, var(--mh-color-brand-base) 20%, transparent);
+}
+
+/* Monochrome High-Contrast Popular Card */
+.pricing-black-white-section .mh-pricing-card.mh-pricing-popular {
+	background: var(--mh-color-text-heading);
+	color: var(--mh-color-text-inverse);
+	border-color: var(--mh-color-text-heading);
+	box-shadow: 0 20px 25px -5px color-mix(in srgb, var(--mh-color-text-heading) 35%, transparent);
+}
+
+.pricing-black-white-section .mh-pricing-card.mh-pricing-popular .mh-pricing-title {
+	color: var(--mh-color-text-inverse);
+}
+
+.pricing-black-white-section .mh-pricing-card.mh-pricing-popular .mh-pricing-price {
+	color: var(--mh-color-text-inverse);
+}
+
+.pricing-black-white-section .mh-pricing-card.mh-pricing-popular .mh-pricing-period {
+	color: var(--mh-color-border);
+}
+
+.pricing-black-white-section .mh-pricing-card.mh-pricing-popular .mh-pricing-features {
+	color: var(--mh-color-border-muted);
+}
+
+/* Popular Highlight Badge */
+.mh-pricing-badge {
+	display: inline-block;
+	background: var(--mh-color-brand-base);
+	color: var(--mh-color-text-inverse);
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-xs);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	padding: var(--mh-spacing-1) var(--mh-spacing-3);
+	border-radius: var(--mh-radius-pill);
+	margin-bottom: var(--mh-spacing-3);
+	align-self: center;
+}
+
+/* Card Elements */
+.mh-pricing-title {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-xl);
+	font-weight: 700;
+	color: var(--mh-color-text-heading);
+	margin: 0 0 var(--mh-spacing-2);
+}
+
+.mh-pricing-price {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-4xl);
+	font-weight: 800;
+	color: var(--mh-color-text-heading);
+	margin: var(--mh-spacing-4) 0;
+	line-height: 1;
+	display: flex;
+	align-items: baseline;
+	justify-content: center;
+}
+
+.mh-pricing-period {
+	font-family: var(--mh-font-body);
+	font-size: var(--mh-text-sm);
+	font-weight: 400;
+	color: var(--mh-color-text-muted);
+	margin-left: var(--mh-spacing-1);
+}
+
+.mh-pricing-desc {
+	font-family: var(--mh-font-body);
+	font-size: var(--mh-text-sm);
+	color: var(--mh-color-text-muted);
+	margin: 0 0 var(--mh-spacing-6);
+}
+
+.mh-pricing-features {
+	list-style: none;
+	padding: 0;
+	margin: var(--mh-spacing-6) 0;
+	line-height: 2.2;
+	color: var(--mh-color-text-main);
+	font-family: var(--mh-font-body);
+	font-size: var(--mh-text-sm);
+	flex-grow: 1;
+}
+
+.mh-pricing-features li {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--mh-spacing-2);
+	padding: var(--mh-spacing-1) 0;
+}
+
+.mh-pricing-features li i {
+	color: var(--mh-color-success);
+	font-size: var(--mh-text-sm);
+}
+
+.mh-pricing-cta {
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+	padding: var(--mh-spacing-3) var(--mh-spacing-6);
+	border-radius: var(--mh-radius-sm);
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-sm);
+	font-weight: 700;
+	text-decoration: none;
+	text-align: center;
+	cursor: pointer;
+	transition: all var(--mh-transition-fast);
+	margin-top: auto;
+}
+
+.mh-pricing-cta.button.blue,
+.mh-pricing-cta:not(.outline) {
+	background: var(--mh-color-brand-base);
+	color: var(--mh-color-text-inverse);
+	border: 1px solid var(--mh-color-brand-base);
+}
+
+.mh-pricing-cta.button.blue:hover,
+.mh-pricing-cta:not(.outline):hover {
+	background: var(--mh-color-brand-hover);
+	border-color: var(--mh-color-brand-hover);
+	transform: translateY(-2px);
+	box-shadow: var(--mh-shadow-sm);
+}
+
+.mh-pricing-cta.button.outline,
+.mh-pricing-cta.outline {
+	background: transparent;
+	color: var(--mh-color-text-heading);
+	border: 2px solid var(--mh-color-border);
+}
+
+.mh-pricing-cta.button.outline:hover,
+.mh-pricing-cta.outline:hover {
+	background: var(--mh-color-section);
+	border-color: var(--mh-color-brand-base);
+	color: var(--mh-color-brand-base);
+}
+
+/* Color Accent Variants (pricing-colors-section) */
+.mh-pricing-card-brand {
+	border-top: 4px solid var(--mh-color-brand-hover);
+}
+
+.mh-pricing-card-brand .mh-pricing-title {
+	color: var(--mh-color-brand-hover);
+}
+
+.mh-pricing-card-success {
+	border-top: 4px solid var(--mh-color-success);
+}
+
+.mh-pricing-card-success .mh-pricing-title {
+	color: var(--mh-color-success);
+}
+
+.mh-pricing-card-accent {
+	border-top: 4px solid var(--mh-color-link-visited);
+}
+
+.mh-pricing-card-accent .mh-pricing-title {
+	color: var(--mh-color-link-visited);
+}
+
+.mh-pricing-card-highlight {
+	border: 2px solid var(--mh-color-brand-base);
+	box-shadow: 0 10px 25px color-mix(in srgb, var(--mh-color-brand-base) 15%, transparent);
+}
+
+/* ==========================================================================
+   4. Clients Section Styles (Lines 2342-2443, 4106-4151, 4794-4827)
+   ========================================================================== */
+
+.clients-strip-section {
+	padding: var(--mh-spacing-8) 0;
+	background: var(--mh-color-body);
+	border-top: 1px solid var(--mh-color-border-muted);
+	border-bottom: 1px solid var(--mh-color-border-muted);
+	box-sizing: border-box;
+}
+
+.row_187 {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	margin: 0 auto;
+	max-width: var(--mh-content-width, 1200px);
+	padding: 0 var(--mh-spacing-6);
+	box-sizing: border-box;
+}
+
+.clients-strip-itemcol {
+	padding: var(--mh-spacing-2) var(--mh-spacing-3);
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.middle_align1,
+.middle_align5 {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+
+.middle_align1 a,
+.middle_align5 a {
+	display: block;
+	width: 100%;
+	text-decoration: none;
+}
+
+.clients-grid-section {
+	padding: var(--mh-spacing-12) 0;
+	background: var(--mh-color-section);
+	box-sizing: border-box;
+}
+
+.clients-grid-textrow {
+	text-align: center;
+	margin-bottom: var(--mh-spacing-8);
+	width: 100%;
+}
+
+.clients-grid-textcol {
+	width: 100%;
+}
+
+.clients-grid-itemcol {
+	padding: var(--mh-spacing-2) var(--mh-spacing-3);
+	box-sizing: border-box;
+	margin-bottom: var(--mh-spacing-4);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* ==========================================================================
+   5. Portfolio Sections (Lines 3286-3425, 4455-4478, 5118-5151)
+   ========================================================================== */
+
+.portfolio-cards-section {
+	padding: var(--mh-spacing-12) 0;
+	background: var(--mh-color-body);
+	box-sizing: border-box;
+}
+
+.portfolio-cards-textcol {
+	text-align: center;
+	margin-bottom: var(--mh-spacing-8);
+	width: 100%;
+}
+
+.portfolio-cards-projectsrow,
+.portfolio-cards-projectsro {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0 calc(-1 * var(--mh-spacing-3));
+	box-sizing: border-box;
+}
+
+.portfolio-cards-projectcol {
+	padding: var(--mh-spacing-3);
+	box-sizing: border-box;
+	margin-bottom: var(--mh-spacing-6);
+}
+
+.portfolio-cards-projectcard {
+	background: var(--mh-color-card);
+	border: 1px solid var(--mh-color-border-muted);
+	border-radius: var(--mh-radius-md);
+	overflow: hidden;
+	transition: all var(--mh-transition-normal);
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+}
+
+.portfolio-cards-projectcard:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--mh-shadow-md);
+	border-color: var(--mh-color-brand-muted);
+}
+
+.portfolio-cards-projectinfo {
+	padding: var(--mh-spacing-4);
+	background: var(--mh-color-card);
+	border-top: 1px solid var(--mh-color-border-muted);
+	box-sizing: border-box;
+}
+
+.portfolio-cards-projnamecol {
+	width: 100%;
+}
+
+.portfolio-cards-projlink {
+	text-decoration: none;
+	color: inherit;
+	display: block;
+}
+
+.portfolio-cards-projtitle {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-base);
+	font-weight: 700;
+	color: var(--mh-color-text-heading);
+	margin: 0;
+	transition: color var(--mh-transition-fast);
+}
+
+.portfolio-cards-projectcard:hover .portfolio-cards-projtitle {
+	color: var(--mh-color-brand-base);
+}
+
+/* ContentSwap Interactive Hover Overlays */
+.contentswap-effect {
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.contentswap-effect .initial-image {
+	width: 100%;
+	display: block;
+	transition: transform var(--mh-transition-normal);
+}
+
+.contentswap-effect:hover .initial-image {
+	transform: scale(1.05);
+}
+
+.contentswap-effect .overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: color-mix(in srgb, var(--mh-color-text-heading) 75%, transparent);
+	opacity: 0;
+	transition: opacity var(--mh-transition-normal);
+	z-index: 1;
+	pointer-events: none;
+}
+
+.contentswap-effect:hover .overlay {
+	opacity: 1;
+}
+
+.contentswap-effect .swap-inner {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transform: translateY(12px);
+	transition: all var(--mh-transition-normal);
+	z-index: 2;
+	pointer-events: auto;
+}
+
+.contentswap-effect:hover .swap-inner {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.portfolio-card-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	border-radius: var(--mh-radius-pill);
+	background: var(--mh-color-brand-base);
+	color: var(--mh-color-text-inverse);
+	font-size: var(--mh-text-base);
+	box-shadow: var(--mh-shadow-md);
+	transition: transform var(--mh-transition-fast), background var(--mh-transition-fast);
+	text-decoration: none;
+}
+
+.portfolio-card-icon:hover {
+	transform: scale(1.15);
+	background: var(--mh-color-brand-hover);
+}
+
+/* Full Width Portfolio */
+.portfolio-full-section {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	overflow: hidden;
+	box-sizing: border-box;
+}
+
+.portfolio-full-projectcol,
+.portfolio-full-projectco {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+.protfolio-full-itemtitle {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-xl);
+	font-weight: 700;
+	color: var(--mh-color-text-inverse);
+	margin: 0 0 var(--mh-spacing-3);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.ContentSwap103-center,
+.ContentSwap104-center {
+	text-align: center;
+	padding: var(--mh-spacing-6);
+	color: var(--mh-color-text-inverse);
+}
+
+a.button.yellow {
+	display: inline-block;
+	padding: var(--mh-spacing-2) var(--mh-spacing-6);
+	background: var(--mh-color-cta-base);
+	color: var(--mh-color-text-inverse);
+	border-radius: var(--mh-radius-sm);
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-xs);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	text-decoration: none;
+	transition: all var(--mh-transition-fast);
+}
+
+a.button.yellow:hover {
+	background: var(--mh-color-cta-hover);
+	transform: translateY(-2px);
+	box-shadow: var(--mh-shadow-sm);
+}
+
+/* ==========================================================================
+   6. Gallery Sections
+   ========================================================================== */
+
+.full-width-gallery {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	overflow: hidden;
+	box-sizing: border-box;
+}
+
+.full-width-gallery .gallery-item {
+	padding: var(--mh-spacing-1);
+	box-sizing: border-box;
+}
+
+.gallery-section {
+	padding: var(--mh-spacing-12) 0;
+	background: var(--mh-color-section);
+	box-sizing: border-box;
+}
+
+.gallery-card {
+	background: var(--mh-color-card);
+	border-radius: var(--mh-radius-md);
+	overflow: hidden;
+	border: 1px solid var(--mh-color-border-muted);
+	margin-bottom: var(--mh-spacing-6);
+	transition: all var(--mh-transition-normal);
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+}
+
+.gallery-card:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--mh-shadow-md);
+	border-color: var(--mh-color-brand-muted);
+}
+
+.gallery-card-body {
+	padding: var(--mh-spacing-4);
+	background: var(--mh-color-card);
+	border-top: 1px solid var(--mh-color-border-muted);
+	flex-grow: 1;
+	box-sizing: border-box;
+}
+
+.gallery-card-title {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-base);
+	font-weight: 700;
+	color: var(--mh-color-text-heading);
+	margin: 0 0 var(--mh-spacing-1);
+}
+
+.gallery-card-category {
+	font-family: var(--mh-font-body);
+	font-size: var(--mh-text-xs);
+	color: var(--mh-color-text-muted);
+	margin: 0;
+}
+
+/* ==========================================================================
+   7. WooCommerce Section Styles
+   ========================================================================== */
+
+.woocommerce-section {
+	padding: var(--mh-spacing-12) 0;
+	background: var(--mh-color-body);
+	box-sizing: border-box;
+}
+
+.product-card,
+.mh-product-card {
+	background: var(--mh-color-card);
+	border: 1px solid var(--mh-color-border-muted);
+	border-radius: var(--mh-radius-md);
+	overflow: hidden;
+	text-align: center;
+	transition: all var(--mh-transition-normal);
+	margin-bottom: var(--mh-spacing-6);
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	box-sizing: border-box;
+}
+
+.product-card:hover,
+.mh-product-card:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--mh-shadow-md);
+	border-color: var(--mh-color-brand-muted);
+}
+
+.product-card-body {
+	padding: var(--mh-spacing-4);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	flex-grow: 1;
+	justify-content: space-between;
+	box-sizing: border-box;
+}
+
+.mh-product-title,
+.product-card h4 {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-base);
+	font-weight: 700;
+	color: var(--mh-color-text-heading);
+	margin: 0 0 var(--mh-spacing-2);
+}
+
+.mh-product-rating {
+	color: var(--mh-color-warning);
+	font-size: var(--mh-text-xs);
+	margin-bottom: var(--mh-spacing-2);
+	display: flex;
+	justify-content: center;
+	gap: 2px;
+}
+
+.mh-product-price {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-lg);
+	font-weight: 800;
+	color: var(--mh-color-text-heading);
+	margin-bottom: var(--mh-spacing-3);
+}
+
+.mh-product-btn {
+	display: inline-block;
+	padding: var(--mh-spacing-2) var(--mh-spacing-5);
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-xs);
+	font-weight: 700;
+	border-radius: var(--mh-radius-sm);
+	text-decoration: none;
+	background: var(--mh-color-brand-base);
+	color: var(--mh-color-text-inverse);
+	border: 1px solid var(--mh-color-brand-base);
+	transition: all var(--mh-transition-fast);
+	margin-top: auto;
+}
+
+.mh-product-btn:hover {
+	background: var(--mh-color-brand-hover);
+	border-color: var(--mh-color-brand-hover);
+	transform: translateY(-1px);
+	box-shadow: var(--mh-shadow-sm);
+}
+
+/* ==========================================================================
+   8. Legacy Grid System Compatibility
+   ========================================================================== */
+
+.cp2cols,
+.cp3cols,
+.cp4cols,
+.cp6cols,
+.cp12cols,
+.col-xs-12,
+.col-xs-6 {
+	box-sizing: border-box;
+}
+
+.col-xs-12 {
+	width: 100%;
+}
+
+.col-xs-6 {
+	width: 50%;
+}
+
+/* ==========================================================================
+   9. Responsive Breakpoints: Tablet (768px+) & Desktop (1024px+)
+   ========================================================================== */
+
+@media only screen and (min-width: 768px) {
+	.cp2cols {
+		width: 16.666667%;
+	}
+
+	.cp3cols,
+	.cp3cols-tablet,
+	.col-sm-3 {
+		width: 25%;
+	}
+
+	.cp4cols,
+	.cp4cols-tablet,
+	.col-sm-4 {
+		width: 33.333333%;
+	}
+
+	.cp6cols,
+	.cp6cols-tablet,
+	.col-sm-6 {
+		width: 50%;
+	}
+
+	.col-sm-5 {
+		width: 41.666667%;
+	}
+
+	.col-sm-8 {
+		width: 66.666667%;
+	}
+
+	.clients-strip-itemcol {
+		flex: 0 0 16.666667%;
+		max-width: 16.666667%;
+	}
+
+	.clients-grid-itemcol {
+		flex: 0 0 25%;
+		max-width: 25%;
+	}
+
+	.portfolio-cards-projectcol {
+		flex: 0 0 33.333333%;
+		max-width: 33.333333%;
+	}
+
+	.portfolio-full-projectcol,
+	.portfolio-full-projectco {
+		flex: 0 0 33.333333%;
+		max-width: 33.333333%;
+	}
+}
+
+@media only screen and (min-width: 1024px) {
+	.gridContainer {
+		max-width: var(--mh-content-width, 1200px);
+	}
+
+	.portfolio-cards-projectsrow,
+	.portfolio-cards-projectsro {
+		margin: 0 calc(-1 * var(--mh-spacing-4));
+	}
+
+	.portfolio-cards-projectcol {
+		padding: var(--mh-spacing-4);
+	}
+}
+
+@media only screen and (max-width: 767px) {
+	.clients-strip-itemcol {
+		flex: 0 0 50%;
+		max-width: 50%;
+	}
+
+	.clients-grid-itemcol {
+		flex: 0 0 50%;
+		max-width: 50%;
+	}
+
+	.portfolio-cards-projectcol {
+		flex: 0 0 100%;
+		max-width: 100%;
+	}
+
+	.portfolio-full-projectcol,
+	.portfolio-full-projectco {
+		flex: 0 0 100%;
+		max-width: 100%;
+	}
+
+	.full-width-gallery .gallery-item {
+		flex: 0 0 50%;
+		max-width: 50%;
+	}
+
+	.mh-pricing-popular {
+		transform: none;
+	}
+
+	.mh-pricing-card {
+		margin-bottom: var(--mh-spacing-6);
+	}
+}

@@ -32,6 +32,12 @@ function xophz_magic_hat_setup() {
     add_theme_support( 'editor-styles' );
     add_editor_style( 'assets/css/variables.css' );
     add_editor_style( 'assets/css/editor-style.css' );
+    add_editor_style( 'assets/css/sections/hero-overlap.css' );
+    add_editor_style( 'assets/css/sections/content-about.css' );
+    add_editor_style( 'assets/css/sections/features-numbers.css' );
+    add_editor_style( 'assets/css/sections/team-testimonials.css' );
+    add_editor_style( 'assets/css/sections/cta-contact.css' );
+    add_editor_style( 'assets/css/sections/pricing-portfolio.css' );
 
     // Support selective refresh in Customizer
     add_theme_support( 'customize-selective-refresh-widgets' );
@@ -154,8 +160,9 @@ require_once get_template_directory() . '/inc/hero.php';
 
 // Enqueue Theme Styles & Scripts
 function xophz_magic_hat_enqueue_styles() {
-    // Enqueue Dashicons for header/footer icons
+    // Enqueue Dashicons and FontAwesome for icons
     wp_enqueue_style( 'dashicons' );
+    wp_enqueue_style( 'magic-hat-font-awesome', get_template_directory_uri() . '/assets/font-awesome/font-awesome.min.css', array(), '4.7.0' );
 
     // Enqueue the foundational Design Tokens
     wp_enqueue_style( 'magic-hat-variables', get_template_directory_uri() . '/assets/css/variables.css', array(), wp_get_theme()->get('Version') );
@@ -163,8 +170,35 @@ function xophz_magic_hat_enqueue_styles() {
     // Enqueue Header & Footer styles
     wp_enqueue_style( 'magic-hat-header-footer', get_template_directory_uri() . '/assets/css/header-footer.css', array('magic-hat-variables'), wp_get_theme()->get('Version') );
 
+    // Enqueue modular section stylesheets
+    $section_categories = array(
+        'hero-overlap',
+        'content-about',
+        'features-numbers',
+        'team-testimonials',
+        'cta-contact',
+        'pricing-portfolio',
+    );
+    $section_handles = array();
+
+    foreach ( $section_categories as $category ) {
+        $handle = 'magic-hat-section-' . $category;
+        wp_enqueue_style(
+            $handle,
+            get_template_directory_uri() . '/assets/css/sections/' . $category . '.css',
+            array( 'magic-hat-variables', 'magic-hat-font-awesome' ),
+            wp_get_theme()->get( 'Version' )
+        );
+        $section_handles[] = $handle;
+    }
+
     // Enqueue the main stylesheet
-    wp_enqueue_style( 'magic-hat-style', get_stylesheet_uri(), array('magic-hat-variables', 'magic-hat-header-footer'), wp_get_theme()->get('Version') );
+    wp_enqueue_style(
+        'magic-hat-style',
+        get_stylesheet_uri(),
+        array_merge( array( 'magic-hat-variables', 'magic-hat-header-footer' ), $section_handles ),
+        wp_get_theme()->get( 'Version' )
+    );
 
     // Enqueue Header & Footer client-side controller (mobile drawer, hamburger toggle)
     wp_enqueue_script( 'magic-hat-header-footer', get_template_directory_uri() . '/assets/js/header-footer.js', array(), wp_get_theme()->get('Version'), true );

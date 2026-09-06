@@ -32,13 +32,13 @@ if ( class_exists( 'WP_Customize_Control' ) && ! class_exists( 'Magic_Hat_Page_B
 				.mh-template-notice { margin-top: 8px; font-size: 11px; line-height: 1.35; padding: 6px 8px; border-radius: 4px; }
 				.mh-template-notice.warning { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
 				.mh-template-notice.success { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
-				#mh_page_rows { list-style: none; margin: 0; padding: 0; }
-				#mh_page_rows .empty { color: #b0b0b0; font-size: 11px; text-transform: uppercase; font-weight: 600; letter-spacing: 1.5px; padding: 18px 10px; text-align: center; border: 1px dashed #d5d5d5; border-radius: 3px; background: #f9f9f9; }
-				#mh_page_rows .mh-section-item { background: #fff; border: 1px solid #e2e2e2; margin-bottom: 6px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; border-radius: 3px; cursor: move; transition: border-color 0.15s; }
-				#mh_page_rows .mh-section-item:hover { border-color: #2563eb; }
+				#mh_page_rows { list-style: none; margin: 0 0 14px; padding: 0; }
+				#mh_page_rows .empty { color: #646970; font-size: 11px; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; padding: 16px 10px; text-align: center; border: 1px dashed #c3c4c7; border-radius: 4px; background: #f6f7f7; }
+				#mh_page_rows .mh-section-item { background: #fff; border: 1px solid #dcdcde; margin-bottom: 8px; padding: 8px 10px; display: flex; align-items: center; gap: 8px; border-radius: 4px; cursor: pointer; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+				#mh_page_rows .mh-section-item:hover { border-color: #2271b1; box-shadow: 0 1px 4px rgba(34,113,177,0.12); }
 				.mh-add-section-wrap { margin-top: 10px; }
-				.mh-add-section-wrap .mh-add-section { width: 100%; padding: 8px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; font-size: 11px; border-radius: 3px; border: none; cursor: pointer; transition: opacity 0.2s; }
-				.mh-add-section-wrap .mh-add-section:hover { opacity: 0.85; }
+				.mh-add-section-wrap .mh-add-section { width: 100%; padding: 8px; font-weight: 600; font-size: 12px; border-radius: 4px; border: none; cursor: pointer; transition: opacity 0.2s; }
+				.mh-add-section-wrap .mh-add-section:hover { opacity: 0.9; }
 			</style>
 
 			<div class="mh-template-switch-wrap">

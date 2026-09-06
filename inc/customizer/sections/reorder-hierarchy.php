@@ -14,11 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Root sequence:
  * 1. Header (10)
- * 2. General Settings (20)
- * 3. Shop Settings (30)
- * 4. Menu Settings (40)
- * 5. Hero (50)
- * 6. Page Settings / Page AI (60 / 65)
+ * 2. Menu Settings (15)
+ * 3. General Settings (20)
+ * 4. Shop Settings (30)
+ * 5. Hero (40)
+ * 6. Page Settings / Page AI (50 / 55)
  * 7. Footer (70)
  *
  * @param WP_Customize_Manager $wp_customize
@@ -27,6 +27,15 @@ function mh_reorder_customizer_hierarchy( $wp_customize ) {
 	// ── 1. Root Level Sections & Panels ───────────────────────────
 	if ( $wp_customize->get_section( 'magic_hat_header' ) ) {
 		$wp_customize->get_section( 'magic_hat_header' )->priority = 10;
+	}
+
+	if ( $wp_customize->get_panel( 'nav_menus' ) ) {
+		$wp_customize->get_panel( 'nav_menus' )->title    = __( '🧭 Menu Settings', 'xophz-magic-hat' );
+		$wp_customize->get_panel( 'nav_menus' )->priority = 15;
+	}
+	if ( $wp_customize->get_section( 'nav_menus' ) ) {
+		$wp_customize->get_section( 'nav_menus' )->title    = __( '🧭 Menu Settings', 'xophz-magic-hat' );
+		$wp_customize->get_section( 'nav_menus' )->priority = 15;
 	}
 
 	if ( $wp_customize->get_panel( 'magic_hat_general_settings' ) ) {
@@ -44,26 +53,17 @@ function mh_reorder_customizer_hierarchy( $wp_customize ) {
 		$wp_customize->get_section( 'woocommerce' )->priority = 30;
 	}
 
-	if ( $wp_customize->get_panel( 'nav_menus' ) ) {
-		$wp_customize->get_panel( 'nav_menus' )->title    = __( '🧭 Menu Settings', 'xophz-magic-hat' );
-		$wp_customize->get_panel( 'nav_menus' )->priority = 40;
-	}
-	if ( $wp_customize->get_section( 'nav_menus' ) ) {
-		$wp_customize->get_section( 'nav_menus' )->title    = __( '🧭 Menu Settings', 'xophz-magic-hat' );
-		$wp_customize->get_section( 'nav_menus' )->priority = 40;
-	}
-
 	if ( $wp_customize->get_section( 'mh_front_page_hero' ) ) {
-		$wp_customize->get_section( 'mh_front_page_hero' )->priority = 50;
+		$wp_customize->get_section( 'mh_front_page_hero' )->priority = 40;
 	}
 
 	if ( $wp_customize->get_section( 'mh_page_builder' ) ) {
 		$wp_customize->get_section( 'mh_page_builder' )->title    = __( '🏗️ Page Settings', 'xophz-magic-hat' );
-		$wp_customize->get_section( 'mh_page_builder' )->priority = 60;
+		$wp_customize->get_section( 'mh_page_builder' )->priority = 50;
 	}
 
 	if ( $wp_customize->get_section( 'mh_ai_page_architect' ) ) {
-		$wp_customize->get_section( 'mh_ai_page_architect' )->priority = 65;
+		$wp_customize->get_section( 'mh_ai_page_architect' )->priority = 55;
 	}
 
 	if ( $wp_customize->get_section( 'magic_hat_footer' ) ) {

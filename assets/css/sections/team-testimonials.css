@@ -1,0 +1,971 @@
+/**
+ * Magic Hat Section Styles: Team & Testimonials
+ *
+ * Category 4: Team cards, member showcases, testimonial quotes, and customer reviews.
+ * Design Tokens: Styled exclusively using CSS custom properties (--mh-color-brand-*,
+ * --mh-color-cta-*, --mh-color-surface-*, --mh-color-text-*, --mh-glass-*, --mh-radius-*,
+ * --mh-shadow-*, and standard typography and spacing tokens from variables.css).
+ *
+ * @package Xophz_Magic_Hat
+ */
+
+/* ==========================================================================
+   1. Shared Layout Containers & Typography
+   ========================================================================== */
+
+.mh-section-team-colors,
+.mh-section-team-large-square,
+.mh-section-team-small,
+.mh-section-testimonials-boxed,
+.mh-section-testimonials-full {
+	position: relative;
+	width: 100%;
+	box-sizing: border-box;
+	padding: var(--mh-spacing-12) 0;
+	background-color: var(--mh-color-body);
+}
+
+.mh-section-testimonials-boxed {
+	background-color: var(--mh-color-section);
+}
+
+.mh-section .gridContainer,
+.mh-section-team-colors .gridContainer,
+.mh-section-team-large-square .gridContainer,
+.mh-section-team-small .gridContainer,
+.mh-section-testimonials-boxed .gridContainer,
+.mh-section-testimonials-full .gridContainer {
+	max-width: var(--mh-content-width, 1200px);
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: var(--mh-spacing-6);
+	padding-right: var(--mh-spacing-6);
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.flexbox-list {
+	display: flex;
+	flex-wrap: wrap;
+	box-sizing: border-box;
+}
+
+/* Section Header Text Columns */
+.team-colors-textcol,
+.team-large-square-textcol,
+.team-small-textcol,
+.testimonials-boxed-textcol,
+.testimonials-full-textcol {
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: var(--mh-spacing-8);
+	text-align: center;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.team-colors-textcol h2,
+.team-large-square-textcol h2,
+.team-small-textcol h2,
+.testimonials-boxed-textcol h2,
+.testimonials-full-textcol h2 {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-3xl);
+	font-weight: 700;
+	color: var(--mh-color-text-heading);
+	line-height: 1.25;
+	margin-top: 0;
+	margin-bottom: var(--mh-spacing-3);
+}
+
+.team-colors-textcol p,
+.team-large-square-textcol p,
+.team-small-textcol p,
+.testimonials-boxed-textcol p,
+.testimonials-full-textcol p {
+	font-family: var(--mh-font-body);
+	font-size: var(--mh-text-base);
+	color: var(--mh-color-text-muted);
+	line-height: 1.6;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+/* Native Gutenberg Core Block Cards */
+.mh-section-team-colors .wp-block-column,
+.mh-section-team-large-square .wp-block-column,
+.mh-section-team-small .wp-block-column,
+.mh-section-testimonials-boxed .wp-block-column,
+.mh-section-testimonials-full .wp-block-column {
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	transition: transform var(--mh-transition-normal), box-shadow var(--mh-transition-normal), border-color var(--mh-transition-normal);
+}
+
+.mh-section-team-colors .wp-block-column:hover,
+.mh-section-team-large-square .wp-block-column:hover,
+.mh-section-team-small .wp-block-column:hover,
+.mh-section-testimonials-boxed .wp-block-column:hover,
+.mh-section-testimonials-full .wp-block-column:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--mh-shadow-lg);
+}
+
+/* ==========================================================================
+   2. Pure CSS Mock Media & Avatar Containers
+   ========================================================================== */
+
+.mh-mock-media-box {
+	background: var(--mh-color-section);
+	border: 1px solid var(--mh-color-border-muted);
+	border-radius: var(--mh-radius-md);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 220px;
+	color: var(--mh-color-text-muted);
+	padding: var(--mh-spacing-4);
+	text-align: center;
+	box-sizing: border-box;
+	transition: border-color var(--mh-transition-normal), box-shadow var(--mh-transition-normal);
+}
+
+.mh-mock-media-box:hover {
+	border-color: var(--mh-color-brand-muted);
+	box-shadow: var(--mh-shadow-sm);
+}
+
+.mh-mock-media-box i,
+.mh-mock-media-box svg {
+	font-size: var(--mh-text-3xl);
+	margin-bottom: var(--mh-spacing-2);
+	color: var(--mh-color-border);
+	transition: color var(--mh-transition-fast);
+}
+
+.mh-mock-media-box:hover i,
+.mh-mock-media-box:hover svg {
+	color: var(--mh-color-brand-base);
+}
+
+.mh-mock-media-box span {
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-xs);
+	font-weight: 600;
+	color: var(--mh-color-text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   3. Section 1: Team Colors Showcase (.team-colors-*)
+   ========================================================================== */
+
+.team-colors-membersrow {
+	display: flex;
+	flex-wrap: wrap;
+	margin-left: -15px;
+	margin-right: -15px;
+	box-sizing: border-box;
+}
+
+.team-colors-membercol {
+	flex: 0 0 100%;
+	max-width: 100%;
+	padding-left: 15px;
+	padding-right: 15px;
+	margin-bottom: var(--mh-spacing-8);
+	box-sizing: border-box;
+}
+
+.team-colors-membercard,
+.mh-team-color-card {
+	background: var(--mh-color-card);
+	border: 1px solid var(--mh-color-border-muted);
+	border-radius: var(--mh-radius-md);
+	box-shadow: var(--mh-shadow-sm);
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	box-sizing: border-box;
+	transition: transform var(--mh-transition-normal), box-shadow var(--mh-transition-normal), border-color var(--mh-transition-normal);
+}
+
+.team-colors-membercard:hover,
+.mh-team-color-card:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--mh-shadow-lg);
+	border-color: var(--mh-color-border);
+}
+
+.mh-team-color-card .mh-mock-media-box {
+	width: 90px;
+	height: 90px;
+	min-height: 90px;
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+	z-index: 2;
+	box-shadow: var(--mh-shadow-sm);
+}
+
+/* Colorful Card Header Bands */
+.team-colors-background {
+	min-height: 110px;
+	width: 100%;
+	transition: opacity var(--mh-transition-normal);
+}
+
+.team-colors-membercol:nth-of-type(4n+1) .team-colors-background {
+	background-color: var(--mh-color-brand-base);
+}
+
+.team-colors-membercol:nth-of-type(4n+2) .team-colors-background {
+	background-color: var(--mh-color-success);
+}
+
+.team-colors-membercol:nth-of-type(4n+3) .team-colors-background {
+	background-color: var(--mh-color-warning);
+}
+
+.team-colors-membercol:nth-of-type(4n+4) .team-colors-background {
+	background-color: var(--mh-color-cta-base);
+}
+
+/* Overlapping Avatar Photo */
+.team-colors-memberavatar,
+.team-colors-memberinfo .mh-mock-media-box,
+img.team-colors-memberimg {
+	width: 120px;
+	height: 120px;
+	min-height: 120px;
+	border-radius: var(--mh-radius-pill);
+	border: 4px solid var(--mh-color-card);
+	margin: -60px auto var(--mh-spacing-4) auto;
+	background: var(--mh-color-section);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	box-shadow: var(--mh-shadow-sm);
+	position: relative;
+	z-index: 2;
+	box-sizing: border-box;
+}
+
+.team-colors-memberavatar i,
+.team-colors-memberinfo .mh-mock-media-box i {
+	font-size: var(--mh-text-2xl);
+	margin-bottom: var(--mh-spacing-1);
+}
+
+.team-colors-memberavatar span,
+.team-colors-memberinfo .mh-mock-media-box span {
+	font-size: 0.65rem;
+}
+
+.team-colors-memberinfo {
+	background: var(--mh-color-card);
+	padding: 0 var(--mh-spacing-6) var(--mh-spacing-4) var(--mh-spacing-6);
+	text-align: center;
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	box-sizing: border-box;
+}
+
+h4.team-colors-membername {
+	font-family: var(--mh-font-heading);
+	color: var(--mh-color-text-heading);
+	font-size: var(--mh-text-xl);
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: var(--mh-spacing-1);
+	line-height: 1.3;
+}
+
+p.team-colors-memberposition {
+	font-family: var(--mh-font-body);
+	color: var(--mh-color-text-muted);
+	font-size: var(--mh-text-sm);
+	font-style: italic;
+	margin-top: 0;
+	margin-bottom: var(--mh-spacing-3);
+}
+
+.team-colors-memberinfo p:not(.team-colors-memberposition) {
+	font-family: var(--mh-font-body);
+	color: var(--mh-color-text-main);
+	font-size: var(--mh-text-sm);
+	line-height: 1.6;
+	margin-top: 0;
+	margin-bottom: var(--mh-spacing-4);
+	flex-grow: 1;
+}
+
+.team-colors-separator {
+	width: 50%;
+	height: 1px;
+	border: none;
+	background: var(--mh-color-border-muted);
+	margin: var(--mh-spacing-3) auto;
+}
+
+.team-colors-membericons {
+	background: var(--mh-color-card);
+	padding: var(--mh-spacing-2) 0 var(--mh-spacing-6) 0;
+	display: flex;
+	justify-content: center;
+	gap: var(--mh-spacing-3);
+	box-sizing: border-box;
+}
+
+.fa.team-colors-icon {
+	color: var(--mh-color-text-muted);
+	font-size: var(--mh-text-base);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	border-radius: var(--mh-radius-pill);
+	background: var(--mh-color-section);
+	text-decoration: none;
+	transition: color var(--mh-transition-fast), background-color var(--mh-transition-fast), transform var(--mh-transition-fast);
+}
+
+.team-colors-membercol:nth-of-type(4n+1) .team-colors-icon:hover {
+	color: var(--mh-color-text-inverse);
+	background-color: var(--mh-color-brand-base);
+	transform: translateY(-2px);
+}
+
+.team-colors-membercol:nth-of-type(4n+2) .team-colors-icon:hover {
+	color: var(--mh-color-text-inverse);
+	background-color: var(--mh-color-success);
+	transform: translateY(-2px);
+}
+
+.team-colors-membercol:nth-of-type(4n+3) .team-colors-icon:hover {
+	color: var(--mh-color-text-inverse);
+	background-color: var(--mh-color-warning);
+	transform: translateY(-2px);
+}
+
+.team-colors-membercol:nth-of-type(4n+4) .team-colors-icon:hover {
+	color: var(--mh-color-text-inverse);
+	background-color: var(--mh-color-cta-base);
+	transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   4. Section 2: Team Large Square Showcase (.team-large-square-*)
+   ========================================================================== */
+
+.team-large-square-innerrow {
+	display: flex;
+	flex-wrap: wrap;
+	margin-left: -15px;
+	margin-right: -15px;
+	box-sizing: border-box;
+}
+
+.team-large-square-membercol {
+	flex: 0 0 100%;
+	max-width: 100%;
+	padding-left: 15px;
+	padding-right: 15px;
+	margin-bottom: var(--mh-spacing-8);
+	box-sizing: border-box;
+}
+
+.team-large-square-membercard,
+.mh-team-square-card {
+	background: var(--mh-color-card);
+	border: 1px solid var(--mh-color-border-muted);
+	border-bottom: 4px solid var(--mh-color-brand-base);
+	border-radius: var(--mh-radius-md);
+	box-shadow: var(--mh-shadow-sm);
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	box-sizing: border-box;
+	transition: transform var(--mh-transition-normal), box-shadow var(--mh-transition-normal), border-bottom-color var(--mh-transition-normal);
+}
+
+.team-large-square-membercard:hover,
+.mh-team-square-card:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--mh-shadow-lg);
+	border-bottom-color: var(--mh-color-brand-hover);
+}
+
+.mh-team-square-card .mh-mock-media-box {
+	min-height: 200px;
+	width: 100%;
+}
+
+/* Modernized ContentSwap102 / ContentSwap103 Token Hover Overlays */
+.contentswap-effect,
+#ContentSwap102,
+#ContentSwap103 {
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+	display: block;
+	margin: 0;
+	padding: 0;
+}
+
+.ContentSwap102_content,
+.ContentSwap103_content {
+	position: relative;
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+.ContentSwap102_content .mh-mock-media-box,
+.ContentSwap103_content .mh-mock-media-box {
+	min-height: 260px;
+	border: none;
+	border-radius: 0;
+	background: var(--mh-color-section);
+}
+
+.swap-inner,
+#ContentSwap102 .swap-inner,
+#ContentSwap103 .swap-inner,
+.contentswap-effect .swap-inner {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(37, 99, 235, 0.88);
+	backdrop-filter: blur(var(--mh-glass-blur-sm));
+	color: var(--mh-color-text-inverse);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity var(--mh-transition-normal), visibility var(--mh-transition-normal);
+	padding: var(--mh-spacing-6);
+	box-sizing: border-box;
+	z-index: 5;
+}
+
+/* Hover State Activates CSS Overlay */
+.contentswap-effect:hover .swap-inner,
+.team-large-square-membercard:hover .swap-inner,
+#ContentSwap102:hover .swap-inner,
+#ContentSwap103:hover .swap-inner {
+	opacity: 1;
+	visibility: visible;
+}
+
+.ContentSwap102-center,
+.ContentSwap103-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--mh-spacing-4);
+	width: 100%;
+}
+
+.fa.team-large-square-membericon {
+	color: var(--mh-color-text-inverse);
+	font-size: var(--mh-text-2xl);
+	width: 46px;
+	height: 46px;
+	border-radius: var(--mh-radius-pill);
+	background: rgba(255, 255, 255, 0.2);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-decoration: none;
+	transition: transform var(--mh-transition-fast), background-color var(--mh-transition-fast), color var(--mh-transition-fast);
+}
+
+.fa.team-large-square-membericon:hover {
+	background: var(--mh-color-card);
+	color: var(--mh-color-brand-base);
+	transform: scale(1.15);
+}
+
+.team-large-square-memberinfo {
+	background: var(--mh-color-card);
+	padding: var(--mh-spacing-6);
+	text-align: center;
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+}
+
+h3.team-large-square-membername {
+	font-family: var(--mh-font-heading);
+	color: var(--mh-color-brand-base);
+	font-size: var(--mh-text-lg);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	margin-top: 0;
+	margin-bottom: var(--mh-spacing-1);
+	line-height: 1.3;
+}
+
+h4.team-large-square-memberposition {
+	font-family: var(--mh-font-body);
+	color: var(--mh-color-text-muted);
+	font-size: var(--mh-text-sm);
+	font-style: italic;
+	margin-top: 0;
+	margin-bottom: var(--mh-spacing-3);
+}
+
+.team-large-square-memberinfo p {
+	font-family: var(--mh-font-body);
+	color: var(--mh-color-text-main);
+	font-size: var(--mh-text-sm);
+	line-height: 1.6;
+	margin: 0;
+}
+
+/* ==========================================================================
+   5. Section 3: Team Small Cards Showcase (.team-small-*)
+   ========================================================================== */
+
+.team-small-memberrow {
+	display: flex;
+	flex-wrap: wrap;
+	margin-left: -15px;
+	margin-right: -15px;
+	justify-content: center;
+	box-sizing: border-box;
+}
+
+.team-small-membercol {
+	flex: 0 0 50%;
+	max-width: 50%;
+	padding-left: 15px;
+	padding-right: 15px;
+	margin-bottom: var(--mh-spacing-8);
+	text-align: center;
+	box-sizing: border-box;
+}
+
+.team-small-memberavatar,
+.team-small-membercol .mh-mock-media-box,
+img.team-small-memberimg-normal {
+	width: 110px;
+	height: 110px;
+	min-height: 110px;
+	border-radius: var(--mh-radius-pill);
+	border: 3px solid var(--mh-color-brand-base);
+	margin: 0 auto var(--mh-spacing-4) auto;
+	background: var(--mh-color-section);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	transition: transform var(--mh-transition-normal), border-color var(--mh-transition-normal), box-shadow var(--mh-transition-normal);
+}
+
+.team-small-memberavatar:hover,
+.team-small-membercol .mh-mock-media-box:hover,
+img.team-small-memberimg-normal:hover {
+	transform: scale(1.05);
+	border-color: var(--mh-color-cta-base);
+	box-shadow: var(--mh-shadow-md);
+}
+
+.team-small-memberavatar i,
+.team-small-membercol .mh-mock-media-box i {
+	font-size: var(--mh-text-2xl);
+	margin-bottom: var(--mh-spacing-1);
+}
+
+.team-small-memberavatar span,
+.team-small-membercol .mh-mock-media-box span {
+	font-size: 0.65rem;
+}
+
+.team-small-membercol h4 {
+	font-family: var(--mh-font-heading);
+	color: var(--mh-color-text-heading);
+	font-size: var(--mh-text-base);
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: var(--mh-spacing-1);
+}
+
+.team-small-membercol p {
+	font-family: var(--mh-font-body);
+	color: var(--mh-color-text-muted);
+	font-size: var(--mh-text-xs);
+	font-style: italic;
+	margin-top: 0;
+	margin-bottom: var(--mh-spacing-3);
+}
+
+.team-small-iconsrow {
+	display: flex;
+	justify-content: center;
+	gap: var(--mh-spacing-2);
+	margin-bottom: var(--mh-spacing-2);
+}
+
+.fa.team-icon {
+	color: var(--mh-color-text-muted);
+	font-size: var(--mh-text-sm);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border-radius: var(--mh-radius-pill);
+	background: var(--mh-color-section);
+	text-decoration: none;
+	transition: color var(--mh-transition-fast), background-color var(--mh-transition-fast);
+}
+
+.fa.team-icon:hover {
+	color: var(--mh-color-text-inverse);
+	background-color: var(--mh-color-brand-base);
+}
+
+/* ==========================================================================
+   6. Section 4: Testimonials Boxed Showcase (.testimonials-boxed-*)
+   ========================================================================== */
+
+.testimonials-boxed-itemsrow {
+	display: flex;
+	flex-wrap: wrap;
+	margin-left: -15px;
+	margin-right: -15px;
+	box-sizing: border-box;
+}
+
+.testimonials-boxed-itemcol {
+	flex: 0 0 100%;
+	max-width: 100%;
+	padding-left: 15px;
+	padding-right: 15px;
+	margin-bottom: var(--mh-spacing-8);
+	box-sizing: border-box;
+}
+
+.testimonials-boxed-itemcard {
+	background: var(--mh-color-card);
+	border: 1px solid var(--mh-color-border-muted);
+	border-radius: var(--mh-radius-md);
+	box-shadow: var(--mh-shadow-sm);
+	padding: var(--mh-spacing-8) var(--mh-spacing-6);
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+	height: 100%;
+	box-sizing: border-box;
+	transition: transform var(--mh-transition-normal), box-shadow var(--mh-transition-normal), border-color var(--mh-transition-normal);
+}
+
+.testimonials-boxed-itemcard:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--mh-shadow-lg);
+	border-color: var(--mh-color-brand-muted);
+}
+
+h4.testimonials-boxed-itemtext {
+	font-family: var(--mh-font-body);
+	color: var(--mh-color-text-main);
+	font-size: var(--mh-text-base);
+	font-style: italic;
+	font-weight: 400;
+	line-height: 1.7;
+	margin-top: 0;
+	margin-bottom: var(--mh-spacing-6);
+}
+
+.testimonials-boxed-itemavatar,
+.testimonials-boxed-itemcard .mh-mock-media-box,
+img.testimonials-boxed-itemimg {
+	width: 80px;
+	height: 80px;
+	min-height: 80px;
+	border-radius: var(--mh-radius-pill);
+	border: 2px solid var(--mh-color-border-muted);
+	margin: 0 auto var(--mh-spacing-3) auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background: var(--mh-color-section);
+	box-sizing: border-box;
+}
+
+.testimonials-boxed-itemavatar i,
+.testimonials-boxed-itemcard .mh-mock-media-box i {
+	font-size: var(--mh-text-xl);
+	margin-bottom: var(--mh-spacing-1);
+}
+
+.testimonials-boxed-itemavatar span,
+.testimonials-boxed-itemcard .mh-mock-media-box span {
+	font-size: 0.6rem;
+}
+
+h5.testimonials-boxed-itemname {
+	font-family: var(--mh-font-heading);
+	color: var(--mh-color-text-heading);
+	font-size: var(--mh-text-base);
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: var(--mh-spacing-1);
+}
+
+h6.testimonials-boxed-itempos {
+	font-family: var(--mh-font-body);
+	color: var(--mh-color-brand-base);
+	font-size: var(--mh-text-xs);
+	font-weight: 600;
+	letter-spacing: 1.5px;
+	text-transform: uppercase;
+	margin: 0;
+}
+
+/* ==========================================================================
+   7. Section 5: Testimonials Full Width Showcase (.testimonials-full-*)
+   ========================================================================== */
+
+.testimonials-full-section {
+	padding: var(--mh-spacing-12) 0;
+	box-sizing: border-box;
+}
+
+.testimonials-full-textrow {
+	margin-bottom: var(--mh-spacing-8);
+	text-align: center;
+}
+
+.testimonials-full-itemsrow {
+	display: flex;
+	flex-wrap: wrap;
+	margin-left: -15px;
+	margin-right: -15px;
+	box-sizing: border-box;
+}
+
+.testimonials-full-itemcol {
+	flex: 0 0 100%;
+	max-width: 100%;
+	padding-left: 15px;
+	padding-right: 15px;
+	margin-bottom: var(--mh-spacing-8);
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.testimonials-full-imgcol {
+	margin-bottom: var(--mh-spacing-4);
+	display: flex;
+	justify-content: center;
+}
+
+.testimonials-full-imgcol .mh-mock-media-box,
+img.testimonials-full-itemimg {
+	width: 96px;
+	height: 96px;
+	min-height: 96px;
+	border-radius: var(--mh-radius-pill);
+	border: 3px solid var(--mh-color-border-muted);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background: var(--mh-color-section);
+	box-sizing: border-box;
+}
+
+.testimonials-full-imgcol .mh-mock-media-box i {
+	font-size: var(--mh-text-2xl);
+	margin-bottom: var(--mh-spacing-1);
+}
+
+.testimonials-full-imgcol .mh-mock-media-box span {
+	font-size: 0.6rem;
+}
+
+.testimonials-full-itemtextcol {
+	text-align: center;
+	max-width: 650px;
+	margin-left: auto;
+	margin-right: auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	box-sizing: border-box;
+}
+
+.testimonials-full-itemtextcol p {
+	font-family: var(--mh-font-body);
+	color: var(--mh-color-text-main);
+	font-size: var(--mh-text-base);
+	font-style: italic;
+	line-height: 1.7;
+	margin-top: 0;
+	margin-bottom: var(--mh-spacing-4);
+}
+
+h5.testimonials-full-nametext {
+	font-family: var(--mh-font-heading);
+	color: var(--mh-color-text-heading);
+	font-size: var(--mh-text-lg);
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: var(--mh-spacing-1);
+}
+
+h6.testimonials-full-postext {
+	font-family: var(--mh-font-body);
+	color: var(--mh-color-cta-base);
+	font-size: var(--mh-text-xs);
+	font-weight: 600;
+	letter-spacing: 1.5px;
+	text-transform: uppercase;
+	margin: 0;
+}
+
+/* ==========================================================================
+   8. Responsive Tablet Overrides (min-width: 768px)
+   ========================================================================== */
+
+@media (min-width: 768px) {
+	.team-colors-textcol,
+	.team-large-square-textcol,
+	.team-small-textcol,
+	.testimonials-boxed-textcol,
+	.testimonials-full-textcol {
+		width: 70%;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.team-colors-membercol {
+		flex: 0 0 50%;
+		max-width: 50%;
+	}
+
+	.team-large-square-membercol {
+		flex: 0 0 33.3333%;
+		max-width: 33.3333%;
+	}
+
+	.team-small-membercol {
+		flex: 0 0 33.3333%;
+		max-width: 33.3333%;
+	}
+
+	.testimonials-boxed-itemcol {
+		flex: 0 0 33.3333%;
+		max-width: 33.3333%;
+	}
+
+	.testimonials-full-itemsrow {
+		display: flex;
+		flex-direction: column;
+		gap: var(--mh-spacing-8);
+	}
+
+	.testimonials-full-itemcol {
+		flex: 0 0 100%;
+		max-width: 100%;
+		flex-direction: row;
+		align-items: center;
+		gap: var(--mh-spacing-6);
+		text-align: left;
+		padding-left: var(--mh-spacing-6);
+		padding-right: var(--mh-spacing-6);
+	}
+
+	.testimonials-full-imgcol {
+		margin-bottom: 0;
+		flex-shrink: 0;
+	}
+
+	.testimonials-full-itemtextcol {
+		text-align: left;
+		align-items: flex-start;
+		max-width: none;
+		margin: 0;
+	}
+}
+
+/* ==========================================================================
+   9. Responsive Desktop Overrides (min-width: 1024px)
+   ========================================================================== */
+
+@media (min-width: 1024px) {
+	.team-colors-textcol,
+	.team-large-square-textcol,
+	.team-small-textcol,
+	.testimonials-boxed-textcol,
+	.testimonials-full-textcol {
+		width: 60%;
+	}
+
+	.team-colors-membercol {
+		flex: 0 0 25%;
+		max-width: 25%;
+	}
+
+	.team-large-square-membercol {
+		flex: 0 0 33.3333%;
+		max-width: 33.3333%;
+	}
+
+	.team-small-membercol {
+		flex: 0 0 16.6667%;
+		max-width: 16.6667%;
+	}
+
+	.testimonials-boxed-itemcol {
+		flex: 0 0 33.3333%;
+		max-width: 33.3333%;
+	}
+
+	.testimonials-full-itemsrow {
+		flex-direction: row;
+		gap: 0;
+	}
+
+	.testimonials-full-itemcol {
+		flex: 0 0 33.3333%;
+		max-width: 33.3333%;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+
+	.testimonials-full-imgcol {
+		margin-bottom: var(--mh-spacing-4);
+	}
+
+	.testimonials-full-itemtextcol {
+		text-align: center;
+		align-items: center;
+	}
+}

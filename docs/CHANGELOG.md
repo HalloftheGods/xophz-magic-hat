@@ -5,6 +5,27 @@ All notable changes to the Xophz Magic Hat theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [26.5.33] - 2026-09-06
+
+### Added
+- Modular Section Stylesheets (`assets/css/sections/`): Created 6 decomposed category stylesheets (`hero-overlap.css`, `content-about.css`, `features-numbers.css`, `team-testimonials.css`, `cta-contact.css`, `pricing-portfolio.css`) referencing central Magic Hat design tokens (`var(--mh-color-*)`, `var(--wp--preset--*)`) with zero raw hex color codes and zero unreferenced WebGradients.
+- Editor Styles for Block Sections (`functions.php`): Registered all 6 section stylesheets in `add_editor_style()` for WYSIWYG Gutenberg Site Editor parity.
+- Native Gutenberg Block Pattern Styling: Configured all category stylesheets to style 100% native Gutenberg core block markup under scoped `.mh-section-*` wrapper classes.
+
+### Changed
+- Modernized Section Enqueues (`functions.php`): Replaced legacy `magic-hat-ope-sections` enqueue with dynamic iteration over the 6 modular category section stylesheets.
+
+### Removed
+- Monolithic Stylesheet Purge: Permanently removed the 5,307-line legacy monolith `assets/css/one-page-express-sections.css`.
+
+## [26.5.32] - 2026-09-06
+
+### Changed
+- Hero Template Clean Restoration (`inc/hero.php`, `inc/customizer.php`): Restored hero template to standard surface card layout, eliminating full-bleed site logo background coverage and bottom separator SVGs.
+
+### Removed
+- Purged Alien Stock Photos and Separator Assets: Removed `assets/images/` and `assets/separators/`, preserving pure design token styling.
+
 ## [26.5.31] - 2026-09-06
 
 ### Added

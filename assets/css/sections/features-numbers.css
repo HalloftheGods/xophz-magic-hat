@@ -1,0 +1,1152 @@
+/**
+ * Magic Hat Section Styles: Features & Numbers
+ *
+ * Category 3: Feature cards, icon grids, statistical counters, and KPI bands.
+ * Design Tokens: Uses --mh-color-brand-*, --mh-color-surface-*, --mh-color-status-*,
+ * --mh-color-text-*, and standard typography and spacing tokens from variables.css.
+ *
+ * @package Xophz_Magic_Hat
+ */
+
+/* ==========================================================================
+   1. Mock Media Containers (Zero External Dependencies)
+   ========================================================================== */
+
+.mh-section .mh-mock-media-box,
+.mh-mock-media-box {
+	background-color: var(--mh-color-section);
+	border: 1px solid var(--mh-color-border-muted);
+	border-radius: var(--mh-radius-md);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 220px;
+	color: var(--mh-color-text-muted);
+	padding: var(--mh-spacing-6);
+	text-align: center;
+}
+
+.mh-section .mh-mock-media-box i.fa,
+.mh-mock-media-box i.fa {
+	font-size: 36px;
+	margin-bottom: var(--mh-spacing-2);
+	color: var(--mh-color-border);
+}
+
+.mh-section .mh-mock-media-box span,
+.mh-mock-media-box span {
+	font-size: var(--mh-text-xs);
+	font-weight: 600;
+	color: var(--mh-color-text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   2. Core Features & Numbers Section Wrappers
+   ========================================================================== */
+
+.mh-section-features {
+	background-color: var(--mh-color-section);
+	padding: var(--mh-spacing-12) var(--mh-spacing-6);
+}
+
+.mh-section-numbers {
+	background-color: var(--mh-color-card);
+	padding: var(--mh-spacing-8) var(--mh-spacing-6);
+}
+
+/* ==========================================================================
+   3. Features Coloured Icon Boxes Section
+   ========================================================================== */
+
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-textrow,
+.features-coloured-icon-boxes-textrow {
+	margin-bottom: var(--mh-spacing-8);
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-textcol,
+.features-coloured-icon-boxes-textcol {
+	float: none;
+	margin: auto;
+	padding-left: var(--mh-spacing-4);
+	padding-right: var(--mh-spacing-4);
+	text-align: center;
+	width: 83.3333%;
+}
+
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol,
+.features-coloured-icon-boxes-featurecol {
+	background-color: var(--mh-color-card);
+	border-radius: var(--mh-radius-sm);
+	box-shadow: var(--mh-shadow-sm);
+	float: none;
+	margin-bottom: var(--mh-spacing-8);
+	padding: var(--mh-spacing-8);
+	text-align: center;
+	width: 100%;
+	transition: var(--mh-transition-normal);
+}
+
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-iconcontainer,
+.features-coloured-icon-boxes-iconcontainer {
+	border-radius: var(--mh-radius-pill);
+	box-shadow: var(--mh-shadow-md);
+	height: 100px;
+	margin: 0 auto var(--mh-spacing-6);
+	min-height: 0;
+	padding-bottom: var(--mh-spacing-6);
+	padding-top: var(--mh-spacing-6);
+	transition: var(--mh-transition-fast);
+	width: 100px;
+}
+
+/* 4-Color Alternating Palette using Design Tokens */
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol:nth-of-type(4n+1) a.features-coloured-button,
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol:nth-of-type(4n+1) .features-coloured-icon-boxes-iconcontainer,
+.features-coloured-icon-boxes-featurecol:nth-of-type(4n+1) a.features-coloured-button,
+.features-coloured-icon-boxes-featurecol:nth-of-type(4n+1) .features-coloured-icon-boxes-iconcontainer {
+	background-color: var(--mh-color-brand-base);
+}
+
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol:nth-of-type(4n+2) a.features-coloured-button,
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol:nth-of-type(4n+2) .features-coloured-icon-boxes-iconcontainer,
+.features-coloured-icon-boxes-featurecol:nth-of-type(4n+2) a.features-coloured-button,
+.features-coloured-icon-boxes-featurecol:nth-of-type(4n+2) .features-coloured-icon-boxes-iconcontainer {
+	background-color: var(--mh-color-success);
+}
+
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol:nth-of-type(4n+3) a.features-coloured-button,
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol:nth-of-type(4n+3) .features-coloured-icon-boxes-iconcontainer,
+.features-coloured-icon-boxes-featurecol:nth-of-type(4n+3) a.features-coloured-button,
+.features-coloured-icon-boxes-featurecol:nth-of-type(4n+3) .features-coloured-icon-boxes-iconcontainer {
+	background-color: var(--mh-color-warning);
+}
+
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol:nth-of-type(4n+4) a.features-coloured-button,
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol:nth-of-type(4n+4) .features-coloured-icon-boxes-iconcontainer,
+.features-coloured-icon-boxes-featurecol:nth-of-type(4n+4) a.features-coloured-button,
+.features-coloured-icon-boxes-featurecol:nth-of-type(4n+4) .features-coloured-icon-boxes-iconcontainer {
+	background-color: var(--mh-color-link-visited);
+}
+
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol:nth-of-type(4n+1) a.features-coloured-button:hover,
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol:nth-of-type(4n+1) a.features-coloured-button:active,
+.features-coloured-icon-boxes-featurecol:nth-of-type(4n+1) a.features-coloured-button:hover,
+.features-coloured-icon-boxes-featurecol:nth-of-type(4n+1) a.features-coloured-button:active {
+	background-color: var(--mh-color-brand-hover);
+}
+
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol:nth-of-type(4n+2) a.features-coloured-button:hover,
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol:nth-of-type(4n+2) a.features-coloured-button:active,
+.features-coloured-icon-boxes-featurecol:nth-of-type(4n+2) a.features-coloured-button:hover,
+.features-coloured-icon-boxes-featurecol:nth-of-type(4n+2) a.features-coloured-button:active {
+	background-color: var(--mh-color-success);
+	filter: brightness(0.9);
+}
+
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol:nth-of-type(4n+3) a.features-coloured-button:hover,
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol:nth-of-type(4n+3) a.features-coloured-button:active,
+.features-coloured-icon-boxes-featurecol:nth-of-type(4n+3) a.features-coloured-button:hover,
+.features-coloured-icon-boxes-featurecol:nth-of-type(4n+3) a.features-coloured-button:active {
+	background-color: var(--mh-color-warning);
+	filter: brightness(0.9);
+}
+
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol:nth-of-type(4n+4) a.features-coloured-button:hover,
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol:nth-of-type(4n+4) a.features-coloured-button:active,
+.features-coloured-icon-boxes-featurecol:nth-of-type(4n+4) a.features-coloured-button:hover,
+.features-coloured-icon-boxes-featurecol:nth-of-type(4n+4) a.features-coloured-button:active {
+	background-color: var(--mh-color-link-visited);
+	filter: brightness(0.9);
+}
+
+.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol .features-coloured-icon-boxes-iconcontainer:hover,
+.features-coloured-icon-boxes-featurecol .features-coloured-icon-boxes-iconcontainer:hover {
+	background-color: var(--mh-color-text-heading);
+	height: 110px;
+	margin: -5px auto 22px auto;
+	min-height: 0;
+	padding: var(--mh-spacing-8) 0;
+	transition: var(--mh-transition-fast);
+	width: 110px;
+}
+
+.mh-section-features-coloured-boxes a.features-coloured-button,
+a.features-coloured-button {
+	border-radius: var(--mh-radius-sm);
+	border-style: solid;
+	border-width: 0;
+	box-shadow: var(--mh-shadow-sm);
+	color: var(--mh-color-text-inverse);
+	cursor: pointer;
+	display: inline-block;
+	font-family: var(--mh-font-body);
+	font-size: var(--mh-text-xs);
+	font-stretch: normal;
+	font-weight: 500;
+	letter-spacing: 1px;
+	line-height: 1.3;
+	margin: var(--mh-spacing-2) var(--mh-spacing-2) var(--mh-spacing-1) var(--mh-spacing-2);
+	padding: 7px 20px;
+	text-align: center;
+	text-decoration: none;
+	text-transform: uppercase;
+	transition: var(--mh-transition-fast);
+}
+
+.mh-section-features-coloured-boxes a.features-coloured-button:hover,
+a.features-coloured-button:hover {
+	box-shadow: var(--mh-shadow-md);
+	color: var(--mh-color-text-inverse);
+}
+
+.mh-section-features-coloured-boxes a.features-coloured-button:active,
+a.features-coloured-button:active {
+	box-shadow: inset 0 3px 2px 0 rgba(0, 0, 0, 0.13);
+	color: var(--mh-color-text-inverse);
+}
+
+/* ==========================================================================
+   4. Feature Icons & Typography Helpers
+   ========================================================================== */
+
+.mh-section .fa.features-coloured-icon,
+.mh-section .fa.font-icon-features-icon-container,
+.fa.features-coloured-icon,
+.fa.font-icon-features-icon-container {
+	background-color: transparent;
+	border-radius: var(--mh-radius-pill);
+	color: var(--mh-color-text-inverse);
+	display: inline-block;
+	font-size: 50px;
+	padding: 0;
+}
+
+.mh-section h4.heading103,
+h4.heading103 {
+	color: var(--mh-color-text-heading);
+	font-family: var(--mh-font-heading);
+	font-size: var(--mh-text-lg);
+	font-weight: 600;
+	letter-spacing: 0;
+}
+
+/* ==========================================================================
+   5. Features Common Header Rows & Columns
+   ========================================================================== */
+
+.mh-section-features-image-cards .features-image-cards-textrow,
+.mh-section-features-large-icons .features-large-icons-textrow,
+.mh-section-features-overlapped-icons .features-overlapped-icons-textrow,
+.mh-section-features-small-icon-cards .features-small-icon-cards-textrow,
+.mh-section-features-square-image .features-square-image-textrow,
+.features-image-cards-textrow,
+.features-large-icons-textrow,
+.features-overlapped-icons-textrow,
+.features-small-icon-cards-textrow,
+.features-square-image-textrow {
+	margin-bottom: var(--mh-spacing-4);
+	margin-left: -15px;
+	margin-right: -15px;
+	text-align: center;
+}
+
+.mh-section-features-image-cards .features-image-cards-textcol,
+.mh-section-features-square-image .features-square-image-textcol,
+.features-image-cards-textcol,
+.features-square-image-textcol {
+	float: none;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: var(--mh-spacing-4);
+	padding-right: var(--mh-spacing-4);
+	width: 83.3333%;
+}
+
+/* ==========================================================================
+   6. Features Image Cards Section
+   ========================================================================== */
+
+.mh-section-features-image-cards .features-image-cards-cardcol,
+.features-image-cards-cardcol {
+	float: none;
+	margin-bottom: var(--mh-spacing-8);
+	margin-top: var(--mh-spacing-8);
+	padding-left: var(--mh-spacing-4);
+	padding-right: var(--mh-spacing-4);
+	width: 100%;
+}
+
+.flexbox-list .features-image-cards-cardrow,
+.flexbox-list .features-overlapped-icons-featinnerrow {
+	height: 100%;
+}
+
+.mh-section-features-image-cards .features-image-cards-cardrow,
+.features-image-cards-cardrow {
+	background-color: var(--mh-color-card);
+	border-radius: var(--mh-radius-sm);
+	box-shadow: var(--mh-shadow-sm);
+	clear: both;
+	float: left;
+	margin-bottom: 0;
+	margin-top: 0;
+	padding-left: 0;
+	padding-right: 0;
+	width: 100%;
+	overflow: hidden;
+}
+
+.mh-section-features-image-cards img.features-image-cards-featimg,
+img.features-image-cards-featimg {
+	border-color: var(--mh-color-border-muted);
+	border-radius: 0;
+	border-style: solid;
+	border-width: 0;
+	display: inline-block;
+	height: auto;
+	margin-bottom: var(--mh-spacing-6);
+	max-width: 100%;
+	width: 100%;
+}
+
+.mh-section-features-image-cards .features-image-cards-cardtextrow,
+.features-image-cards-cardtextrow {
+	clear: both;
+	float: left;
+	padding-bottom: var(--mh-spacing-4);
+	padding-left: var(--mh-spacing-4);
+	padding-right: var(--mh-spacing-4);
+	width: 100%;
+}
+
+.mh-section-features-image-cards .features-image-cards-separator,
+.features-image-cards-separator {
+	background-color: var(--mh-color-border);
+	border: 0;
+	height: 1px;
+	margin-bottom: var(--mh-spacing-4);
+}
+
+.mh-section .fa.font-icon-22,
+.fa.font-icon-22 {
+	color: var(--mh-color-brand-base);
+	font-size: var(--mh-text-sm);
+}
+
+/* ==========================================================================
+   7. Features Large Icons Section
+   ========================================================================== */
+
+.mh-section-features-large-icons,
+.features-large-icons-section {
+	clear: both;
+	padding-bottom: var(--mh-spacing-12);
+	padding-top: var(--mh-spacing-12);
+	width: auto;
+}
+
+.mh-section-features-large-icons .features-large-icons-textcol,
+.features-large-icons-textcol {
+	margin-left: 8.3333%;
+	padding-left: var(--mh-spacing-4);
+	padding-right: var(--mh-spacing-4);
+	width: 83.3333%;
+}
+
+.mh-section-features-large-icons .features-large-icons-featcol,
+.features-large-icons-featcol {
+	float: none;
+	margin-bottom: var(--mh-spacing-4);
+	margin-top: var(--mh-spacing-4);
+	padding: 0 var(--mh-spacing-4);
+	text-align: center;
+	transform: none;
+	width: auto;
+}
+
+.mh-section .features-icon-container-nomargin,
+.features-icon-container-nomargin {
+	background-color: var(--mh-color-brand-base);
+	border-radius: var(--mh-radius-pill);
+	box-shadow: var(--mh-shadow-md);
+	height: 100px;
+	margin: 0 auto var(--mh-spacing-6);
+	min-height: 0;
+	padding-bottom: var(--mh-spacing-6);
+	padding-top: var(--mh-spacing-6);
+	transition: var(--mh-transition-fast);
+	width: 100px;
+}
+
+.mh-section .features-icon-container-nomargin:hover,
+.features-icon-container-nomargin:hover {
+	background-color: var(--mh-color-text-heading);
+	height: 110px;
+	margin: -5px auto 22px auto;
+	min-height: 0;
+	padding: var(--mh-spacing-8) 0;
+	transition: var(--mh-transition-fast);
+	width: 110px;
+}
+
+/* ==========================================================================
+   8. Features Overlapped Icons Section
+   ========================================================================== */
+
+.mh-section-features-overlapped-icons,
+.features-overlapped-icons-section {
+	border-radius: var(--mh-radius-sm);
+	clear: both;
+	padding-bottom: var(--mh-spacing-12);
+	padding-top: var(--mh-spacing-12);
+}
+
+.mh-section-features-overlapped-icons .features-overlapped-icons-textcol,
+.features-overlapped-icons-textcol {
+	float: none;
+	left: auto;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: var(--mh-spacing-4);
+	padding-right: var(--mh-spacing-4);
+	right: auto;
+	width: 83.3333%;
+}
+
+.mh-section-features-overlapped-icons .features-overlapped-icons-featuresrow,
+.features-overlapped-icons-featuresrow {
+	align-items: flex-start;
+	clear: both;
+	margin-left: -15px;
+	margin-right: -15px;
+	width: auto;
+}
+
+.mh-section-features-overlapped-icons .features-overlapped-icons-featcol,
+.mh-section-features-square-image .features-square-image-featcol,
+.features-overlapped-icons-featcol,
+.features-square-image-featcol {
+	float: left;
+	margin-bottom: var(--mh-spacing-4);
+	margin-top: var(--mh-spacing-4);
+	padding-left: var(--mh-spacing-4);
+	padding-right: var(--mh-spacing-4);
+	width: 100%;
+}
+
+.mh-section-features-overlapped-icons .features-overlapped-icons-featinnerrow,
+.features-overlapped-icons-featinnerrow {
+	background-color: var(--mh-color-card);
+	border-radius: var(--mh-radius-sm);
+	box-shadow: var(--mh-shadow-sm);
+	clear: both;
+	color: var(--mh-color-text-main);
+	margin-top: 50px;
+	padding: 0 27px 9px 27px;
+	text-align: center;
+	text-shadow: none;
+}
+
+.mh-section .features-icon-container,
+.features-icon-container {
+	background-color: var(--mh-color-brand-base);
+	border-radius: var(--mh-radius-pill);
+	box-shadow: var(--mh-shadow-md);
+	display: inline-block;
+	height: 100px;
+	margin: -50px auto var(--mh-spacing-6) auto;
+	min-height: 0;
+	padding-bottom: var(--mh-spacing-6);
+	padding-top: var(--mh-spacing-6);
+	transition: var(--mh-transition-fast);
+	width: 100px;
+}
+
+.mh-section .features-icon-container:hover,
+.features-icon-container:hover {
+	background-color: var(--mh-color-text-heading);
+	height: 110px;
+	margin: -55px auto 22px auto;
+	min-height: 0;
+	padding: var(--mh-spacing-8) 0;
+	transition: var(--mh-transition-fast);
+	width: 110px;
+}
+
+/* ==========================================================================
+   9. Features Small Icon Cards Section
+   ========================================================================== */
+
+.mh-section-features-small-icon-cards .features-small-icon-cards-textcol,
+.features-small-icon-cards-textcol {
+	float: none;
+	left: auto;
+	margin-bottom: 0;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: var(--mh-spacing-4);
+	padding-right: var(--mh-spacing-4);
+	right: auto;
+	width: 83.3333%;
+}
+
+.mh-section-features-small-icon-cards .features-small-icon-cards-featuresrow,
+.features-small-icon-cards-featuresrow {
+	clear: both;
+	float: left;
+	margin-left: -15px;
+	margin-right: -15px;
+	padding-left: var(--mh-spacing-4);
+	padding-right: var(--mh-spacing-4);
+	width: auto;
+}
+
+.mh-section-features-small-icon-cards .features-small-icon-cards-featcol,
+.features-small-icon-cards-featcol {
+	float: none;
+	margin-bottom: var(--mh-spacing-4);
+	margin-left: -15px;
+	margin-right: -15px;
+	margin-top: var(--mh-spacing-4);
+	padding-left: var(--mh-spacing-4);
+	padding-right: var(--mh-spacing-4);
+	width: auto;
+}
+
+.mh-section-features-small-icon-cards .features-small-icon-cards-featinnerrow,
+.features-small-icon-cards-featinnerrow {
+	background-color: var(--mh-color-card);
+	border-radius: var(--mh-radius-sm);
+	box-shadow: var(--mh-shadow-sm);
+	transition: var(--mh-transition-normal);
+}
+
+.mh-section-features-small-icon-cards .features-small-icon-cards-iconcol,
+.features-small-icon-cards-iconcol {
+	float: left;
+	padding: var(--mh-spacing-8) var(--mh-spacing-4);
+	text-align: center;
+	width: 100%;
+}
+
+.mh-section .fa.font-icon-23,
+.fa.font-icon-23 {
+	color: var(--mh-color-brand-base);
+	font-size: 3.33em;
+}
+
+.mh-section-features-small-icon-cards .features-small-icon-cards-feattextcol,
+.features-small-icon-cards-feattextcol {
+	float: left;
+	margin-left: 0;
+	padding: var(--mh-spacing-4) var(--mh-spacing-4) 0 var(--mh-spacing-4);
+	text-align: center;
+	width: 100%;
+}
+
+/* ==========================================================================
+   10. Features Small Image Cards Section
+   ========================================================================== */
+
+.mh-section-features-small-image-cards,
+.features-small-image-cards-section {
+	padding-bottom: var(--mh-spacing-12);
+	padding-top: var(--mh-spacing-12);
+	text-align: center;
+}
+
+.mh-section-features-small-image-cards .features-small-image-cards-textrow,
+.features-small-image-cards-textrow {
+	margin-bottom: var(--mh-spacing-4);
+	margin-left: -15px;
+	margin-right: -15px;
+}
+
+.mh-section-features-small-image-cards .features-small-image-cards-textcol,
+.features-small-image-cards-textcol {
+	float: none;
+	margin-left: 8.3333%;
+	padding-left: var(--mh-spacing-4);
+	padding-right: var(--mh-spacing-4);
+	text-align: center;
+	width: 83.3333%;
+}
+
+.mh-section-features-small-image-cards .features-small-image-cards-featrow,
+.features-small-image-cards-featrow {
+	clear: both;
+	margin-left: -15px;
+	margin-right: -15px;
+	padding-left: var(--mh-spacing-4);
+	padding-right: var(--mh-spacing-4);
+	width: auto;
+}
+
+.mh-section-features-small-image-cards .features-small-image-cards-featcol,
+.features-small-image-cards-featcol {
+	float: left;
+	margin-bottom: var(--mh-spacing-4);
+	margin-top: var(--mh-spacing-4);
+	width: 100%;
+}
+
+.mh-section-features-small-image-cards .features-small-image-cards-featinnerrow,
+.features-small-image-cards-featinnerrow {
+	background-color: var(--mh-color-card);
+	border-radius: var(--mh-radius-sm);
+	box-shadow: var(--mh-shadow-sm);
+	clear: both;
+	margin-left: 0;
+	margin-right: 0;
+	width: auto;
+	overflow: hidden;
+}
+
+/* Replaced legacy external bitmap with token background */
+.mh-section-features-small-image-cards .features-small-image-cards-imgcol,
+.features-small-image-cards-imgcol {
+	background: linear-gradient(135deg, var(--mh-color-section) 0%, var(--mh-color-brand-muted) 100%);
+	border-right: 1px solid var(--mh-color-border-muted);
+	float: left;
+	min-height: 180px;
+	padding-left: var(--mh-spacing-4);
+	padding-right: var(--mh-spacing-4);
+	padding-top: 0;
+	text-align: right;
+	width: 100%;
+}
+
+.mh-section-features-small-image-cards .features-small-image-cards-featcol-feattextcol,
+.features-small-image-cards-featcol-feattextcol {
+	float: left;
+	min-height: 0;
+	padding: var(--mh-spacing-4);
+	text-align: left;
+	width: 100%;
+}
+
+.mh-section-features-small-image-cards .features-small-image-cards-separator,
+.features-small-image-cards-separator {
+	background-color: var(--mh-color-border);
+	border: 0;
+	height: 1px;
+	margin-bottom: var(--mh-spacing-4);
+}
+
+/* ==========================================================================
+   11. Features Square Image Section
+   ========================================================================== */
+
+.mh-section-features-square-image img.features-square-image-featimg,
+img.features-square-image-featimg {
+	border-color: var(--mh-color-border-muted);
+	border-radius: 0;
+	border-style: solid;
+	border-width: 0;
+	display: inline-block;
+	height: auto;
+	margin-bottom: var(--mh-spacing-6);
+	max-width: 100%;
+	width: auto;
+}
+
+/* ==========================================================================
+   12. Numbers Section Grid
+   ========================================================================== */
+
+.mh-section-numbers-grid,
+.numbers-section {
+	clear: both;
+	padding-bottom: var(--mh-spacing-8);
+	padding-top: var(--mh-spacing-8);
+	position: relative;
+	text-align: center;
+	z-index: 1;
+}
+
+/* Token background replaces legacy dark overlay */
+.mh-section-numbers-grid:before,
+.numbers-section:before {
+	background-color: var(--mh-color-text-heading);
+	opacity: 0.75;
+	content: ' ';
+	display: inline-block;
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: -1;
+}
+
+.mh-section-numbers-grid .numbers-itemcol,
+.numbers-section .numbers-itemcol {
+	border-bottom: 0 solid transparent;
+	border-right-color: var(--mh-color-text-inverse);
+	float: none;
+	margin-bottom: 18px;
+	padding-left: var(--mh-spacing-4);
+	padding-right: var(--mh-spacing-4);
+	width: 100%;
+}
+
+.mh-section-numbers-grid h2.numbers-numbertext,
+.numbers-section h2.numbers-numbertext {
+	color: var(--mh-color-text-inverse);
+	font-family: var(--mh-font-heading);
+	font-weight: 700;
+	margin-bottom: var(--mh-spacing-2);
+}
+
+.mh-section-numbers-grid h3.numbers-titletext,
+.numbers-section h3.numbers-titletext {
+	color: var(--mh-color-text-inverse);
+	font-family: var(--mh-font-body);
+	margin-bottom: var(--mh-spacing-1);
+	font-size: var(--mh-text-sm);
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+.mh-section-numbers-grid .numbers-itemcol-last,
+.numbers-section .numbers-itemcol-last {
+	border-right-color: var(--mh-color-text-inverse);
+	border-right-style: solid;
+	border-right-width: 0;
+	float: left;
+	padding-left: var(--mh-spacing-4);
+	padding-right: var(--mh-spacing-4);
+	width: 100%;
+}
+
+/* ==========================================================================
+   13. Tablet Responsive Overrides (min-width: 768px)
+   ========================================================================== */
+
+@media only screen and (min-width: 768px) {
+	.mh-section-features-coloured-boxes .features-coloured-icon-boxes-textcol,
+	.features-coloured-icon-boxes-textcol {
+		margin: auto;
+		width: 83.3333%;
+	}
+
+	.mh-section .fa.features-coloured-icon,
+	.mh-section .fa.font-icon-features-icon-container,
+	.fa.features-coloured-icon,
+	.fa.font-icon-features-icon-container {
+		min-height: 0;
+		padding: 0;
+		width: auto;
+	}
+
+	.mh-section-features-coloured-boxes .features-coloured-icon-boxes-featurecol,
+	.features-coloured-icon-boxes-featurecol {
+		float: left;
+		width: 50%;
+	}
+
+	.mh-section-features-image-cards .features-image-cards-textcol,
+	.mh-section-features-overlapped-icons .features-overlapped-icons-textcol,
+	.mh-section-features-square-image .features-square-image-textcol,
+	.features-image-cards-textcol,
+	.features-overlapped-icons-textcol,
+	.features-square-image-textcol {
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 83.3333%;
+	}
+
+	.mh-section-features-image-cards .features-image-cards-cardcol,
+	.features-image-cards-cardcol {
+		float: left;
+		margin-bottom: var(--mh-spacing-4);
+		margin-top: var(--mh-spacing-4);
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 50%;
+	}
+
+	.mh-section-features-image-cards .features-image-cards-cardrow,
+	.features-image-cards-cardrow {
+		clear: both;
+		float: left;
+		margin-bottom: 0;
+		margin-top: 0;
+		padding-left: 0;
+		padding-right: 0;
+		width: 100%;
+	}
+
+	.mh-section-features-image-cards .features-image-cards-cardtextrow,
+	.features-image-cards-cardtextrow {
+		clear: both;
+		float: left;
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 100%;
+	}
+
+	.mh-section-features-large-icons .features-large-icons-textcol,
+	.features-large-icons-textcol {
+		margin-left: auto;
+		margin-right: auto;
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 83.3333%;
+	}
+
+	.mh-section-features-large-icons .features-large-icons-featcol,
+	.features-large-icons-featcol {
+		float: left;
+		padding: var(--mh-spacing-4);
+		width: 50%;
+	}
+
+	.mh-section-features-overlapped-icons .features-overlapped-icons-featcol,
+	.mh-section-features-small-image-cards .features-small-image-cards-featcol,
+	.mh-section-features-square-image .features-square-image-featcol,
+	.features-overlapped-icons-featcol,
+	.features-small-image-cards-featcol,
+	.features-square-image-featcol {
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 50%;
+	}
+
+	.mh-section-features-overlapped-icons .features-overlapped-icons-featinnerrow,
+	.features-overlapped-icons-featinnerrow {
+		clear: both;
+		min-height: 200px;
+		padding: 0 27px 9px 27px;
+	}
+
+	.mh-section .features-icon-container:hover,
+	.features-icon-container:hover {
+		height: 110px;
+		margin-left: auto;
+		margin-right: auto;
+		min-height: 0;
+		transition: var(--mh-transition-fast);
+		width: 110px;
+	}
+
+	.mh-section .features-icon-container,
+	.features-icon-container {
+		height: 100px;
+		min-height: 0;
+		width: 100px;
+	}
+
+	.mh-section-features-small-icon-cards .features-small-icon-cards-textcol,
+	.features-small-icon-cards-textcol {
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 83.3333%;
+	}
+
+	.mh-section-features-small-icon-cards .features-small-icon-cards-featuresrow,
+	.features-small-icon-cards-featuresrow {
+		clear: both;
+		float: left;
+		padding-left: 0;
+		padding-right: 0;
+		width: 100%;
+	}
+
+	.mh-section-features-small-icon-cards .features-small-icon-cards-featcol,
+	.features-small-icon-cards-featcol {
+		float: left;
+		margin-left: 0;
+		margin-right: 0;
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 50%;
+	}
+
+	.mh-section-features-small-icon-cards .features-small-icon-cards-featinnerrow,
+	.features-small-icon-cards-featinnerrow {
+		margin-left: 0;
+		margin-right: 0;
+		min-height: 117px;
+	}
+
+	.mh-section-features-small-icon-cards .features-small-icon-cards-iconcol,
+	.features-small-icon-cards-iconcol {
+		float: left;
+		width: 20%;
+	}
+
+	.mh-section-features-small-icon-cards .features-small-icon-cards-iconcol i.fa,
+	.features-small-icon-cards-iconcol i.fa {
+		font-size: 2.22em;
+	}
+
+	.mh-section-features-small-icon-cards .features-small-icon-cards-feattextcol,
+	.features-small-icon-cards-feattextcol {
+		float: left;
+		margin-left: 0;
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		text-align: left;
+		width: 80%;
+	}
+
+	.mh-section-features-small-image-cards .features-small-image-cards-textcol,
+	.features-small-image-cards-textcol {
+		margin-left: auto;
+		margin-right: auto;
+		min-height: 154px;
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 83.3333%;
+	}
+
+	.mh-section-features-small-image-cards .features-small-image-cards-featinnerrow,
+	.mh-section-features-square-image img.features-square-image-featimg,
+	.features-small-image-cards-featinnerrow,
+	img.features-square-image-featimg {
+		width: auto;
+	}
+
+	.mh-section-numbers-grid .numbers-itemcol,
+	.numbers-section .numbers-itemcol {
+		border-bottom: 0 none;
+		border-right-style: solid;
+		border-right-width: 1px;
+		float: left;
+		margin-bottom: 0;
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 33.3333%;
+	}
+
+	.mh-section-numbers-grid .numbers-itemcol-last,
+	.numbers-section .numbers-itemcol-last {
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 33.3333%;
+	}
+}
+
+/* ==========================================================================
+   14. Desktop Responsive Overrides (min-width: 1024px)
+   ========================================================================== */
+
+@media only screen and (min-width: 1024px) {
+	.mh-section .fa.features-coloured-icon,
+	.mh-section .fa.font-icon-features-icon-container,
+	.fa.features-coloured-icon,
+	.fa.font-icon-features-icon-container {
+		display: inline-block;
+		min-height: 0;
+		padding: 0;
+		width: auto;
+	}
+
+	.mh-section-features-image-cards .features-image-cards-textrow,
+	.mh-section-features-large-icons .features-large-icons-textrow,
+	.mh-section-features-overlapped-icons .features-overlapped-icons-textrow,
+	.mh-section-features-small-icon-cards .features-small-icon-cards-textrow,
+	.mh-section-features-small-image-cards .features-small-image-cards-textrow,
+	.mh-section-features-square-image .features-square-image-textrow,
+	.features-image-cards-textrow,
+	.features-large-icons-textrow,
+	.features-overlapped-icons-textrow,
+	.features-small-icon-cards-textrow,
+	.features-small-image-cards-textrow,
+	.features-square-image-textrow {
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.mh-section-features-image-cards .features-image-cards-cardcol,
+	.features-image-cards-cardcol {
+		float: left;
+		margin-bottom: var(--mh-spacing-4);
+		margin-top: var(--mh-spacing-4);
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 33.3333%;
+	}
+
+	.mh-section-features-image-cards .features-image-cards-cardrow,
+	.features-image-cards-cardrow {
+		clear: both;
+		float: left;
+		margin-bottom: 0;
+		margin-top: 0;
+		padding-left: 0;
+		padding-right: 0;
+		width: 100%;
+	}
+
+	.mh-section-features-image-cards .features-image-cards-cardtextrow,
+	.features-image-cards-cardtextrow {
+		clear: both;
+		float: left;
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 100%;
+	}
+
+	.mh-section-features-large-icons,
+	.features-large-icons-section {
+		clear: both;
+		width: auto;
+	}
+
+	.mh-section-features-large-icons .features-large-icons-textcol,
+	.features-large-icons-textcol {
+		float: none;
+		left: auto;
+		margin-left: auto;
+		margin-right: auto;
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		right: auto;
+		width: 66.6667%;
+	}
+
+	.mh-section-features-large-icons .features-large-icons-featrow,
+	.features-large-icons-featrow {
+		clear: both;
+		min-height: 50px;
+	}
+
+	.mh-section-features-large-icons .features-large-icons-featcol,
+	.features-large-icons-featcol {
+		float: left;
+		padding: 0 var(--mh-spacing-4);
+		width: 25%;
+	}
+
+	.mh-section-features-overlapped-icons .features-overlapped-icons-featcol,
+	.features-overlapped-icons-featcol {
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 25%;
+	}
+
+	.mh-section-features-overlapped-icons .features-overlapped-icons-featinnerrow,
+	.features-overlapped-icons-featinnerrow {
+		padding: 0 27px 27px 27px;
+	}
+
+	.mh-section .features-icon-container:hover,
+	.features-icon-container:hover {
+		height: 110px;
+		margin-left: auto;
+		margin-right: auto;
+		min-height: 0;
+		transition: var(--mh-transition-fast);
+		width: 110px;
+	}
+
+	.mh-section .features-icon-container,
+	.features-icon-container {
+		height: 100px;
+		min-height: 0;
+		width: 100px;
+	}
+
+	.mh-section-features-small-icon-cards .features-small-icon-cards-textcol,
+	.features-small-icon-cards-textcol {
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 66.6667%;
+	}
+
+	.mh-section-features-small-icon-cards .features-small-icon-cards-featinnerrow,
+	.features-small-icon-cards-featinnerrow {
+		margin-left: 0;
+		margin-right: 0;
+		min-height: 117px;
+	}
+
+	.mh-section-features-small-icon-cards .features-small-icon-cards-iconcol,
+	.features-small-icon-cards-iconcol {
+		float: left;
+		width: 20%;
+	}
+
+	.mh-section-features-small-icon-cards .features-small-icon-cards-iconcol i.fa,
+	.features-small-icon-cards-iconcol i.fa {
+		font-size: 3.33em;
+	}
+
+	.mh-section-features-small-icon-cards .features-small-icon-cards-feattextcol,
+	.features-small-icon-cards-feattextcol {
+		float: left;
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 80%;
+	}
+
+	.mh-section-features-small-image-cards .features-small-image-cards-textcol,
+	.features-small-image-cards-textcol {
+		float: none;
+		left: auto;
+		margin-left: 16.6667%;
+		margin-right: 0;
+		min-height: 154px;
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		right: auto;
+		width: 66.6667%;
+	}
+
+	.mh-section-features-small-image-cards .features-small-image-cards-featcol-feattextcol,
+	.features-small-image-cards-featcol-feattextcol {
+		width: 70%;
+	}
+
+	.mh-section-features-small-image-cards .features-small-image-cards-imgcol,
+	.features-small-image-cards-imgcol {
+		width: 30%;
+	}
+
+	.mh-section-features-small-image-cards .features-small-image-cards-featcol,
+	.features-small-image-cards-featcol {
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 50%;
+	}
+
+	.mh-section-features-small-image-cards .features-small-image-cards-featinnerrow,
+	.mh-section-features-square-image img.features-square-image-featimg,
+	.features-small-image-cards-featinnerrow,
+	img.features-square-image-featimg {
+		width: auto;
+	}
+
+	.mh-section-features-square-image .features-square-image-featcol,
+	.features-square-image-featcol {
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 33.3333%;
+	}
+
+	.mh-section-numbers-grid .numbers-itemcol,
+	.numbers-section .numbers-itemcol {
+		border-bottom: 0 none;
+		border-right-style: solid;
+		border-right-width: 1px;
+		float: left;
+		margin-bottom: 0;
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+	}
+
+	.mh-section-numbers-grid .numbers-itemcol-last,
+	.numbers-section .numbers-itemcol-last {
+		border-right-width: 0;
+		padding-left: var(--mh-spacing-4);
+		padding-right: var(--mh-spacing-4);
+		width: 33.3333%;
+	}
+}
