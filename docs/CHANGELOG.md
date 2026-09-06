@@ -7,12 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [26.5.28] - 2026-09-06
 
+### Added
+- Visual Identity Refresh (`screenshot.png`, `icon.svg`, `icon.png`): Replaced legacy crude graphics with modern starship-aesthetic theme screenshot showcase (Concept A FSE dashboard card with circadian wave and glowing insignia) and circular vector emblem logo (Option 3 with glowing neon cyan ring, crescent moon buckle, and transparent perimeter).
+
 ### Changed
 - Quantum Customizer Architecture Refactoring (`inc/customizer.php` & `inc/customizer/*`): Refactored monolithic 2,167-line Customizer file into a clean 63-line Table-of-Contents entrypoint delegating to an isolated, modular `inc/customizer/` capsule.
 - Dedicated Customizer Controls (`inc/customizer/controls/*`): Extracted `Magic_Hat_Range_Slider_Control`, `Magic_Hat_Font_Control`, `Magic_Hat_AI_Architect_Control`, `Magic_Hat_Page_Builder_Control`, and `Magic_Hat_Group_Title_Control` into dedicated class files strictly under 185 lines each.
 - Modular Panels and Sections (`inc/customizer/sections/*`): Decomposed section registration across single-responsibility modules: AI Page Architect, Page Builder, Site Styles panel, Site Colors panel (with dedicated sub-sections), Background & Canvas, Typography, Spacing, Buttons, Header, Footer, and Hierarchy Reordering.
 - Dedicated CSS, UI Scripts, Circadian, and Canvas Engines (`inc/customizer/*`): Extracted runtime subsystems into `css-generator.php`, `controls-ui.php`, `circadian.php`, and `ambient-canvas.php`, achieving 100% compliance with file line limits (all files under 300 lines) with zero regressions to Customizer settings or identifiers.
 - Restored Dedicated Site Colors Panel (`inc/customizer/sections/panel-site-colors.php` & `inc/stylebook-template.php`): Maintained "🎨 Site Colors" as its own top-level Customizer panel with its full set of individual sub-sections intact, ensuring seamless Stylebook navigation and preview synchronization.
+
+### Removed
+- Redundant Customize Submenu (`functions.php`): Removed `xophz_magic_hat_add_customize_menu()` manual registration of `customize.php` under Appearance, eliminating duplicate Customize entries in WP Admin.
 
 ## [26.5.27] - 2026-09-05
 

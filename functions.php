@@ -194,19 +194,6 @@ function xophz_magic_hat_customize_preview_init() {
 add_action( 'customize_preview_init', 'xophz_magic_hat_customize_preview_init' );
 
 /**
- * Ensure Appearance > Customize is always present in WP Admin
- */
-function xophz_magic_hat_add_customize_menu() {
-    add_theme_page(
-        __( 'Customize', 'xophz-magic-hat' ),
-        __( 'Customize', 'xophz-magic-hat' ),
-        'edit_theme_options',
-        'customize.php'
-    );
-}
-add_action( 'admin_menu', 'xophz_magic_hat_add_customize_menu' );
-
-/**
  * Sync Magic Hat Customizer Colors with Gutenberg Editor Palette
  */
 function xophz_magic_hat_gutenberg_palette() {
