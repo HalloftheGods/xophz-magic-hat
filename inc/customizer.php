@@ -471,7 +471,7 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	// PANEL: Site Styles (Parent Panel)
 	// ==============================================
 	$wp_customize->add_panel( 'magic_hat_site_styles', array(
-		'title'       => __( '🎨 Site Styles', 'xophz-magic-hat' ),
+		'title'       => __( '🧑‍🎨 Site Styles', 'xophz-magic-hat' ),
 		'description' => __( 'Manage global design system styling: background canvas, colors, typography, spacing, buttons, and custom CSS.', 'xophz-magic-hat' ),
 		'priority'    => 30,
 	) );
@@ -480,7 +480,7 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	// SECTION: Site Colors (Nested inside Site Styles)
 	// ==============================================
 	$wp_customize->add_section( 'magic_hat_colors', array(
-		'title'       => __( '🎭 Site Colors', 'xophz-magic-hat' ),
+		'title'       => __( '🎨 Site Colors', 'xophz-magic-hat' ),
 		'description' => __( 'Customize your core design system colors and circadian schedule behavior.', 'xophz-magic-hat' ),
 		'priority'    => 20,
 		'panel'       => 'magic_hat_site_styles',
@@ -560,8 +560,8 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	// SECTION: Site Background & Animated Canvases
 	// ==============================================
 	$wp_customize->add_section( 'magic_hat_background', array(
-		'title'       => __( '🎨 Site Background & Canvas', 'xophz-magic-hat' ),
-		'description' => __( 'Configure your site canvas: choose standard daylight theme surface, solid color, gradient, or one of 21 interactive generative animated canvas backgrounds.', 'xophz-magic-hat' ),
+		'title'       => __( '🖼️ Site Background & Canvas', 'xophz-magic-hat' ),
+		'description' => __( 'Configure your site canvas: choose standard daylight theme surface, solid color, gradient, custom image, or one of 21 interactive generative animated canvas backgrounds.', 'xophz-magic-hat' ),
 		'priority'    => 10,
 		'panel'       => 'magic_hat_site_styles',
 	) );
@@ -573,6 +573,10 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 
 	function mh_is_bg_mode_gradient( $control ) {
 		return $control->manager->get_setting( 'mh_bg_mode' ) && $control->manager->get_setting( 'mh_bg_mode' )->value() === 'gradient';
+	}
+
+	function mh_is_bg_mode_image( $control ) {
+		return $control->manager->get_setting( 'mh_bg_mode' ) && $control->manager->get_setting( 'mh_bg_mode' )->value() === 'image';
 	}
 
 	function mh_is_bg_mode_canvas( $control ) {
@@ -594,6 +598,7 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 			'default'  => __( 'Default Circadian Theme Surface', 'xophz-magic-hat' ),
 			'solid'    => __( 'Solid Color', 'xophz-magic-hat' ),
 			'gradient' => __( 'Linear Gradient', 'xophz-magic-hat' ),
+			'image'    => __( 'Custom Background Image', 'xophz-magic-hat' ),
 			'canvas'   => __( '✨ Animated Generative Canvas (21 Presets)', 'xophz-magic-hat' ),
 		),
 	) );
@@ -631,6 +636,99 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 		'label'           => __( 'Gradient End Color', 'xophz-magic-hat' ),
 		'section'         => 'magic_hat_background',
 		'active_callback' => 'mh_is_bg_mode_gradient',
+	) ) );
+
+	// Background Image Controls (Only shown when mode is image)
+	$wp_customize->add_setting( 'mh_bg_image', array(
+		'default'           => '',
+		'sanitize_callback' => 'esc_url_raw',
+		'transport'         => 'refresh',
+	) );
+	$wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'mh_bg_image', array(
+		'label'           => __( 'Background Image', 'xophz-magic-hat' ),
+		'section'         => 'magic_hat_background',
+		'active_callback' => 'mh_is_bg_mode_image',
+	) ) );
+
+	$wp_customize->add_setting( 'mh_bg_image_size', array(
+		'default'           => 'cover',
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'refresh',
+	) );
+	$wp_customize->add_control( 'mh_bg_image_size', array(
+		'type'            => 'select',
+		'section'         => 'magic_hat_background',
+		'label'           => __( 'Image Sizing', 'xophz-magic-hat' ),
+		'active_callback' => 'mh_is_bg_mode_image',
+		'choices'         => array(
+			'cover'   => __( 'Fit to Screen (Cover)', 'xophz-magic-hat' ),
+			'contain' => __( 'Fit Inside Screen (Contain)', 'xophz-magic-hat' ),
+			'auto'    => __( 'Original Size (Auto)', 'xophz-magic-hat' ),
+		),
+	) );
+
+	$wp_customize->add_setting( 'mh_bg_image_repeat', array(
+		'default'           => 'no-repeat',
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'refresh',
+	) );
+	$wp_customize->add_control( 'mh_bg_image_repeat', array(
+		'type'            => 'select',
+		'section'         => 'magic_hat_background',
+		'label'           => __( 'Repeat / Tile', 'xophz-magic-hat' ),
+		'active_callback' => 'mh_is_bg_mode_image',
+		'choices'         => array(
+			'no-repeat' => __( 'Do Not Repeat', 'xophz-magic-hat' ),
+			'repeat'    => __( 'Tile Horizontally & Vertically', 'xophz-magic-hat' ),
+			'repeat-x'  => __( 'Tile Horizontally', 'xophz-magic-hat' ),
+			'repeat-y'  => __( 'Tile Vertically', 'xophz-magic-hat' ),
+		),
+	) );
+
+	$wp_customize->add_setting( 'mh_bg_image_position', array(
+		'default'           => 'center center',
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'refresh',
+	) );
+	$wp_customize->add_control( 'mh_bg_image_position', array(
+		'type'            => 'select',
+		'section'         => 'magic_hat_background',
+		'label'           => __( 'Image Position', 'xophz-magic-hat' ),
+		'active_callback' => 'mh_is_bg_mode_image',
+		'choices'         => array(
+			'center center' => __( 'Center Center', 'xophz-magic-hat' ),
+			'top center'    => __( 'Top Center', 'xophz-magic-hat' ),
+			'top left'      => __( 'Top Left', 'xophz-magic-hat' ),
+			'top right'     => __( 'Top Right', 'xophz-magic-hat' ),
+			'bottom center' => __( 'Bottom Center', 'xophz-magic-hat' ),
+		),
+	) );
+
+	$wp_customize->add_setting( 'mh_bg_image_attachment', array(
+		'default'           => 'fixed',
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'refresh',
+	) );
+	$wp_customize->add_control( 'mh_bg_image_attachment', array(
+		'type'            => 'select',
+		'section'         => 'magic_hat_background',
+		'label'           => __( 'Scroll Behavior', 'xophz-magic-hat' ),
+		'active_callback' => 'mh_is_bg_mode_image',
+		'choices'         => array(
+			'fixed'  => __( 'Fixed (Parallax)', 'xophz-magic-hat' ),
+			'scroll' => __( 'Scroll with Page', 'xophz-magic-hat' ),
+		),
+	) );
+
+	$wp_customize->add_setting( 'mh_bg_image_bg_color', array(
+		'default'           => '#0a0b10',
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'refresh',
+	) );
+	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mh_bg_image_bg_color', array(
+		'label'           => __( 'Underlying Background Color', 'xophz-magic-hat' ),
+		'section'         => 'magic_hat_background',
+		'active_callback' => 'mh_is_bg_mode_image',
 	) ) );
 
 	// Canvas Preset (21 Presets - Only shown when mode is canvas)
@@ -1287,6 +1385,7 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 
 	// Reorder core sections and panels to align with the design hierarchy
 	if ( $wp_customize->get_section( 'title_tagline' ) ) {
+		$wp_customize->get_section( 'title_tagline' )->title    = __( '🆔 Site Identity', 'xophz-magic-hat' );
 		$wp_customize->get_section( 'title_tagline' )->priority = 20;
 	}
 	if ( $wp_customize->get_section( 'custom_css' ) ) {
@@ -1294,6 +1393,7 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 		$wp_customize->get_section( 'custom_css' )->priority = 60;
 	}
 	if ( $wp_customize->get_section( 'static_front_page' ) ) {
+		$wp_customize->get_section( 'static_front_page' )->title    = __( '🏠 Homepage Settings', 'xophz-magic-hat' );
 		$wp_customize->get_section( 'static_front_page' )->priority = 40;
 	}
 	if ( $wp_customize->get_panel( 'woocommerce' ) ) {
@@ -1305,7 +1405,12 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 		$wp_customize->get_section( 'woocommerce' )->priority = 50;
 	}
 	if ( $wp_customize->get_panel( 'nav_menus' ) ) {
-		$wp_customize->get_panel( 'nav_menus' )->priority = 60;
+		$wp_customize->get_panel( 'nav_menus' )->title    = __( '🧭 Menu Settings', 'xophz-magic-hat' );
+		$wp_customize->get_panel( 'nav_menus' )->priority = 115;
+	}
+	if ( $wp_customize->get_section( 'nav_menus' ) ) {
+		$wp_customize->get_section( 'nav_menus' )->title    = __( '🧭 Menu Settings', 'xophz-magic-hat' );
+		$wp_customize->get_section( 'nav_menus' )->priority = 115;
 	}
 }
 add_action( 'customize_register', 'xophz_magic_hat_customize_register' );
@@ -1314,6 +1419,14 @@ add_action( 'customize_register', 'xophz_magic_hat_customize_register' );
  * Late Customizer panel/section adjustments for WooCommerce and third-party plugins
  */
 function xophz_magic_hat_late_customizer_adjustments( $wp_customize ) {
+	if ( $wp_customize->get_section( 'title_tagline' ) ) {
+		$wp_customize->get_section( 'title_tagline' )->title    = __( '🆔 Site Identity', 'xophz-magic-hat' );
+		$wp_customize->get_section( 'title_tagline' )->priority = 20;
+	}
+	if ( $wp_customize->get_section( 'static_front_page' ) ) {
+		$wp_customize->get_section( 'static_front_page' )->title    = __( '🏠 Homepage Settings', 'xophz-magic-hat' );
+		$wp_customize->get_section( 'static_front_page' )->priority = 40;
+	}
 	if ( $wp_customize->get_panel( 'woocommerce' ) ) {
 		$wp_customize->get_panel( 'woocommerce' )->title    = __( '🛍️ Shop Settings', 'xophz-magic-hat' );
 		$wp_customize->get_panel( 'woocommerce' )->priority = 50;
@@ -1325,6 +1438,14 @@ function xophz_magic_hat_late_customizer_adjustments( $wp_customize ) {
 	if ( $wp_customize->get_section( 'custom_css' ) ) {
 		$wp_customize->get_section( 'custom_css' )->panel    = 'magic_hat_site_styles';
 		$wp_customize->get_section( 'custom_css' )->priority = 60;
+	}
+	if ( $wp_customize->get_panel( 'nav_menus' ) ) {
+		$wp_customize->get_panel( 'nav_menus' )->title    = __( '🧭 Menu Settings', 'xophz-magic-hat' );
+		$wp_customize->get_panel( 'nav_menus' )->priority = 115;
+	}
+	if ( $wp_customize->get_section( 'nav_menus' ) ) {
+		$wp_customize->get_section( 'nav_menus' )->title    = __( '🧭 Menu Settings', 'xophz-magic-hat' );
+		$wp_customize->get_section( 'nav_menus' )->priority = 115;
 	}
 }
 add_action( 'customize_register', 'xophz_magic_hat_late_customizer_adjustments', 999 );
@@ -1517,7 +1638,39 @@ function xophz_magic_hat_customize_controls_scripts() {
 				});
 			});
 
+			// Contextual controls live visibility toggle for Site Background & Canvas
+			wp.customize.bind('ready', function() {
+				if (wp.customize('mh_bg_mode')) {
+					var updateBgControlsVisibility = function(mode) {
+						var isSolid = (mode === 'solid');
+						var isGradient = (mode === 'gradient');
+						var isImage = (mode === 'image');
+						var isCanvas = (mode === 'canvas');
 
+						var setControlActive = function(controlId, active) {
+							if (wp.customize.control(controlId)) {
+								wp.customize.control(controlId).active.set(active);
+							}
+						};
+
+						setControlActive('mh_bg_solid_color', isSolid);
+						setControlActive('mh_bg_gradient_start', isGradient);
+						setControlActive('mh_bg_gradient_end', isGradient);
+						setControlActive('mh_bg_image', isImage);
+						setControlActive('mh_bg_image_size', isImage);
+						setControlActive('mh_bg_image_repeat', isImage);
+						setControlActive('mh_bg_image_position', isImage);
+						setControlActive('mh_bg_image_attachment', isImage);
+						setControlActive('mh_bg_image_bg_color', isImage);
+						setControlActive('mh_bg_canvas_preset', isCanvas);
+						setControlActive('mh_bg_canvas_color', isCanvas);
+						setControlActive('mh_bg_canvas_opacity', isCanvas);
+						setControlActive('mh_bg_canvas_speed', isCanvas);
+					};
+
+					updateBgControlsVisibility(wp.customize('mh_bg_mode').get());
+					wp.customize('mh_bg_mode').bind(updateBgControlsVisibility);
+				}
 			});
 		});
 	</script>
@@ -1684,6 +1837,18 @@ function xophz_magic_hat_customizer_css() {
 		body {
 			background: linear-gradient(135deg, <?php echo esc_attr( get_theme_mod( 'mh_bg_gradient_start', '#0f172a' ) ); ?>, <?php echo esc_attr( get_theme_mod( 'mh_bg_gradient_end', '#020617' ) ); ?>) !important;
 			background-attachment: fixed !important;
+		}
+		<?php elseif ( $bg_mode === 'image' ) : ?>
+		body {
+			<?php $bg_img = get_theme_mod( 'mh_bg_image' ); ?>
+			<?php if ( ! empty( $bg_img ) ) : ?>
+			background-image: url('<?php echo esc_url( $bg_img ); ?>') !important;
+			background-size: <?php echo esc_attr( get_theme_mod( 'mh_bg_image_size', 'cover' ) ); ?> !important;
+			background-position: <?php echo esc_attr( get_theme_mod( 'mh_bg_image_position', 'center center' ) ); ?> !important;
+			background-repeat: <?php echo esc_attr( get_theme_mod( 'mh_bg_image_repeat', 'no-repeat' ) ); ?> !important;
+			background-attachment: <?php echo esc_attr( get_theme_mod( 'mh_bg_image_attachment', 'fixed' ) ); ?> !important;
+			<?php endif; ?>
+			background-color: <?php echo esc_attr( get_theme_mod( 'mh_bg_image_bg_color', '#0a0b10' ) ); ?> !important;
 		}
 		<?php elseif ( $bg_mode === 'canvas' ) : ?>
 		body {

@@ -5,6 +5,24 @@ All notable changes to the Xophz Magic Hat theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [26.5.26] - 2026-09-05
+
+### Added
+- Custom Background Image Support (`inc/customizer.php`): Introduced "Custom Background Image" mode with full image upload control, sizing options (cover, contain, auto), repeat/tile settings, alignment positioning, parallax/fixed scroll toggle, and fallback background color.
+
+### Changed
+- Refreshed Customizer Emojis (`inc/customizer.php`): Updated Site Styles to use artist emoji (🧑‍🎨 Site Styles), Site Colors to use palette emoji (🎨 Site Colors), and Site Background & Canvas to use frame emoji (🖼️ Site Background & Canvas).
+
+## [26.5.25] - 2026-09-05
+
+### Changed
+- Customizer Menus Priority (`inc/customizer.php`): Set `nav_menus` panel priority to 115 across standard registration and late adjustments hooks, placing Menus after Footer Settings in the hierarchy.
+
+## [26.5.24] - 2026-09-05
+
+### Changed
+- Contextual Background Controls Visibility (`inc/customizer.php`): Added `active_callback` helpers (`mh_is_bg_mode_solid`, `mh_is_bg_mode_gradient`, `mh_is_bg_mode_canvas`) and client-side reactive bindings ensuring solid, gradient, and animated canvas controls only display when their corresponding Background Mode is active.
+
 ## [26.5.23] - 2026-09-05
 
 ### Changed
