@@ -1,33 +1,35 @@
 :root {
   /* 1. Brand */
-  --mh-color-brand-base: #62c9ff;
-  --mh-color-brand-hover: #8be0ff;
-  --mh-color-brand-active: #40a0df;
-  --mh-color-brand-muted: #1a3a4d;
+  --mh-color-brand-base: #2563eb;
+  --mh-color-brand-hover: #3b82f6;
+  --mh-color-brand-active: #1d4ed8;
+  --mh-color-brand-muted: #dbeafe;
 
   /* 2. CTA */
   --mh-color-cta-base: #ff3366;
   --mh-color-cta-hover: #ff668c;
   --mh-color-cta-active: #e62050;
-  --mh-color-cta-muted: #4d1a26;
+  --mh-color-cta-muted: #ffe4e6;
 
   /* 3. Links */
-  --mh-color-link: #62c9ff;
+  --mh-color-link: #2563eb;
   --mh-color-link-hover: #ff3366;
-  --mh-color-link-active: #e62050;
-  --mh-color-link-visited: #9b59b6;
+  --mh-color-link-active: #1d4ed8;
+  --mh-color-link-visited: #7c3aed;
 
-  /* 4. Surfaces & Backgrounds */
-  --mh-color-body: #0a0b10;
-  --mh-color-main: #0f172a;
-  --mh-color-section: rgba(255, 255, 255, 0.02);
-  --mh-color-card: rgba(255, 255, 255, 0.05);
+  /* 4. Surfaces & Backgrounds (Default Blank White Canvas) */
+  --mh-color-body: #ffffff;
+  --mh-color-main: #ffffff;
+  --mh-color-section: #f8fafc;
+  --mh-color-card: #ffffff;
+  --mh-color-border-muted: #e2e8f0;
+  --mh-color-border: #cbd5e1;
 
   /* 5. Text */
-  --mh-color-text-heading: #ffffff;
-  --mh-color-text-main: #f8fafc;
-  --mh-color-text-muted: #94a3b8;
-  --mh-color-text-inverse: #0f172a;
+  --mh-color-text-heading: #0f172a;
+  --mh-color-text-main: #334155;
+  --mh-color-text-muted: #64748b;
+  --mh-color-text-inverse: #ffffff;
 
   /* 6. Status / System */
   --mh-color-success: #10b981;
@@ -63,8 +65,8 @@
   --mh-glass-blur-sm: 4px;
   --mh-glass-blur-md: 8px;
   --mh-glass-blur-lg: 16px;
-  --mh-glass-bg: rgba(255, 255, 255, 0.05);
-  --mh-glass-border: rgba(255, 255, 255, 0.1);
+  --mh-glass-bg: rgba(255, 255, 255, 0.85);
+  --mh-glass-border: rgba(226, 232, 240, 0.8);
 
   /* 10. Borders & Radii */
   --mh-radius-sm: 4px;
@@ -72,10 +74,11 @@
   --mh-radius-lg: 16px;
   --mh-radius-pill: 9999px;
 
-  /* 11. Shadows & Glows */
-  --mh-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --mh-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
-  --mh-glow-brand: 0 0 10px var(--mh-color-brand-base);
+  /* 11. Shadows & Elevations */
+  --mh-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --mh-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --mh-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+  --mh-glow-brand: 0 0 15px rgba(37, 99, 235, 0.25);
 
   /* 12. Transitions */
   --mh-transition-fast: 150ms ease-out;

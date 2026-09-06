@@ -16,3 +16,25 @@ Update URI: https://github.com/HalloftheGods/xophz-magic-hat
 */
 
 /* Presentation rules flow through CSS Custom Properties and theme.json */
+
+/* Post titles and headings with links preserve heading color */
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a,
+.entry-title a,
+.wp-block-post-title a {
+	color: var(--mh-color-text-heading, #0f172a) !important;
+	text-decoration: none;
+	transition: color 0.15s ease;
+}
+
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover,
+.entry-title a:hover,
+.wp-block-post-title a:hover {
+	color: var(--mh-color-brand-base, #2563eb) !important;
+}
+
+/* Header button wrapping guard */
+header .wp-block-buttons,
+header .wp-block-button {
+	flex-shrink: 0 !important;
+	white-space: nowrap !important;
+}

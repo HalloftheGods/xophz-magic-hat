@@ -31,6 +31,7 @@ function xophz_magic_hat_setup() {
     // Support editor styles
     add_theme_support( 'editor-styles' );
     add_editor_style( 'assets/css/variables.css' );
+    add_editor_style( 'assets/css/editor-style.css' );
 
     // Support selective refresh in Customizer
     add_theme_support( 'customize-selective-refresh-widgets' );
@@ -145,17 +146,28 @@ function mh_get_or_create_page( $title ) {
 
 add_action('init', 'xophz_magic_hat_create_default_menus');
 
-// Load Customizer Settings & AI Architect Engine
+// Load Customizer Settings, AI Architect Engine & Header/Footer Engine
 require_once get_template_directory() . '/inc/customizer.php';
 require_once get_template_directory() . '/inc/class-magic-hat-ai-architect.php';
+require_once get_template_directory() . '/inc/header-footer.php';
+require_once get_template_directory() . '/inc/hero.php';
 
-// Enqueue Theme Styles
+// Enqueue Theme Styles & Scripts
 function xophz_magic_hat_enqueue_styles() {
+    // Enqueue Dashicons for header/footer icons
+    wp_enqueue_style( 'dashicons' );
+
     // Enqueue the foundational Design Tokens
     wp_enqueue_style( 'magic-hat-variables', get_template_directory_uri() . '/assets/css/variables.css', array(), wp_get_theme()->get('Version') );
     
-    // Enqueue the main stylesheet (if you eventually add custom rules there)
-    wp_enqueue_style( 'magic-hat-style', get_stylesheet_uri(), array('magic-hat-variables'), wp_get_theme()->get('Version') );
+    // Enqueue Header & Footer styles
+    wp_enqueue_style( 'magic-hat-header-footer', get_template_directory_uri() . '/assets/css/header-footer.css', array('magic-hat-variables'), wp_get_theme()->get('Version') );
+
+    // Enqueue the main stylesheet
+    wp_enqueue_style( 'magic-hat-style', get_stylesheet_uri(), array('magic-hat-variables', 'magic-hat-header-footer'), wp_get_theme()->get('Version') );
+
+    // Enqueue Header & Footer client-side controller (mobile drawer, hamburger toggle)
+    wp_enqueue_script( 'magic-hat-header-footer', get_template_directory_uri() . '/assets/js/header-footer.js', array(), wp_get_theme()->get('Version'), true );
 }
 add_action( 'wp_enqueue_scripts', 'xophz_magic_hat_enqueue_styles' );
 
@@ -166,6 +178,14 @@ function xophz_magic_hat_customize_preview_init() {
     wp_enqueue_script(
         'magic-hat-customize-preview-ai',
         get_template_directory_uri() . '/assets/js/customizer-preview-ai.js',
+        array( 'customize-preview', 'jquery' ),
+        wp_get_theme()->get( 'Version' ),
+        true
+    );
+
+    wp_enqueue_script(
+        'magic-hat-customize-preview-header-footer',
+        get_template_directory_uri() . '/assets/js/customizer-preview-header-footer.js',
         array( 'customize-preview', 'jquery' ),
         wp_get_theme()->get( 'Version' ),
         true
@@ -190,58 +210,87 @@ add_action( 'admin_menu', 'xophz_magic_hat_add_customize_menu' );
  * Sync Magic Hat Customizer Colors with Gutenberg Editor Palette
  */
 function xophz_magic_hat_gutenberg_palette() {
+    $schedule_mode = get_theme_mod( 'mh_color_schedule_mode', 'circadian' );
+
+    // Determine active phase suffix
+    $phase = 'light';
+    if ( $schedule_mode === 'dark' ) {
+        $phase = 'dark';
+    } elseif ( $schedule_mode === 'twilight' ) {
+        $phase = 'twilight';
+    } elseif ( $schedule_mode === 'circadian' ) {
+        $hour = intval( current_time( 'H' ) );
+        if ( $hour < 6 || $hour >= 21 ) {
+            $phase = 'dark';
+        } elseif ( ( $hour >= 6 && $hour < 8 ) || ( $hour >= 18 && $hour < 21 ) ) {
+            $phase = 'twilight';
+        } else {
+            $phase = 'light';
+        }
+    }
+
     $colors = array(
         // Brand
-        'mh_color_brand_base'   => array('name' => 'Brand Base', 'default' => '#62c9ff', 'slug' => 'brand-base'),
-        'mh_color_brand_hover'  => array('name' => 'Brand Hover', 'default' => '#8be0ff', 'slug' => 'brand-hover'),
-        'mh_color_brand_active' => array('name' => 'Brand Active', 'default' => '#40a0df', 'slug' => 'brand-active'),
-        'mh_color_brand_muted'  => array('name' => 'Brand Muted', 'default' => '#1a3a4d', 'slug' => 'brand-muted'),
+        'mh_color_brand_base'   => array('name' => 'Brand Base', 'default' => '#2563eb', 'default_dark' => '#62c9ff', 'slug' => 'brand-base'),
+        'mh_color_brand_hover'  => array('name' => 'Brand Hover', 'default' => '#3b82f6', 'default_dark' => '#8be0ff', 'slug' => 'brand-hover'),
+        'mh_color_brand_active' => array('name' => 'Brand Active', 'default' => '#1d4ed8', 'default_dark' => '#40a0df', 'slug' => 'brand-active'),
+        'mh_color_brand_muted'  => array('name' => 'Brand Muted', 'default' => '#dbeafe', 'default_dark' => '#1a3a4d', 'slug' => 'brand-muted'),
         
         // Action (CTA)
-        'mh_color_cta_base'     => array('name' => 'Action Base', 'default' => '#ff3366', 'slug' => 'action-base'),
-        'mh_color_cta_hover'    => array('name' => 'Action Hover', 'default' => '#ff668c', 'slug' => 'action-hover'),
-        'mh_color_cta_active'   => array('name' => 'Action Active', 'default' => '#e62050', 'slug' => 'action-active'),
-        'mh_color_cta_muted'    => array('name' => 'Action Muted', 'default' => '#4d1a26', 'slug' => 'action-muted'),
+        'mh_color_cta_base'     => array('name' => 'Action Base', 'default' => '#ff3366', 'default_dark' => '#ff3366', 'slug' => 'cta-base'),
+        'mh_color_cta_hover'    => array('name' => 'Action Hover', 'default' => '#ff668c', 'default_dark' => '#ff668c', 'slug' => 'cta-hover'),
+        'mh_color_cta_active'   => array('name' => 'Action Active', 'default' => '#e62050', 'default_dark' => '#e62050', 'slug' => 'action-active'),
+        'mh_color_cta_muted'    => array('name' => 'Action Muted', 'default' => '#ffe4e6', 'default_dark' => '#4d1a26', 'slug' => 'action-muted'),
         
         // Links
-        'mh_color_link'         => array('name' => 'Link Default', 'default' => '#62c9ff', 'slug' => 'link-default'),
-        'mh_color_link_hover'   => array('name' => 'Link Hover', 'default' => '#ff3366', 'slug' => 'link-hover'),
-        'mh_color_link_active'  => array('name' => 'Link Active', 'default' => '#e62050', 'slug' => 'link-active'),
-        'mh_color_link_visited' => array('name' => 'Link Visited', 'default' => '#9b59b6', 'slug' => 'link-visited'),
+        'mh_color_link'         => array('name' => 'Link Default', 'default' => '#2563eb', 'default_dark' => '#62c9ff', 'slug' => 'link-default'),
+        'mh_color_link_hover'   => array('name' => 'Link Hover', 'default' => '#ff3366', 'default_dark' => '#ff3366', 'slug' => 'link-hover'),
+        'mh_color_link_active'  => array('name' => 'Link Active', 'default' => '#1d4ed8', 'default_dark' => '#e62050', 'slug' => 'link-active'),
+        'mh_color_link_visited' => array('name' => 'Link Visited', 'default' => '#7c3aed', 'default_dark' => '#9b59b6', 'slug' => 'link-visited'),
         
         // Text
-        'mh_color_text_heading' => array('name' => 'Text Heading', 'default' => '#ffffff', 'slug' => 'text-heading'),
-        'mh_color_text_main'    => array('name' => 'Text Main', 'default' => '#f8fafc', 'slug' => 'text-main'),
-        'mh_color_text_muted'   => array('name' => 'Text Muted', 'default' => '#94a3b8', 'slug' => 'text-muted'),
-        'mh_color_text_inverse' => array('name' => 'Text Inverse', 'default' => '#0f172a', 'slug' => 'text-inverse'),
+        'mh_color_text_heading' => array('name' => 'Text Heading', 'default' => '#0f172a', 'default_dark' => '#ffffff', 'slug' => 'text-heading'),
+        'mh_color_text_main'    => array('name' => 'Text Main', 'default' => '#334155', 'default_dark' => '#f8fafc', 'slug' => 'text-main'),
+        'mh_color_text_muted'   => array('name' => 'Text Muted', 'default' => '#64748b', 'default_dark' => '#94a3b8', 'slug' => 'text-muted'),
+        'mh_color_text_inverse' => array('name' => 'Text Inverse', 'default' => '#ffffff', 'default_dark' => '#0f172a', 'slug' => 'text-inverse'),
         
         // Surfaces & Layers
-        'mh_color_body'         => array('name' => 'Body (Base)', 'default' => '#0a0b10', 'slug' => 'surface-body'),
-        'mh_color_main'         => array('name' => 'Main Background', 'default' => '#0f172a', 'slug' => 'surface-main'),
-        'mh_color_section'      => array('name' => 'Section Layer', 'default' => 'rgba(255, 255, 255, 0.02)', 'slug' => 'surface-section'),
-        'mh_color_card'         => array('name' => 'Card Layer', 'default' => 'rgba(255, 255, 255, 0.05)', 'slug' => 'surface-card'),
+        'mh_color_body'         => array('name' => 'Body (Base)', 'default' => '#ffffff', 'default_dark' => '#0a0b10', 'slug' => 'surface-body'),
+        'mh_color_main'         => array('name' => 'Main Background', 'default' => '#ffffff', 'default_dark' => '#0f172a', 'slug' => 'surface-main'),
+        'mh_color_section'      => array('name' => 'Section Layer', 'default' => '#f8fafc', 'default_dark' => 'rgba(255, 255, 255, 0.02)', 'slug' => 'surface-section'),
+        'mh_color_card'         => array('name' => 'Card Layer', 'default' => '#ffffff', 'default_dark' => 'rgba(255, 255, 255, 0.05)', 'slug' => 'surface-card'),
         
         // Status System
-        'mh_color_success'      => array('name' => 'Status Success', 'default' => '#10b981', 'slug' => 'status-success'),
-        'mh_color_warning'      => array('name' => 'Status Warning', 'default' => '#f59e0b', 'slug' => 'status-warning'),
-        'mh_color_danger'       => array('name' => 'Status Danger', 'default' => '#ef4444', 'slug' => 'status-danger'),
-        'mh_color_info'         => array('name' => 'Status Info', 'default' => '#3b82f6', 'slug' => 'status-info'),
+        'mh_color_success'      => array('name' => 'Status Success', 'default' => '#10b981', 'default_dark' => '#10b981', 'slug' => 'status-success'),
+        'mh_color_warning'      => array('name' => 'Status Warning', 'default' => '#f59e0b', 'default_dark' => '#f59e0b', 'slug' => 'status-warning'),
+        'mh_color_danger'       => array('name' => 'Status Danger', 'default' => '#ef4444', 'default_dark' => '#ef4444', 'slug' => 'status-danger'),
+        'mh_color_info'         => array('name' => 'Status Info', 'default' => '#3b82f6', 'default_dark' => '#3b82f6', 'slug' => 'status-info'),
     );
 
     $palette = array();
-    foreach ($colors as $key => $data) {
+    foreach ( $colors as $key => $data ) {
+        $setting_key = $key;
+        $default_val = $data['default'];
+
+        if ( $phase === 'dark' ) {
+            $setting_key = $key . '_dark';
+            $default_val = isset( $data['default_dark'] ) ? $data['default_dark'] : $data['default'];
+        } elseif ( $phase === 'twilight' ) {
+            $setting_key = $key . '_twilight';
+        }
+
         $palette[] = array(
             'name'  => $data['name'],
             'slug'  => $data['slug'],
-            'color' => get_theme_mod($key, $data['default']),
+            'color' => get_theme_mod( $setting_key, $default_val ),
         );
     }
 
-    add_theme_support('editor-color-palette', $palette);
+    add_theme_support( 'editor-color-palette', $palette );
     
     // Only disable custom colors if the option is checked in Customizer
-    if (get_theme_mod('mh_enforce_site_colors', false)) {
-        add_theme_support('disable-custom-colors');
+    if ( get_theme_mod( 'mh_enforce_site_colors', false ) ) {
+        add_theme_support( 'disable-custom-colors' );
     }
 }
-add_action('after_setup_theme', 'xophz_magic_hat_gutenberg_palette');
+add_action( 'after_setup_theme', 'xophz_magic_hat_gutenberg_palette' );

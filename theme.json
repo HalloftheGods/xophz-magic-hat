@@ -14,22 +14,22 @@
 				{
 					"name": "Brand Base",
 					"slug": "brand-base",
-					"color": "#62c9ff"
+					"color": "#2563eb"
 				},
 				{
 					"name": "Brand Hover",
 					"slug": "brand-hover",
-					"color": "#8be0ff"
+					"color": "#3b82f6"
 				},
 				{
 					"name": "Brand Active",
 					"slug": "brand-active",
-					"color": "#40a0df"
+					"color": "#1d4ed8"
 				},
 				{
 					"name": "Brand Muted",
 					"slug": "brand-muted",
-					"color": "#1a3a4d"
+					"color": "#dbeafe"
 				},
 				{
 					"name": "Action Base",
@@ -49,12 +49,12 @@
 				{
 					"name": "Action Muted",
 					"slug": "cta-muted",
-					"color": "#4d1a26"
+					"color": "#ffe4e6"
 				},
 				{
 					"name": "Link Default",
 					"slug": "link-default",
-					"color": "#62c9ff"
+					"color": "#2563eb"
 				},
 				{
 					"name": "Link Hover",
@@ -64,42 +64,42 @@
 				{
 					"name": "Text Heading",
 					"slug": "text-heading",
-					"color": "#ffffff"
+					"color": "#0f172a"
 				},
 				{
 					"name": "Text Main",
 					"slug": "text-main",
-					"color": "#f8fafc"
+					"color": "#334155"
 				},
 				{
 					"name": "Text Muted",
 					"slug": "text-muted",
-					"color": "#94a3b8"
+					"color": "#64748b"
 				},
 				{
 					"name": "Text Inverse",
 					"slug": "text-inverse",
-					"color": "#0f172a"
+					"color": "#ffffff"
 				},
 				{
 					"name": "Surface Body",
 					"slug": "surface-body",
-					"color": "#0a0b10"
+					"color": "#ffffff"
 				},
 				{
 					"name": "Surface Main",
 					"slug": "surface-main",
-					"color": "#0f172a"
+					"color": "#ffffff"
 				},
 				{
 					"name": "Surface Section",
 					"slug": "surface-section",
-					"color": "rgba(255, 255, 255, 0.02)"
+					"color": "#f8fafc"
 				},
 				{
 					"name": "Surface Card",
 					"slug": "surface-card",
-					"color": "rgba(255, 255, 255, 0.05)"
+					"color": "#ffffff"
 				},
 				{
 					"name": "Status Success",
@@ -268,7 +268,7 @@
 			"button": {
 				"color": {
 					"background": "var:preset|color|brand-base",
-					"text": "var:preset|color|surface-body"
+					"text": "var:preset|color|text-inverse"
 				},
 				"border": {
 					"radius": "4px"
@@ -279,7 +279,7 @@
 				":hover": {
 					"color": {
 						"background": "var:preset|color|brand-hover",
-						"text": "var:preset|color|surface-body"
+						"text": "var:preset|color|text-inverse"
 					}
 				}
 			}

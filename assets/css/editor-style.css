@@ -1,0 +1,75 @@
+/**
+ * Magic Hat Gutenberg Editor & Site Editor Stylesheet
+ *
+ * Ensures all text elements, headings, paragraphs, lists, and layout blocks
+ * have crisp, high-contrast readability in the WordPress Block Editor and Site Editor.
+ *
+ * @package Xophz_Magic_Hat
+ */
+
+/* Force editor canvas background and default text color to match theme tokens */
+.editor-styles-wrapper {
+  background-color: var(--mh-color-body, #ffffff) !important;
+  color: var(--mh-color-text-main, #334155) !important;
+  font-family: var(--mh-font-body, 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
+}
+
+/* Headings contrast */
+.editor-styles-wrapper h1,
+.editor-styles-wrapper h2,
+.editor-styles-wrapper h3,
+.editor-styles-wrapper h4,
+.editor-styles-wrapper h5,
+.editor-styles-wrapper h6,
+.editor-styles-wrapper .wp-block-post-title,
+.editor-styles-wrapper .wp-block-site-title,
+.editor-styles-wrapper .has-text-heading-color {
+  color: var(--mh-color-text-heading, #0f172a) !important;
+  font-family: var(--mh-font-heading, 'Outfit', sans-serif);
+}
+
+/* Headings anchor links */
+.editor-styles-wrapper h1 a,
+.editor-styles-wrapper h2 a,
+.editor-styles-wrapper h3 a,
+.editor-styles-wrapper h4 a,
+.editor-styles-wrapper h5 a,
+.editor-styles-wrapper h6 a,
+.editor-styles-wrapper .wp-block-post-title a {
+  color: inherit !important;
+  text-decoration: none;
+}
+
+/* Paragraphs and copy text */
+.editor-styles-wrapper p,
+.editor-styles-wrapper li,
+.editor-styles-wrapper dl,
+.editor-styles-wrapper dd,
+.editor-styles-wrapper blockquote,
+.editor-styles-wrapper .has-text-main-color {
+  color: var(--mh-color-text-main, #334155) !important;
+}
+
+/* Muted secondary text */
+.editor-styles-wrapper .has-text-muted-color,
+.editor-styles-wrapper figcaption,
+.editor-styles-wrapper .wp-block-post-date,
+.editor-styles-wrapper .wp-block-post-author {
+  color: var(--mh-color-text-muted, #64748b) !important;
+}
+
+/* Hyperlinks */
+.editor-styles-wrapper a {
+  color: var(--mh-color-link, #2563eb);
+}
+
+/* Card surfaces */
+.editor-styles-wrapper .has-surface-card-background-color {
+  background-color: var(--mh-color-card, #ffffff) !important;
+  border-color: var(--mh-color-border-muted, #e2e8f0) !important;
+}
+
+/* Post title placeholder in editor */
+.editor-styles-wrapper .wp-block-post-title[data-empty="true"]::before {
+  color: var(--mh-color-text-muted, #94a3b8) !important;
+}

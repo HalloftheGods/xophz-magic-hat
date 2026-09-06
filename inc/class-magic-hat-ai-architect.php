@@ -87,6 +87,7 @@ class Magic_Hat_AI_Architect {
 	}
 
 	/**
+	/**
 	 * Retrieve configured Gemini API key
 	 */
 	public static function get_api_key() {
@@ -100,6 +101,10 @@ class Magic_Hat_AI_Architect {
 		if ( ! empty( $_ENV['GEMINI_API_KEY'] ) ) {
 			return $_ENV['GEMINI_API_KEY'];
 		}
+		$connector_key = get_option( 'connectors_ai_google_api_key', '' );
+		if ( ! empty( $connector_key ) ) {
+			return $connector_key;
+		}
 		$opt_key = get_option( 'xophz_gemini_api_key', '' );
 		if ( ! empty( $opt_key ) ) {
 			return $opt_key;
@@ -109,6 +114,170 @@ class Magic_Hat_AI_Architect {
 			return $compass_key;
 		}
 		return '';
+	}
+
+	/**
+	 * Retrieve configured Anthropic Claude API key
+	 */
+	public static function get_anthropic_api_key() {
+		if ( defined( 'ANTHROPIC_API_KEY' ) && ! empty( ANTHROPIC_API_KEY ) ) {
+			return ANTHROPIC_API_KEY;
+		}
+		$env = getenv( 'ANTHROPIC_API_KEY' );
+		if ( ! empty( $env ) ) {
+			return $env;
+		}
+		$opt = get_option( 'connectors_ai_anthropic_api_key', '' );
+		if ( ! empty( $opt ) ) {
+			return $opt;
+		}
+		return get_option( 'compass_anthropic_api_key', '' );
+	}
+
+	/**
+	 * Retrieve configured OpenAI API key
+	 */
+	public static function get_openai_api_key() {
+		if ( defined( 'OPENAI_API_KEY' ) && ! empty( OPENAI_API_KEY ) ) {
+			return OPENAI_API_KEY;
+		}
+		$env = getenv( 'OPENAI_API_KEY' );
+		if ( ! empty( $env ) ) {
+			return $env;
+		}
+		$opt = get_option( 'connectors_ai_openai_api_key', '' );
+		if ( ! empty( $opt ) ) {
+			return $opt;
+		}
+		return get_option( 'compass_openai_api_key', '' );
+	}
+
+	/**
+	 * Retrieve configured OpenRouter API key
+	 */
+	public static function get_openrouter_api_key() {
+		if ( defined( 'OPENROUTER_API_KEY' ) && ! empty( OPENROUTER_API_KEY ) ) {
+			return OPENROUTER_API_KEY;
+		}
+		$env = getenv( 'OPENROUTER_API_KEY' );
+		if ( ! empty( $env ) ) {
+			return $env;
+		}
+		return get_option( 'compass_openrouter_api_key', '' );
+	}
+
+	/**
+	 * Retrieve configured Ollama endpoint URL
+	 */
+	public static function get_ollama_url() {
+		if ( defined( 'OLLAMA_URL' ) && ! empty( OLLAMA_URL ) ) {
+			return OLLAMA_URL;
+		}
+		$env = getenv( 'OLLAMA_URL' );
+		if ( ! empty( $env ) ) {
+			return $env;
+		}
+		return get_option( 'compass_ollama_url', '' );
+	}
+
+	/**
+	 * Retrieve all registered and available AI connectors and their status
+	 */
+	public static function get_available_connectors() {
+		$connectors = array();
+
+		// 1. Google Gemini AI
+		$gemini_key = self::get_api_key();
+		$connectors['gemini'] = array(
+			'id'            => 'gemini',
+			'name'          => 'Google Gemini AI',
+			'configured'    => ! empty( $gemini_key ),
+			'setting_name'  => 'connectors_ai_google_api_key',
+			'default_model' => 'gemini-2.5-flash',
+			'models'        => array(
+				array( 'id' => 'gemini-2.5-flash', 'name' => 'Gemini 2.5 Flash (Ultra Fast, High Fidelity)' ),
+				array( 'id' => 'gemini-2.5-pro',   'name' => 'Gemini 2.5 Pro (Deep Architectural Reasoning)' ),
+				array( 'id' => 'gemini-1.5-flash', 'name' => 'Gemini 1.5 Flash' ),
+				array( 'id' => 'gemini-1.5-pro',   'name' => 'Gemini 1.5 Pro' ),
+			),
+		);
+
+		// 2. Anthropic Claude AI
+		$anthropic_key = self::get_anthropic_api_key();
+		$connectors['anthropic'] = array(
+			'id'            => 'anthropic',
+			'name'          => 'Anthropic Claude AI',
+			'configured'    => ! empty( $anthropic_key ),
+			'setting_name'  => 'connectors_ai_anthropic_api_key',
+			'default_model' => 'claude-3-5-sonnet-20241022',
+			'models'        => array(
+				array( 'id' => 'claude-3-5-sonnet-20241022', 'name' => 'Claude 3.5 Sonnet (State-of-the-Art Layouts)' ),
+				array( 'id' => 'claude-3-5-haiku-20241022',  'name' => 'Claude 3.5 Haiku (Lightning Fast)' ),
+				array( 'id' => 'claude-3-opus-20240229',      'name' => 'Claude 3 Opus' ),
+			),
+		);
+
+		// 3. OpenAI
+		$openai_key = self::get_openai_api_key();
+		$connectors['openai'] = array(
+			'id'            => 'openai',
+			'name'          => 'OpenAI',
+			'configured'    => ! empty( $openai_key ),
+			'setting_name'  => 'connectors_ai_openai_api_key',
+			'default_model' => 'gpt-4o',
+			'models'        => array(
+				array( 'id' => 'gpt-4o',      'name' => 'GPT-4o (Omni Multimodal Flagship)' ),
+				array( 'id' => 'gpt-4o-mini', 'name' => 'GPT-4o Mini (Fast & Efficient)' ),
+				array( 'id' => 'o1-mini',     'name' => 'o1-mini (Specialized Reasoning)' ),
+				array( 'id' => 'gpt-4-turbo', 'name' => 'GPT-4 Turbo' ),
+			),
+		);
+
+		// 4. OpenRouter AI Proxy
+		$openrouter_key = self::get_openrouter_api_key();
+		$connectors['openrouter'] = array(
+			'id'            => 'openrouter',
+			'name'          => 'OpenRouter AI Proxy',
+			'configured'    => ! empty( $openrouter_key ),
+			'setting_name'  => 'compass_openrouter_api_key',
+			'default_model' => 'anthropic/claude-3.5-sonnet',
+			'models'        => array(
+				array( 'id' => 'anthropic/claude-3.5-sonnet',       'name' => 'Claude 3.5 Sonnet (via OpenRouter)' ),
+				array( 'id' => 'google/gemini-2.0-flash-001',       'name' => 'Gemini 2.0 Flash (via OpenRouter)' ),
+				array( 'id' => 'meta-llama/llama-3.3-70b-instruct', 'name' => 'Llama 3.3 70B (via OpenRouter)' ),
+				array( 'id' => 'deepseek/deepseek-chat',             'name' => 'DeepSeek V3 (via OpenRouter)' ),
+			),
+		);
+
+		// 5. Local Ollama Runner
+		$ollama_url = self::get_ollama_url();
+		$connectors['ollama'] = array(
+			'id'            => 'ollama',
+			'name'          => 'Local Ollama Runner',
+			'configured'    => ! empty( $ollama_url ),
+			'setting_name'  => 'compass_ollama_url',
+			'default_model' => 'llama3.2',
+			'models'        => array(
+				array( 'id' => 'llama3.2',      'name' => 'Llama 3.2 (Local)' ),
+				array( 'id' => 'mistral',       'name' => 'Mistral 7B (Local)' ),
+				array( 'id' => 'qwen2.5-coder', 'name' => 'Qwen 2.5 Coder (Local)' ),
+				array( 'id' => 'phi4',          'name' => 'Phi-4 (Local)' ),
+			),
+		);
+
+		// 6. Built-in Procedural Synthesizer
+		$connectors['procedural'] = array(
+			'id'            => 'procedural',
+			'name'          => 'Built-in Procedural Synthesizer',
+			'configured'    => true,
+			'setting_name'  => '',
+			'default_model' => 'quantum-synthesizer-v2',
+			'models'        => array(
+				array( 'id' => 'quantum-synthesizer-v2', 'name' => 'Deterministic Quantum Synthesizer (Offline)' ),
+			),
+		);
+
+		return $connectors;
 	}
 
 	/**
@@ -138,7 +307,7 @@ class Magic_Hat_AI_Architect {
 		$api_key = self::get_api_key();
 
 		if ( ! empty( $api_key ) ) {
-			$remote_result = $this->call_gemini_api( $prompt, $system_instruction, $api_key );
+			$remote_result = $this->call_gemini_api( $prompt, $system_instruction, $api_key, 'gemini-2.5-flash' );
 			if ( ! is_wp_error( $remote_result ) && ! empty( $remote_result ) ) {
 				return rest_ensure_response( array(
 					'success' => true,
@@ -161,14 +330,15 @@ class Magic_Hat_AI_Architect {
 	 * Handle Page Layout generation
 	 */
 	private function handle_page_generation( $prompt, $vibe, $archetype, $params ) {
-		$api_key     = self::get_api_key();
+		$connector   = isset( $params['connector'] ) ? sanitize_key( $params['connector'] ) : 'gemini';
+		$model       = isset( $params['model'] ) ? sanitize_text_field( $params['model'] ) : '';
 		$blocks_html = '';
 		$source      = 'procedural-synthesizer';
 
-		if ( ! empty( $api_key ) ) {
+		if ( 'procedural' !== $connector ) {
 			$ai_prompt = $this->build_page_ai_prompt( $prompt, $vibe, $archetype );
 			$system    = 'You are a master WordPress theme and Gutenberg block architect. You build complete, production-ready WordPress pages using standard core Gutenberg blocks (wp:group, wp:heading, wp:paragraph, wp:buttons, wp:columns, wp:separator, wp:list). Never output raw HTML layout tags like <div> or <section> without wrapping in valid Gutenberg block comments. Output ONLY valid Gutenberg block markup, with no conversational filler.';
-			$result    = $this->call_gemini_api( $ai_prompt, $system, $api_key );
+			$result    = $this->dispatch_ai_generation( $ai_prompt, $system, $connector, $model );
 
 			if ( ! is_wp_error( $result ) && ! empty( $result ) ) {
 				// Strip code fences if model wrapped in markdown
@@ -176,14 +346,15 @@ class Magic_Hat_AI_Architect {
 				$cleaned = preg_replace( '/\s*```$/', '', $cleaned );
 				if ( stripos( $cleaned, '<!-- wp:' ) !== false ) {
 					$blocks_html = $cleaned;
-					$source      = 'gemini-api';
+					$source      = $connector . ( $model ? ' (' . $model . ')' : '' );
 				}
 			}
 		}
 
-		// Fallback to rich architectural synthesizer if Gemini was not called or failed
+		// Fallback to rich architectural synthesizer if remote model was not called or failed
 		if ( empty( $blocks_html ) ) {
 			$blocks_html = $this->synthesize_page_blocks( $prompt, $vibe, $archetype );
+			$source      = 'procedural-synthesizer';
 		}
 
 		$page_id = 0;
@@ -218,6 +389,62 @@ class Magic_Hat_AI_Architect {
 	}
 
 	/**
+	 * Dispatch AI generation to chosen WP Connector
+	 */
+	private function dispatch_ai_generation( $prompt, $system, $connector, $model ) {
+		switch ( $connector ) {
+			case 'anthropic':
+				$key = self::get_anthropic_api_key();
+				if ( empty( $key ) ) {
+					return new WP_Error( 'missing_key', 'Anthropic API key is not configured.' );
+				}
+				return $this->call_anthropic_api( $prompt, $system, $key, $model );
+
+			case 'openai':
+				$key = self::get_openai_api_key();
+				if ( empty( $key ) ) {
+					return new WP_Error( 'missing_key', 'OpenAI API key is not configured.' );
+				}
+				return $this->call_openai_compatible_api( $prompt, $system, $key, $model ?: 'gpt-4o' );
+
+			case 'openrouter':
+				$key = self::get_openrouter_api_key();
+				if ( empty( $key ) ) {
+					return new WP_Error( 'missing_key', 'OpenRouter API key is not configured.' );
+				}
+				return $this->call_openai_compatible_api(
+					$prompt,
+					$system,
+					$key,
+					$model ?: 'anthropic/claude-3.5-sonnet',
+					'https://openrouter.ai/api/v1/chat/completions',
+					array(
+						'HTTP-Referer' => home_url(),
+						'X-Title'      => 'Magic Hat AI Page Architect',
+					)
+				);
+
+			case 'ollama':
+				$url = self::get_ollama_url();
+				if ( empty( $url ) ) {
+					return new WP_Error( 'missing_url', 'Ollama endpoint URL is not configured.' );
+				}
+				return $this->call_ollama_api( $prompt, $system, $url, $model ?: 'llama3.2' );
+
+			case 'procedural':
+				return null;
+
+			case 'gemini':
+			default:
+				$key = self::get_api_key();
+				if ( empty( $key ) ) {
+					return new WP_Error( 'missing_key', 'Gemini API key is not configured.' );
+				}
+				return $this->call_gemini_api( $prompt, $system, $key, $model ?: 'gemini-2.5-flash' );
+		}
+	}
+
+	/**
 	 * Handle saving page content from Customizer
 	 */
 	public function handle_save_page( WP_REST_Request $request ) {
@@ -247,8 +474,9 @@ class Magic_Hat_AI_Architect {
 	/**
 	 * Call official Google Gemini REST API
 	 */
-	private function call_gemini_api( $prompt, $system_instruction, $api_key ) {
-		$url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' . urlencode( $api_key );
+	private function call_gemini_api( $prompt, $system_instruction, $api_key, $model = 'gemini-2.5-flash' ) {
+		$target_model = ! empty( $model ) ? $model : 'gemini-2.5-flash';
+		$url = 'https://generativelanguage.googleapis.com/v1beta/models/' . urlencode( $target_model ) . ':generateContent?key=' . urlencode( $api_key );
 
 		$body = array(
 			'contents' => array(
@@ -289,6 +517,134 @@ class Magic_Hat_AI_Architect {
 		}
 
 		return $data['candidates'][0]['content']['parts'][0]['text'];
+	}
+
+	/**
+	 * Call Anthropic Claude Messages API
+	 */
+	private function call_anthropic_api( $prompt, $system_instruction, $api_key, $model = 'claude-3-5-sonnet-20241022' ) {
+		$target_model = ! empty( $model ) ? $model : 'claude-3-5-sonnet-20241022';
+		$url = 'https://api.anthropic.com/v1/messages';
+
+		$body = array(
+			'model'      => $target_model,
+			'max_tokens' => 4096,
+			'messages'   => array(
+				array( 'role' => 'user', 'content' => $prompt ),
+			),
+		);
+
+		if ( ! empty( $system_instruction ) ) {
+			$body['system'] = $system_instruction;
+		}
+
+		$response = wp_remote_post(
+			$url,
+			array(
+				'headers' => array(
+					'Content-Type'      => 'application/json',
+					'x-api-key'         => $api_key,
+					'anthropic-version' => '2023-06-01',
+				),
+				'body'    => wp_json_encode( $body ),
+				'timeout' => 45,
+			)
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$code = wp_remote_retrieve_response_code( $response );
+		$data = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		if ( 200 !== $code || empty( $data['content'][0]['text'] ) ) {
+			return new WP_Error( 'anthropic_error', 'Anthropic API call failed with code: ' . $code );
+		}
+
+		return $data['content'][0]['text'];
+	}
+
+	/**
+	 * Call OpenAI / OpenRouter Compatible Chat Completions API
+	 */
+	private function call_openai_compatible_api( $prompt, $system_instruction, $api_key, $model, $endpoint = 'https://api.openai.com/v1/chat/completions', $extra_headers = array() ) {
+		$messages = array();
+		if ( ! empty( $system_instruction ) ) {
+			$messages[] = array( 'role' => 'system', 'content' => $system_instruction );
+		}
+		$messages[] = array( 'role' => 'user', 'content' => $prompt );
+
+		$body = array(
+			'model'    => $model,
+			'messages' => $messages,
+		);
+
+		$headers = array_merge(
+			array(
+				'Content-Type'  => 'application/json',
+				'Authorization' => 'Bearer ' . $api_key,
+			),
+			$extra_headers
+		);
+
+		$response = wp_remote_post(
+			$endpoint,
+			array(
+				'headers' => $headers,
+				'body'    => wp_json_encode( $body ),
+				'timeout' => 45,
+			)
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$code = wp_remote_retrieve_response_code( $response );
+		$data = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		if ( 200 !== $code || empty( $data['choices'][0]['message']['content'] ) ) {
+			return new WP_Error( 'openai_error', 'API call failed with code: ' . $code );
+		}
+
+		return $data['choices'][0]['message']['content'];
+	}
+
+	/**
+	 * Call Local Ollama Runner API
+	 */
+	private function call_ollama_api( $prompt, $system_instruction, $ollama_url, $model = 'llama3.2' ) {
+		$url = rtrim( $ollama_url, '/' ) . '/api/generate';
+		$full_prompt = ! empty( $system_instruction ) ? ( $system_instruction . "\n\n" . $prompt ) : $prompt;
+
+		$body = array(
+			'model'  => ! empty( $model ) ? $model : 'llama3.2',
+			'prompt' => $full_prompt,
+			'stream' => false,
+		);
+
+		$response = wp_remote_post(
+			$url,
+			array(
+				'headers' => array( 'Content-Type' => 'application/json' ),
+				'body'    => wp_json_encode( $body ),
+				'timeout' => 45,
+			)
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$code = wp_remote_retrieve_response_code( $response );
+		$data = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		if ( 200 !== $code || empty( $data['response'] ) ) {
+			return new WP_Error( 'ollama_error', 'Ollama API call failed with code: ' . $code );
+		}
+
+		return $data['response'];
 	}
 
 	/**
