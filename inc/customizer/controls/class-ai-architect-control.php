@@ -57,7 +57,7 @@ if ( class_exists( 'WP_Customize_Control' ) && ! class_exists( 'Magic_Hat_AI_Arc
 						<label for="mh-ai-connector" style="font-size: 11px; font-weight: 700; color: #1e293b; text-transform: uppercase; letter-spacing: 0.5px;">
 							AI Connector:
 						</label>
-						<a href="<?php echo esc_url( admin_url( 'options-general.php?page=wp-connectors' ) ); ?>" target="_blank" style="font-size: 10px; color: #2563eb; text-decoration: none;" title="Configure API keys in WP Connectors">
+						<a href="<?php echo esc_url( admin_url( 'options-connectors.php' ) ); ?>" target="_blank" style="font-size: 10px; color: #2563eb; text-decoration: none;" title="Configure API keys in WP Connectors">
 							⚙️ Connectors
 						</a>
 					</div>
