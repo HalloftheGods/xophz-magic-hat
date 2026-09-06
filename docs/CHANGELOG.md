@@ -19,7 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Stylebook Deep-Linking Updates (`inc/stylebook-template.php`): Updated Colors navigation target to `magic_hat_colors` and expanded panel checks for `magic_hat_general_settings`.
 
 ### Fixed
+- Page Sections JSON Sanitization (`inc/customizer/sections/section-page-builder.php`): Replaced `sanitize_text_field` on the `mh_page_sections` Customizer setting with safe JSON validation. `sanitize_text_field` stripped newlines and corrupted multiline item lists (such as pricing features); the custom validator verifies valid JSON arrays while preserving item formatting.
 - Accordion Child DOM Resolution (`inc/customizer/controls-ui.php`): Resolved accordion collapse failure by switching child control resolution to jQuery `nextUntil('.customize-control-mh_accordion_toggle')`. WordPress core `WP_Customize_Color_Control` ignores `input_attrs`, causing selector lookups to fail. Also added focus detection to auto-expand accordion groups on deep-link.
+- Accordion Initial Fold State (`inc/customizer/sections/section-site-colors.php` & `inc/customizer/controls-ui.php`): Configured all 8 color accordion groups to start closed by default (`is_open => false`) and added default folded CSS rules on child controls, eliminating initial expansion and flash of uncollapsed content.
 
 ## [26.5.30] - 2026-09-06
 

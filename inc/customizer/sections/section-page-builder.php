@@ -23,7 +23,13 @@ function mh_register_page_builder_section( $wp_customize ) {
 	// Setting to store JSON data for the page sections
 	$wp_customize->add_setting( 'mh_page_sections', array(
 		'default'           => '[]',
-		'sanitize_callback' => 'sanitize_text_field',
+		'sanitize_callback' => function( $val ) {
+			if ( is_array( $val ) ) {
+				return wp_json_encode( $val );
+			}
+			$decoded = json_decode( $val, true );
+			return ( json_last_error() === JSON_ERROR_NONE && is_array( $decoded ) ) ? $val : '[]';
+		},
 		'transport'         => 'postMessage',
 	) );
 	

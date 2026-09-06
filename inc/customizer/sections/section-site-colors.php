@@ -71,7 +71,6 @@ function mh_register_site_colors_section( $wp_customize ) {
 	);
 
 	$priority = 10;
-	$is_first = true;
 
 	foreach ( $color_groups as $group_label => $settings ) {
 		$meta       = isset( $group_metadata[ $group_label ] ) ? $group_metadata[ $group_label ] : array( 'title' => $group_label, 'slug' => sanitize_title( $group_label ) );
@@ -90,11 +89,9 @@ function mh_register_site_colors_section( $wp_customize ) {
 				'section'     => 'magic_hat_colors',
 				'priority'    => $priority++,
 				'group_id'    => $group_slug,
-				'is_open'     => $is_first,
+				'is_open'     => false,
 			) ) );
 		}
-
-		$is_first = false;
 
 		foreach ( $settings as $id => $data ) {
 			// Light Mode

@@ -68,6 +68,10 @@ function xophz_magic_hat_customize_controls_scripts() {
 			opacity: 0.7;
 			cursor: not-allowed;
 		}
+		/* Default folded state for Site Colors accordion child controls */
+		#sub-accordion-section-magic_hat_colors li.customize-control:not(.customize-control-mh_accordion_toggle):not(#customize-control-mh_color_schedule_mode) {
+			display: none;
+		}
 		/* Accordion Toggle Control Styles */
 		.customize-control-mh_accordion_toggle {
 			margin: 10px 0 4px 0 !important;
