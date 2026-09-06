@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Modernized Section Enqueues (`functions.php`): Replaced legacy `magic-hat-ope-sections` enqueue with dynamic iteration over the 6 modular category section stylesheets.
 
+### Fixed
+- Gutenberg Block Support in Site Editor (`assets/js/editor-blocks.js`, `functions.php`, `inc/header-footer.php`, `inc/hero.php`): Fixed issue where Gutenberg Site Editor displayed "Your site doesn't include support for the block" error for `xophz-magic-hat/header`, `xophz-magic-hat/hero`, and `xophz-magic-hat/footer`. Created dedicated block editor script registering all three dynamic block types in Gutenberg runtime (`wp.blocks.registerBlockType`) with `wp.serverSideRender` support. Enqueued editor script and styles via `enqueue_block_editor_assets` and linked `editor_script` in PHP block registrations.
+
 ### Removed
 - Monolithic Stylesheet Purge: Permanently removed the 5,307-line legacy monolith `assets/css/one-page-express-sections.css`.
 

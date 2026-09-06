@@ -276,6 +276,7 @@ function xophz_magic_hat_register_hero_block() {
 	if ( function_exists( 'register_block_type' ) ) {
 		register_block_type( 'xophz-magic-hat/hero', array(
 			'render_callback' => 'mh_render_hero_markup',
+			'editor_script'   => 'magic-hat-editor-blocks',
 		) );
 	}
 }

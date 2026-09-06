@@ -19,10 +19,12 @@ function mh_register_header_footer_blocks() {
 	if ( function_exists( 'register_block_type' ) ) {
 		register_block_type( 'xophz-magic-hat/header', array(
 			'render_callback' => 'mh_render_header_block',
+			'editor_script'   => 'magic-hat-editor-blocks',
 		) );
 
 		register_block_type( 'xophz-magic-hat/footer', array(
 			'render_callback' => 'mh_render_footer_block',
+			'editor_script'   => 'magic-hat-editor-blocks',
 		) );
 	}
 }

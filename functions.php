@@ -228,6 +228,35 @@ function xophz_magic_hat_customize_preview_init() {
 add_action( 'customize_preview_init', 'xophz_magic_hat_customize_preview_init' );
 
 /**
+ * Register Gutenberg Block Editor Script Handle
+ */
+function xophz_magic_hat_register_block_editor_assets() {
+    wp_register_script(
+        'magic-hat-editor-blocks',
+        get_template_directory_uri() . '/assets/js/editor-blocks.js',
+        array( 'wp-blocks', 'wp-element', 'wp-server-side-render', 'wp-i18n' ),
+        wp_get_theme()->get( 'Version' ),
+        true
+    );
+}
+add_action( 'init', 'xophz_magic_hat_register_block_editor_assets', 5 );
+
+/**
+ * Enqueue scripts and styles for Gutenberg Site Editor & Block Editor
+ */
+function xophz_magic_hat_block_editor_assets() {
+    wp_enqueue_script( 'magic-hat-editor-blocks' );
+
+    wp_enqueue_style(
+        'magic-hat-header-footer-editor',
+        get_template_directory_uri() . '/assets/css/header-footer.css',
+        array( 'magic-hat-variables' ),
+        wp_get_theme()->get( 'Version' )
+    );
+}
+add_action( 'enqueue_block_editor_assets', 'xophz_magic_hat_block_editor_assets' );
+
+/**
  * Sync Magic Hat Customizer Colors with Gutenberg Editor Palette
  */
 function xophz_magic_hat_gutenberg_palette() {
