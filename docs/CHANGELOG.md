@@ -5,6 +5,61 @@ All notable changes to the Xophz Magic Hat theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [26.5.23] - 2026-09-05
+
+### Changed
+- Standardized Customizer Appearance (`inc/customizer.php`): Removed custom dark gradient background and colored borders from `Site Styles`, restoring 100% native WordPress Customizer styling uniformity across all sidebar items.
+- Native Nested Hierarchy for Site Colors (`inc/customizer.php` & `inc/stylebook-template.php`): Converted "🎭 Site Colors" into a native Customizer section (`magic_hat_colors`) nested directly inside "🎨 Site Styles" with clean category headings (`Magic_Hat_Group_Title_Control`), eliminating the orphaned top-level row and removing obsolete DOM manipulation scripts.
+
+## [26.5.22] - 2026-09-05
+
+### Added
+- Site Styles Parent Panel (`inc/customizer.php`): Created unified "🎨 Site Styles" parent panel (priority 30) grouping Site Background & Canvas, Typography, Spacing & Layout, Buttons, and Additional CSS.
+- Nested Site Colors Sub-Panel (`inc/customizer.php`): Implemented seamless nested panel navigation embedding "🎭 Site Colors" inside Site Styles with smooth back navigation.
+
+### Changed
+- Reordered Top-Level Customizer Hierarchy (`inc/customizer.php` & `inc/hero.php`): Consolidated top-level navigation into 10 clean areas: AI Page Architect (10), Site Identity (20), Site Styles (30), Homepage Settings (40), Shop Settings (50), Menus (60), Header Settings (70), Hero Settings (80), Page Builder (90), Footer Settings (100).
+
+## [26.5.21] - 2026-09-05
+
+### Changed
+- Uniform Settings Nomenclature (`inc/customizer.php` & `inc/hero.php`): Renamed all customizer sections containing "Options" to "Settings" for consistent naming: "🎩 Header Settings", "🌟 Hero Settings", and "🦶 Footer Settings".
+- WooCommerce Renamed to Shop Settings (`inc/customizer.php`): Renamed WooCommerce panel and section title to "🛍️ Shop Settings" at priority 95, with late adjustment hook ensuring third-party registration priority compatibility.
+
+## [26.5.20] - 2026-09-05
+
+### Changed
+- Live Typography Token Binding (`inc/stylebook-template.php` & `page-styleguide.php`): Updated `.type-preview` headings H1-H6 and paragraphs to consume live Customizer CSS properties (`--mh-font-size-h1` through `--mh-font-size-h6`, `--mh-font-size`, `--mh-heading-weight`, `--mh-heading-line-height`, `--mh-line-height`) instead of hardcoded fallback tokens.
+- Customizer PostMessage Transport for Typography and Spacing (`inc/customizer.php`): Enabled `'transport' => 'postMessage'` on base font family, font size, line height, heading weight, heading line height, all H1-H6 size controls, and spacing tokens. Added `change` trigger in `Magic_Hat_Range_Slider_Control` for 60fps responsiveness.
+- Global Element Typography Rules (`inc/customizer.php`): Bound `h1`-`h6`, `.wp-block-heading`, and paragraph elements in `xophz_magic_hat_customizer_css()` to their respective CSS variables across the theme.
+- Customizer Live Preview Synchronizer (`assets/js/customizer-preview-header-footer.js` & `inc/stylebook-template.php`): Added real-time CSS variable and dynamic Google Fonts link updating in the preview iframe for all typography and layout adjustments.
+
+## [26.5.19] - 2026-09-05
+
+### Added
+- Single Page Template (`page.php`): Created dedicated template supporting optional Hero Options (`mh_render_hero_markup()`) and clean semantic page content.
+
+### Changed
+- Customizer Hierarchy and Prioritization (`inc/customizer.php` & `inc/hero.php`): Reordered Customizer sections into intuitive flow: AI Page Architect (10), Site Identity (20), Site Background & Canvas (30), Site Colors (40), Typography (50), Spacing & Layout (60), Buttons (70), Additional CSS (80), Homepage Settings (90), WooCommerce (95), Menus (100), Header Options (110), Hero Options (120), Page Builder (130), Footer Options (140).
+- Renamed Hero Section to Hero Options (`inc/hero.php` & `front-page.php`): Renamed section to "🌟 Hero Options", updated control labels to "Enable Hero Options", and added dynamic page title fallbacks for non-front pages.
+
+### Fixed
+- Magic Wand Detection in Customizer (`inc/customizer.php`): Resolved undefined `$is_active` variable in `Magic_Hat_Page_Builder_Control::render_content()` that caused a false "Magic Wand Required" warning and disabled the "+ Add Section" button.
+- Preview Content Filter Scoping (`inc/customizer.php`): Scoped "+ Add Section" preview append helper to canvas mode and pages with sections to prevent polluting standard Gutenberg pages.
+
+## [26.5.18] - 2026-09-05
+
+### Fixed
+- Horizontal Layout Overflow and Scrollbar Elimination (`assets/css/header-footer.css`): Resolved horizontal overflow caused by `.mh-mobile-nav-drawer` translating 320px off-screen inside `.mh-header-sticky`. Moved `backdrop-filter` from `.mh-header-sticky` to a pseudo-element (`::before`) to prevent the header from becoming an unintended containing block for `position: fixed` elements, added `overflow: hidden` to `.mh-mobile-nav`, and ensured sticky header functionality within Full Site Editing template parts (`.wp-block-template-part:has(.mh-header-sticky)`).
+
+## [26.5.17] - 2026-09-05
+
+### Added
+- In-Canvas Header and Footer Layout Cycling (`assets/js/customizer-preview-header-footer.js`): Added "Cycle Layout" action buttons on both `#mw-header` and `#mw-footer` floating preview badges. Users can instantly cycle through Header layouts (Standard, Centered, Split, Minimal) and Footer layouts (4-Column Mega, 3-Column, Centered Minimal, Split Modern) with instant Selective Refresh re-rendering directly in the Customizer canvas.
+
+### Changed
+- Default WordPress Color Selectors (`inc/customizer.php`): Reverted custom CSS overrides and row header controls in Site Colors panel. Restored native WordPress `WP_Customize_Color_Control` selectors with standard full-width layout, default "Select Color" swatches, and clean inline Iris color pickers.
+
 ## [26.5.16] - 2026-09-05
 
 ### Added

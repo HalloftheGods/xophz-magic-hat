@@ -49,11 +49,11 @@ get_header(); ?>
     <section style="margin-bottom: var(--mh-spacing-12);">
         <h2 style="font-family: var(--mh-font-heading); font-size: var(--mh-text-2xl); border-bottom: 1px solid var(--mh-glass-border); padding-bottom: var(--mh-spacing-2); margin-bottom: var(--mh-spacing-6);">2. Typography</h2>
         <div style="background: var(--mh-color-card); padding: var(--mh-spacing-6); border-radius: var(--mh-radius-lg); backdrop-filter: blur(var(--mh-glass-blur-md)); border: 1px solid var(--mh-glass-border);">
-            <h1 style="font-size: var(--mh-text-4xl); font-family: var(--mh-font-heading); margin-bottom: var(--mh-spacing-4);">Heading 1 (4xl)</h1>
-            <h2 style="font-size: var(--mh-text-3xl); font-family: var(--mh-font-heading); margin-bottom: var(--mh-spacing-4);">Heading 2 (3xl)</h2>
-            <h3 style="font-size: var(--mh-text-2xl); font-family: var(--mh-font-heading); margin-bottom: var(--mh-spacing-4);">Heading 3 (2xl)</h3>
-            <p style="font-size: var(--mh-text-base); margin-bottom: var(--mh-spacing-4);">Body Text (base): This is an example of the standard body text using the defined font family and sizing. Magic Hat aims to make reading effortless.</p>
-            <p style="font-size: var(--mh-text-sm); color: var(--mh-color-text-muted); margin-bottom: 0;">Muted Text (sm): Secondary information or captions use this token to establish visual hierarchy without adding clutter.</p>
+            <h1 style="font-size: var(--mh-font-size-h1, 48px); font-family: var(--mh-font-heading); font-weight: var(--mh-heading-weight, 600); line-height: var(--mh-heading-line-height, 1.2); margin-bottom: var(--mh-spacing-4);">Heading 1</h1>
+            <h2 style="font-size: var(--mh-font-size-h2, 36px); font-family: var(--mh-font-heading); font-weight: var(--mh-heading-weight, 600); line-height: var(--mh-heading-line-height, 1.2); margin-bottom: var(--mh-spacing-4);">Heading 2</h2>
+            <h3 style="font-size: var(--mh-font-size-h3, 28px); font-family: var(--mh-font-heading); font-weight: var(--mh-heading-weight, 600); line-height: var(--mh-heading-line-height, 1.2); margin-bottom: var(--mh-spacing-4);">Heading 3</h3>
+            <p style="font-size: var(--mh-font-size, 16px); line-height: var(--mh-line-height, 1.6); margin-bottom: var(--mh-spacing-4);">Body Text (base): This is an example of the standard body text using the defined font family and sizing. Magic Hat aims to make reading effortless.</p>
+            <p style="font-size: calc(var(--mh-font-size, 16px) * 0.875); color: var(--mh-color-text-muted); margin-bottom: 0;">Muted Text (sm): Secondary information or captions use this token to establish visual hierarchy without adding clutter.</p>
         </div>
     </section>
 

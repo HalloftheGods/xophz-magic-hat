@@ -54,11 +54,15 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 		.swatch-light { color: #333; text-shadow: none; }
 		/* Typography */
 		.type-preview h1, .type-preview h2, .type-preview h3, .type-preview h4, .type-preview h5, .type-preview h6 { font-weight: var(--mh-heading-weight, 600); line-height: var(--mh-heading-line-height, 1.2); color: var(--mh-color-text-heading); margin: 0 0 10px 0; font-family: var(--mh-font-heading); }
-		.type-preview h1 { font-size: var(--mh-text-4xl, 2.25rem); }
-		.type-preview h2 { font-size: var(--mh-text-3xl, 1.875rem); }
-		.type-preview h3 { font-size: var(--mh-text-2xl, 1.5rem); }
-		.type-preview p { font-size: var(--mh-text-base, 1rem); line-height: var(--mh-line-height, 1.6); color: var(--mh-color-text-main); max-width: 800px; font-family: var(--mh-font-body); }
-		.type-preview blockquote { border-left: 4px solid var(--mh-color-brand-base); margin: 20px 0; padding: 10px 20px; font-size: 1.2em; font-style: italic; background: var(--mh-color-section); }
+		.type-preview h1 { font-size: var(--mh-font-size-h1, 48px); }
+		.type-preview h2 { font-size: var(--mh-font-size-h2, 36px); }
+		.type-preview h3 { font-size: var(--mh-font-size-h3, 28px); }
+		.type-preview h4 { font-size: var(--mh-font-size-h4, 24px); }
+		.type-preview h5 { font-size: var(--mh-font-size-h5, 20px); }
+		.type-preview h6 { font-size: var(--mh-font-size-h6, 16px); }
+		.type-preview p { font-size: var(--mh-font-size, 16px); line-height: var(--mh-line-height, 1.6); color: var(--mh-color-text-main); max-width: 800px; font-family: var(--mh-font-body); }
+		.type-preview blockquote { border-left: 4px solid var(--mh-color-brand-base); margin: 20px 0; padding: 10px 20px; font-size: 1.2em; font-style: italic; background: var(--mh-color-section); font-family: var(--mh-font-body); color: var(--mh-color-text-main); }
+		.type-preview ul, .type-preview ol { font-family: var(--mh-font-body); font-size: var(--mh-font-size, 16px); line-height: var(--mh-line-height, 1.6); color: var(--mh-color-text-main); }
 		
 		/* Buttons */
 		.btn-preview { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; margin-bottom: 30px; }
@@ -139,7 +143,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			border-radius: var(--mh-border-radius, 4px);
 			color: var(--mh-color-text-main);
 			font-family: var(--mh-font-body);
-			font-size: var(--mh-text-base, 16px);
+			font-size: var(--mh-font-size, 16px);
 			transition: all 0.2s;
 			box-sizing: border-box;
 		}
@@ -251,16 +255,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			if ( window.parent && window.parent.wp && window.parent.wp.customize ) {
 				var control = window.parent.wp.customize.control( controlId );
 				if ( control ) {
-					var sectionId = control.section();
-					var isMhColorSection = sectionId && sectionId.indexOf('mh_colors_') === 0;
-					
-					if (isMhColorSection) {
-						window.parent.wp.customize.panel( 'magic_hat_colors_panel' ).expand();
-						setTimeout(function() { control.focus(); }, 350);
-					} else {
-						// For top-level sections like Typography and Buttons, just focus directly
-						control.focus();
-					}
+					control.focus();
 				}
 			}
 		}
@@ -277,7 +272,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 		<nav class="stylebook-nav">
 			<div class="nav-header">Design Tokens</div>
 			<ul>
-				<li><a href="#section-colors" data-customizer-target="magic_hat_colors_panel">Colors</a></li>
+				<li><a href="#section-colors" data-customizer-target="magic_hat_colors">Colors</a></li>
 				<li><a href="#section-typography" data-customizer-target="magic_hat_typography">Typography</a></li>
 				<li><a href="#section-spacing" data-customizer-target="magic_hat_spacing">Spacing & Layout</a></li>
 			</ul>
@@ -967,8 +962,8 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					}
 					var expandedPanel = window.parent.wp.customize.state('expandedPanel');
 					if (expandedPanel && expandedPanel.get()) {
-						if (expandedPanel.get().id === 'magic_hat_colors_panel') {
-							activeTab = 'section-colors';
+						if (expandedPanel.get().id === 'magic_hat_colors_panel' || expandedPanel.get().id === 'magic_hat_site_styles') {
+							// Kept for compatibility with active panel states
 						}
 					}
 				}
@@ -1000,6 +995,49 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 						}
 					});
 				});
+			}
+
+			// --- Live Customizer Sync for Typography & Design Tokens ---
+			if ( window.parent && window.parent.wp && window.parent.wp.customize ) {
+				var pCustomize = window.parent.wp.customize;
+				var syncTypeVar = function(settingId, cssVar, unit) {
+					if ( pCustomize(settingId) ) {
+						pCustomize(settingId).bind(function(val) {
+							document.documentElement.style.setProperty(cssVar, val + (unit || ''));
+						});
+					}
+				};
+				syncTypeVar('mh_font_size', '--mh-font-size', 'px');
+				syncTypeVar('mh_line_height', '--mh-line-height', '');
+				syncTypeVar('mh_heading_weight', '--mh-heading-weight', '');
+				syncTypeVar('mh_heading_line_height', '--mh-heading-line-height', '');
+				syncTypeVar('mh_font_size_h1', '--mh-font-size-h1', 'px');
+				syncTypeVar('mh_font_size_h2', '--mh-font-size-h2', 'px');
+				syncTypeVar('mh_font_size_h3', '--mh-font-size-h3', 'px');
+				syncTypeVar('mh_font_size_h4', '--mh-font-size-h4', 'px');
+				syncTypeVar('mh_font_size_h5', '--mh-font-size-h5', 'px');
+				syncTypeVar('mh_font_size_h6', '--mh-font-size-h6', 'px');
+				if ( pCustomize('mh_font_family') ) {
+					pCustomize('mh_font_family').bind(function(val) {
+						if (!val) return;
+						var fontName = val.split(',')[0].trim();
+						var linkId = 'mh-preview-google-font';
+						var link = document.getElementById(linkId);
+						var fontUrl = 'https://fonts.googleapis.com/css2?family=' + encodeURIComponent(fontName) + ':wght@300;400;500;600;700;800;900&display=swap';
+						if (!link) {
+							link = document.createElement('link');
+							link.id = linkId;
+							link.rel = 'stylesheet';
+							link.href = fontUrl;
+							document.head.appendChild(link);
+						} else {
+							link.href = fontUrl;
+						}
+						document.documentElement.style.setProperty('--mh-font-family', val);
+						document.documentElement.style.setProperty('--mh-font-heading', val);
+						document.documentElement.style.setProperty('--mh-font-body', val);
+					});
+				}
 			}
 		});
 	</script>
@@ -1070,7 +1108,11 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 						window.parent.wp.customize(key).set(val);
 					}
 				}
-				window.parent.wp.customize.panel( 'magic_hat_colors_panel' ).expand();
+				if (window.parent.wp.customize.section( 'magic_hat_colors' )) {
+					window.parent.wp.customize.section( 'magic_hat_colors' ).focus();
+				} else if (window.parent.wp.customize.panel( 'magic_hat_colors_panel' )) {
+					window.parent.wp.customize.panel( 'magic_hat_colors_panel' ).expand();
+				}
 			}
 		}
 

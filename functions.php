@@ -229,54 +229,20 @@ function xophz_magic_hat_gutenberg_palette() {
         }
     }
 
-    $colors = array(
-        // Brand
-        'mh_color_brand_base'   => array('name' => 'Brand Base', 'default' => '#2563eb', 'default_dark' => '#62c9ff', 'slug' => 'brand-base'),
-        'mh_color_brand_hover'  => array('name' => 'Brand Hover', 'default' => '#3b82f6', 'default_dark' => '#8be0ff', 'slug' => 'brand-hover'),
-        'mh_color_brand_active' => array('name' => 'Brand Active', 'default' => '#1d4ed8', 'default_dark' => '#40a0df', 'slug' => 'brand-active'),
-        'mh_color_brand_muted'  => array('name' => 'Brand Muted', 'default' => '#dbeafe', 'default_dark' => '#1a3a4d', 'slug' => 'brand-muted'),
-        
-        // Action (CTA)
-        'mh_color_cta_base'     => array('name' => 'Action Base', 'default' => '#ff3366', 'default_dark' => '#ff3366', 'slug' => 'cta-base'),
-        'mh_color_cta_hover'    => array('name' => 'Action Hover', 'default' => '#ff668c', 'default_dark' => '#ff668c', 'slug' => 'cta-hover'),
-        'mh_color_cta_active'   => array('name' => 'Action Active', 'default' => '#e62050', 'default_dark' => '#e62050', 'slug' => 'action-active'),
-        'mh_color_cta_muted'    => array('name' => 'Action Muted', 'default' => '#ffe4e6', 'default_dark' => '#4d1a26', 'slug' => 'action-muted'),
-        
-        // Links
-        'mh_color_link'         => array('name' => 'Link Default', 'default' => '#2563eb', 'default_dark' => '#62c9ff', 'slug' => 'link-default'),
-        'mh_color_link_hover'   => array('name' => 'Link Hover', 'default' => '#ff3366', 'default_dark' => '#ff3366', 'slug' => 'link-hover'),
-        'mh_color_link_active'  => array('name' => 'Link Active', 'default' => '#1d4ed8', 'default_dark' => '#e62050', 'slug' => 'link-active'),
-        'mh_color_link_visited' => array('name' => 'Link Visited', 'default' => '#7c3aed', 'default_dark' => '#9b59b6', 'slug' => 'link-visited'),
-        
-        // Text
-        'mh_color_text_heading' => array('name' => 'Text Heading', 'default' => '#0f172a', 'default_dark' => '#ffffff', 'slug' => 'text-heading'),
-        'mh_color_text_main'    => array('name' => 'Text Main', 'default' => '#334155', 'default_dark' => '#f8fafc', 'slug' => 'text-main'),
-        'mh_color_text_muted'   => array('name' => 'Text Muted', 'default' => '#64748b', 'default_dark' => '#94a3b8', 'slug' => 'text-muted'),
-        'mh_color_text_inverse' => array('name' => 'Text Inverse', 'default' => '#ffffff', 'default_dark' => '#0f172a', 'slug' => 'text-inverse'),
-        
-        // Surfaces & Layers
-        'mh_color_body'         => array('name' => 'Body (Base)', 'default' => '#ffffff', 'default_dark' => '#0a0b10', 'slug' => 'surface-body'),
-        'mh_color_main'         => array('name' => 'Main Background', 'default' => '#ffffff', 'default_dark' => '#0f172a', 'slug' => 'surface-main'),
-        'mh_color_section'      => array('name' => 'Section Layer', 'default' => '#f8fafc', 'default_dark' => 'rgba(255, 255, 255, 0.02)', 'slug' => 'surface-section'),
-        'mh_color_card'         => array('name' => 'Card Layer', 'default' => '#ffffff', 'default_dark' => 'rgba(255, 255, 255, 0.05)', 'slug' => 'surface-card'),
-        
-        // Status System
-        'mh_color_success'      => array('name' => 'Status Success', 'default' => '#10b981', 'default_dark' => '#10b981', 'slug' => 'status-success'),
-        'mh_color_warning'      => array('name' => 'Status Warning', 'default' => '#f59e0b', 'default_dark' => '#f59e0b', 'slug' => 'status-warning'),
-        'mh_color_danger'       => array('name' => 'Status Danger', 'default' => '#ef4444', 'default_dark' => '#ef4444', 'slug' => 'status-danger'),
-        'mh_color_info'         => array('name' => 'Status Info', 'default' => '#3b82f6', 'default_dark' => '#3b82f6', 'slug' => 'status-info'),
-    );
+    $color_defs = mh_get_color_definitions();
 
     $palette = array();
-    foreach ( $colors as $key => $data ) {
-        $setting_key = $key;
-        $default_val = $data['default'];
+    foreach ( $color_defs as $key => $data ) {
+        $setting_base = 'mh_color_' . str_replace( '-', '_', $key );
+        $setting_key  = $setting_base;
+        $default_val  = $data['light'];
 
         if ( $phase === 'dark' ) {
-            $setting_key = $key . '_dark';
-            $default_val = isset( $data['default_dark'] ) ? $data['default_dark'] : $data['default'];
+            $setting_key = $setting_base . '_dark';
+            $default_val = $data['dark'];
         } elseif ( $phase === 'twilight' ) {
-            $setting_key = $key . '_twilight';
+            $setting_key = $setting_base . '_twilight';
+            $default_val = $data['twilight'];
         }
 
         $palette[] = array(

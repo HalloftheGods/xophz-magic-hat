@@ -10,7 +10,7 @@
 
 get_header();
 
-// 1. Dedicated Front Page Hero Section
+// 1. Dedicated Hero Section
 if ( function_exists( 'mh_render_hero_markup' ) ) {
 	echo mh_render_hero_markup();
 }

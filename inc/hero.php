@@ -20,11 +20,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function xophz_magic_hat_register_hero_customizer( $wp_customize ) {
 
-	// Dedicated Front Page Hero Section
+	// Hero Settings Section
 	$wp_customize->add_section( 'mh_front_page_hero', array(
-		'title'       => __( '🌟 Front Page Hero', 'xophz-magic-hat' ),
-		'description' => __( 'Configure your front page hero banner: choose between 5 layouts, customize typography, buttons, and toggle between Full Width and Boxed.', 'xophz-magic-hat' ),
-		'priority'    => 12,
+		'title'       => __( '🌟 Hero Settings', 'xophz-magic-hat' ),
+		'description' => __( 'Configure your hero banner: choose between 5 layouts, customize typography, buttons, and toggle between Full Width and Boxed.', 'xophz-magic-hat' ),
+		'priority'    => 80,
 	) );
 
 	// 1. Enable / Disable Hero
@@ -36,8 +36,8 @@ function xophz_magic_hat_register_hero_customizer( $wp_customize ) {
 	$wp_customize->add_control( 'mh_hero_enabled', array(
 		'type'        => 'checkbox',
 		'section'     => 'mh_front_page_hero',
-		'label'       => __( 'Enable Front Page Hero', 'xophz-magic-hat' ),
-		'description' => __( 'Show this prominent hero section at the top of your homepage.', 'xophz-magic-hat' ),
+		'label'       => __( 'Enable Hero Section', 'xophz-magic-hat' ),
+		'description' => __( 'Show this prominent hero section at the top of the page.', 'xophz-magic-hat' ),
 	) );
 
 	// 2. Hero Layout
@@ -282,10 +282,21 @@ function xophz_magic_hat_register_hero_block() {
 add_action( 'init', 'xophz_magic_hat_register_hero_block' );
 
 /**
- * Render Front Page Hero HTML Markup
+ * Render Hero HTML Markup (Supports any page with dynamic title fallbacks)
  */
-function mh_render_hero_markup() {
-	$enabled = get_theme_mod( 'mh_hero_enabled', true );
+function mh_render_hero_markup( $post_id = null ) {
+	$current_id    = $post_id ? absint( $post_id ) : get_queried_object_id();
+	$front_page_id = absint( get_option( 'page_on_front' ) );
+	$is_front      = is_front_page() || ( $front_page_id && $current_id === $front_page_id );
+
+	// Check per-page hero enabled toggle if set, otherwise fallback to global theme mod
+	$page_hero_meta = $current_id ? get_post_meta( $current_id, '_mh_hero_enabled', true ) : '';
+	if ( '' !== $page_hero_meta ) {
+		$enabled = ( '1' === $page_hero_meta || 'yes' === $page_hero_meta || true === $page_hero_meta );
+	} else {
+		$enabled = get_theme_mod( 'mh_hero_enabled', true );
+	}
+
 	if ( ! $enabled && ! is_customize_preview() ) {
 		return '';
 	}
@@ -294,8 +305,24 @@ function mh_render_hero_markup() {
 	$width_mode  = get_theme_mod( 'mh_hero_width', 'boxed' );
 	$height_mode = get_theme_mod( 'mh_hero_height', 'large' );
 	$badge       = get_theme_mod( 'mh_hero_badge', '⚡ NEW GENERATION THEME' );
-	$headline    = get_theme_mod( 'mh_hero_headline', 'We Synthesize The Modern Web' );
-	$subtitle    = get_theme_mod( 'mh_hero_subtitle', 'Create stunning, high-converting digital experiences with modular precision and dynamic circadian lighting.' );
+
+	// Headline resolution: per-page meta > page title (on non-front pages) > global theme mod
+	$page_headline_meta = $current_id ? get_post_meta( $current_id, '_mh_hero_headline', true ) : '';
+	if ( ! empty( $page_headline_meta ) ) {
+		$headline = $page_headline_meta;
+	} elseif ( ! $is_front && $current_id && get_the_title( $current_id ) ) {
+		$headline = get_the_title( $current_id );
+	} else {
+		$headline = get_theme_mod( 'mh_hero_headline', 'We Synthesize The Modern Web' );
+	}
+
+	$page_subtitle_meta = $current_id ? get_post_meta( $current_id, '_mh_hero_subtitle', true ) : '';
+	if ( ! empty( $page_subtitle_meta ) ) {
+		$subtitle = $page_subtitle_meta;
+	} else {
+		$subtitle = get_theme_mod( 'mh_hero_subtitle', 'Create stunning, high-converting digital experiences with modular precision and dynamic circadian lighting.' );
+	}
+
 	$cta1_text   = get_theme_mod( 'mh_hero_cta_primary_text', 'Get Started' );
 	$cta1_url    = get_theme_mod( 'mh_hero_cta_primary_url', '#features' );
 	$cta2_text   = get_theme_mod( 'mh_hero_cta_secondary_text', 'Explore Architecture' );
@@ -322,9 +349,9 @@ function mh_render_hero_markup() {
 	if ( $bg_type === 'subtle' ) {
 		$bg_style = 'background: var(--mh-color-section, #f8fafc);';
 	} elseif ( $bg_type === 'gradient' ) {
-		$bg_style = 'background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);';
+		$bg_style = 'background: linear-gradient(135deg, var(--mh-color-body, #f8fafc) 0%, var(--mh-color-section, #eff6ff) 100%);';
 	} elseif ( $bg_type === 'dark' ) {
-		$bg_style = 'background: #0f172a; color: #ffffff;';
+		$bg_style = 'background: var(--mh-color-main, #0f172a); color: var(--mh-color-text-heading, #ffffff);';
 	}
 
 	// Container width
@@ -344,31 +371,31 @@ function mh_render_hero_markup() {
 				<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 48px; align-items: center; padding: 60px 0;">
 					<div class="mh-hero-text">
 						<?php if ( ! empty( $badge ) ) : ?>
-							<span class="mh-hero-badge" data-mh-focus="mh_hero_badge" style="display: inline-block; padding: 4px 12px; background: rgba(37, 99, 235, 0.1); color: #2563eb; border-radius: 9999px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 16px; cursor: pointer;">
+							<span class="mh-hero-badge" data-mh-focus="mh_hero_badge" style="display: inline-block; padding: 4px 12px; background: color-mix(in srgb, var(--mh-color-brand-base, #2563eb) 12%, transparent); color: var(--mh-color-brand-base, #2563eb); border-radius: 9999px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 16px; cursor: pointer;">
 								<?php echo esc_html( $badge ); ?>
 							</span>
 						<?php endif; ?>
 						<h1 class="mh-hero-headline" data-mh-focus="mh_hero_headline" style="font-size: clamp(32px, 5vw, 56px); font-weight: 800; line-height: 1.15; color: var(--mh-color-text-heading, #0f172a); margin: 0 0 18px; cursor: text;">
 							<?php echo esc_html( $headline ); ?>
 						</h1>
-						<p class="mh-hero-subtitle" data-mh-focus="mh_hero_subtitle" style="font-size: clamp(16px, 2vw, 19px); line-height: 1.6; color: var(--mh-color-text-main, #475569); margin: 0 0 32px; max-width: 540px; cursor: text;">
+						<p class="mh-hero-subtitle" data-mh-focus="mh_hero_subtitle" style="font-size: clamp(16px, 2vw, 19px); line-height: 1.6; color: var(--mh-color-text-muted, #64748b); margin: 0 0 32px; max-width: 540px; cursor: text;">
 							<?php echo esc_html( $subtitle ); ?>
 						</p>
 						<div style="display: flex; gap: 14px; flex-wrap: wrap; align-items: center;">
 							<?php if ( ! empty( $cta1_text ) ) : ?>
-								<a href="<?php echo esc_url( $cta1_url ); ?>" class="mh-hero-cta1 btn-primary" data-mh-focus="mh_hero_cta_primary_text" data-mh-link="mh_hero_cta_primary_url" style="background: var(--mh-color-cta-base, #2563eb); color: #ffffff; padding: 13px 30px; font-size: 14px; font-weight: 700; border-radius: 6px; text-decoration: none; display: inline-block; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3); transition: transform 0.15s, box-shadow 0.15s; cursor: pointer;">
+								<a href="<?php echo esc_url( $cta1_url ); ?>" class="mh-hero-cta1 btn-primary" data-mh-focus="mh_hero_cta_primary_text" data-mh-link="mh_hero_cta_primary_url" style="background: var(--mh-color-cta-base, #ff3366); color: var(--mh-color-text-inverse, #ffffff); padding: 13px 30px; font-size: 14px; font-weight: 700; border-radius: 6px; text-decoration: none; display: inline-block; box-shadow: 0 4px 14px color-mix(in srgb, var(--mh-color-cta-base, #ff3366) 35%, transparent); transition: transform 0.15s, box-shadow 0.15s; cursor: pointer;">
 									<?php echo esc_html( $cta1_text ); ?>
 								</a>
 							<?php endif; ?>
 							<?php if ( ! empty( $cta2_text ) ) : ?>
-								<a href="<?php echo esc_url( $cta2_url ); ?>" class="mh-hero-cta2 btn-secondary" data-mh-focus="mh_hero_cta_secondary_text" data-mh-link="mh_hero_cta_secondary_url" style="background: var(--mh-color-section, #f8fafc); color: var(--mh-color-text-heading, #0f172a); border: 1px solid var(--mh-color-border-muted, #cbd5e1); padding: 13px 26px; font-size: 14px; font-weight: 600; border-radius: 6px; text-decoration: none; display: inline-block; cursor: pointer;">
+								<a href="<?php echo esc_url( $cta2_url ); ?>" class="mh-hero-cta2 btn-secondary" data-mh-focus="mh_hero_cta_secondary_text" data-mh-link="mh_hero_cta_secondary_url" style="background: var(--mh-color-card, #ffffff); color: var(--mh-color-text-heading, #0f172a); border: 1px solid var(--mh-color-border-muted, #cbd5e1); padding: 13px 26px; font-size: 14px; font-weight: 600; border-radius: 6px; text-decoration: none; display: inline-block; cursor: pointer;">
 									<?php echo esc_html( $cta2_text ); ?>
 								</a>
 							<?php endif; ?>
 						</div>
 					</div>
 					<div class="mh-hero-media" style="text-align: center;">
-						<img class="mh-hero-image-el" data-mh-focus="mh_hero_image" data-mh-image="mh_hero_image" src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $headline ); ?>" style="width: 100%; max-height: 480px; object-fit: cover; border-radius: 14px; box-shadow: 0 20px 35px -10px rgba(0,0,0,0.12); border: 1px solid #e2e8f0; cursor: pointer;" />
+						<img class="mh-hero-image-el" data-mh-focus="mh_hero_image" data-mh-image="mh_hero_image" src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $headline ); ?>" style="width: 100%; max-height: 480px; object-fit: cover; border-radius: 14px; box-shadow: 0 20px 35px -10px rgba(0,0,0,0.12); border: 1px solid var(--mh-color-border-muted, #e2e8f0); cursor: pointer;" />
 					</div>
 				</div>
 
@@ -376,31 +403,31 @@ function mh_render_hero_markup() {
 				<!-- Centered Impact Layout -->
 				<div style="text-align: center; max-width: 820px; margin: 0 auto; padding: 80px 0;">
 					<?php if ( ! empty( $badge ) ) : ?>
-						<span class="mh-hero-badge" data-mh-focus="mh_hero_badge" style="display: inline-block; padding: 4px 14px; background: rgba(37, 99, 235, 0.1); color: #2563eb; border-radius: 9999px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 18px; cursor: pointer;">
+						<span class="mh-hero-badge" data-mh-focus="mh_hero_badge" style="display: inline-block; padding: 4px 14px; background: color-mix(in srgb, var(--mh-color-brand-base, #2563eb) 12%, transparent); color: var(--mh-color-brand-base, #2563eb); border-radius: 9999px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 18px; cursor: pointer;">
 							<?php echo esc_html( $badge ); ?>
 						</span>
 					<?php endif; ?>
 					<h1 class="mh-hero-headline" data-mh-focus="mh_hero_headline" style="font-size: clamp(34px, 5.5vw, 62px); font-weight: 800; line-height: 1.15; color: var(--mh-color-text-heading, #0f172a); margin: 0 0 20px; cursor: text;">
 						<?php echo esc_html( $headline ); ?>
 					</h1>
-					<p class="mh-hero-subtitle" data-mh-focus="mh_hero_subtitle" style="font-size: clamp(16px, 2.2vw, 20px); line-height: 1.6; color: var(--mh-color-text-main, #475569); margin: 0 auto 36px; max-width: 640px; cursor: text;">
+					<p class="mh-hero-subtitle" data-mh-focus="mh_hero_subtitle" style="font-size: clamp(16px, 2.2vw, 20px); line-height: 1.6; color: var(--mh-color-text-muted, #64748b); margin: 0 auto 36px; max-width: 640px; cursor: text;">
 						<?php echo esc_html( $subtitle ); ?>
 					</p>
 					<div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px;">
 						<?php if ( ! empty( $cta1_text ) ) : ?>
-							<a href="<?php echo esc_url( $cta1_url ); ?>" class="mh-hero-cta1 btn-primary" data-mh-focus="mh_hero_cta_primary_text" data-mh-link="mh_hero_cta_primary_url" style="background: var(--mh-color-cta-base, #2563eb); color: #ffffff; padding: 14px 34px; font-size: 15px; font-weight: 700; border-radius: 6px; text-decoration: none; display: inline-block; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3); cursor: pointer;">
+							<a href="<?php echo esc_url( $cta1_url ); ?>" class="mh-hero-cta1 btn-primary" data-mh-focus="mh_hero_cta_primary_text" data-mh-link="mh_hero_cta_primary_url" style="background: var(--mh-color-cta-base, #ff3366); color: var(--mh-color-text-inverse, #ffffff); padding: 14px 34px; font-size: 15px; font-weight: 700; border-radius: 6px; text-decoration: none; display: inline-block; box-shadow: 0 4px 14px color-mix(in srgb, var(--mh-color-cta-base, #ff3366) 35%, transparent); cursor: pointer;">
 								<?php echo esc_html( $cta1_text ); ?>
 							</a>
 						<?php endif; ?>
 						<?php if ( ! empty( $cta2_text ) ) : ?>
-							<a href="<?php echo esc_url( $cta2_url ); ?>" class="mh-hero-cta2 btn-secondary" data-mh-focus="mh_hero_cta_secondary_text" data-mh-link="mh_hero_cta_secondary_url" style="background: var(--mh-color-section, #f8fafc); color: var(--mh-color-text-heading, #0f172a); border: 1px solid var(--mh-color-border-muted, #cbd5e1); padding: 14px 28px; font-size: 15px; font-weight: 600; border-radius: 6px; text-decoration: none; display: inline-block; cursor: pointer;">
+							<a href="<?php echo esc_url( $cta2_url ); ?>" class="mh-hero-cta2 btn-secondary" data-mh-focus="mh_hero_cta_secondary_text" data-mh-link="mh_hero_cta_secondary_url" style="background: var(--mh-color-card, #ffffff); color: var(--mh-color-text-heading, #0f172a); border: 1px solid var(--mh-color-border-muted, #cbd5e1); padding: 14px 28px; font-size: 15px; font-weight: 600; border-radius: 6px; text-decoration: none; display: inline-block; cursor: pointer;">
 								<?php echo esc_html( $cta2_text ); ?>
 							</a>
 						<?php endif; ?>
 					</div>
 					<?php if ( ! empty( $image_url ) ) : ?>
 						<div style="margin-top: 20px;">
-							<img class="mh-hero-image-el" data-mh-focus="mh_hero_image" data-mh-image="mh_hero_image" src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $headline ); ?>" style="width: 100%; max-height: 420px; object-fit: cover; border-radius: 12px; box-shadow: 0 25px 40px -15px rgba(0,0,0,0.15); border: 1px solid #e2e8f0; cursor: pointer;" />
+							<img class="mh-hero-image-el" data-mh-focus="mh_hero_image" data-mh-image="mh_hero_image" src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $headline ); ?>" style="width: 100%; max-height: 420px; object-fit: cover; border-radius: 12px; box-shadow: 0 25px 40px -15px rgba(0,0,0,0.15); border: 1px solid var(--mh-color-border-muted, #e2e8f0); cursor: pointer;" />
 						</div>
 					<?php endif; ?>
 				</div>
@@ -409,18 +436,18 @@ function mh_render_hero_markup() {
 				<!-- Editorial Minimal Layout -->
 				<div style="max-width: 900px; padding: 90px 0;">
 					<?php if ( ! empty( $badge ) ) : ?>
-						<span class="mh-hero-badge" data-mh-focus="mh_hero_badge" style="font-size: 12px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #2563eb; display: block; margin-bottom: 16px; cursor: pointer;">
+						<span class="mh-hero-badge" data-mh-focus="mh_hero_badge" style="font-size: 12px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--mh-color-brand-base, #2563eb); display: block; margin-bottom: 16px; cursor: pointer;">
 							<?php echo esc_html( $badge ); ?>
 						</span>
 					<?php endif; ?>
 					<h1 class="mh-hero-headline" data-mh-focus="mh_hero_headline" style="font-size: clamp(38px, 6vw, 68px); font-weight: 900; line-height: 1.08; letter-spacing: -1px; color: var(--mh-color-text-heading, #0f172a); margin: 0 0 24px; cursor: text;">
 						<?php echo esc_html( $headline ); ?>
 					</h1>
-					<p class="mh-hero-subtitle" data-mh-focus="mh_hero_subtitle" style="font-size: 20px; line-height: 1.7; color: var(--mh-color-text-main, #334155); margin: 0 0 32px; max-width: 680px; cursor: text;">
+					<p class="mh-hero-subtitle" data-mh-focus="mh_hero_subtitle" style="font-size: 20px; line-height: 1.7; color: var(--mh-color-text-muted, #64748b); margin: 0 0 32px; max-width: 680px; cursor: text;">
 						<?php echo esc_html( $subtitle ); ?>
 					</p>
 					<?php if ( ! empty( $cta1_text ) ) : ?>
-						<a href="<?php echo esc_url( $cta1_url ); ?>" class="mh-hero-cta1" data-mh-focus="mh_hero_cta_primary_text" data-mh-link="mh_hero_cta_primary_url" style="color: #2563eb; font-size: 16px; font-weight: 700; text-decoration: none; border-bottom: 2px solid #2563eb; padding-bottom: 4px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
+						<a href="<?php echo esc_url( $cta1_url ); ?>" class="mh-hero-cta1" data-mh-focus="mh_hero_cta_primary_text" data-mh-link="mh_hero_cta_primary_url" style="color: var(--mh-color-brand-base, #2563eb); font-size: 16px; font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--mh-color-brand-base, #2563eb); padding-bottom: 4px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
 							<?php echo esc_html( $cta1_text ); ?> &rarr;
 						</a>
 					<?php endif; ?>
@@ -431,26 +458,26 @@ function mh_render_hero_markup() {
 				<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; align-items: center; padding: 70px 0;">
 					<div>
 						<?php if ( ! empty( $badge ) ) : ?>
-							<span class="mh-hero-badge" data-mh-focus="mh_hero_badge" style="display: inline-block; padding: 3px 10px; background: rgba(99, 102, 241, 0.12); color: #6366f1; border-radius: 9999px; font-size: 11px; font-weight: 700; margin-bottom: 14px; cursor: pointer;">
+							<span class="mh-hero-badge" data-mh-focus="mh_hero_badge" style="display: inline-block; padding: 3px 10px; background: color-mix(in srgb, var(--mh-color-brand-base, #2563eb) 12%, transparent); color: var(--mh-color-brand-base, #2563eb); border-radius: 9999px; font-size: 11px; font-weight: 700; margin-bottom: 14px; cursor: pointer;">
 								<?php echo esc_html( $badge ); ?>
 							</span>
 						<?php endif; ?>
 						<h1 class="mh-hero-headline" data-mh-focus="mh_hero_headline" style="font-size: clamp(30px, 4.5vw, 50px); font-weight: 800; line-height: 1.2; color: var(--mh-color-text-heading, #0f172a); margin: 0 0 16px; cursor: text;">
 							<?php echo esc_html( $headline ); ?>
 						</h1>
-						<p class="mh-hero-subtitle" data-mh-focus="mh_hero_subtitle" style="font-size: 16px; line-height: 1.6; color: var(--mh-color-text-main, #475569); margin: 0 0 28px; cursor: text;">
+						<p class="mh-hero-subtitle" data-mh-focus="mh_hero_subtitle" style="font-size: 16px; line-height: 1.6; color: var(--mh-color-text-muted, #64748b); margin: 0 0 28px; cursor: text;">
 							<?php echo esc_html( $subtitle ); ?>
 						</p>
 						<div style="display: flex; gap: 12px; flex-wrap: wrap;">
 							<?php if ( ! empty( $cta1_text ) ) : ?>
-								<a href="<?php echo esc_url( $cta1_url ); ?>" class="mh-hero-cta1 btn-primary" data-mh-focus="mh_hero_cta_primary_text" data-mh-link="mh_hero_cta_primary_url" style="background: #6366f1; color: #fff; padding: 12px 28px; font-size: 14px; font-weight: 700; border-radius: 6px; text-decoration: none; cursor: pointer;">
+								<a href="<?php echo esc_url( $cta1_url ); ?>" class="mh-hero-cta1 btn-primary" data-mh-focus="mh_hero_cta_primary_text" data-mh-link="mh_hero_cta_primary_url" style="background: var(--mh-color-cta-base, #ff3366); color: var(--mh-color-text-inverse, #ffffff); padding: 12px 28px; font-size: 14px; font-weight: 700; border-radius: 6px; text-decoration: none; cursor: pointer; box-shadow: 0 4px 14px color-mix(in srgb, var(--mh-color-cta-base, #ff3366) 35%, transparent);">
 									<?php echo esc_html( $cta1_text ); ?>
 								</a>
 							<?php endif; ?>
 						</div>
 					</div>
 					<div style="display: flex; justify-content: center;">
-						<div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 18px; padding: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.18); max-width: 440px; width: 100%;">
+						<div style="background: var(--mh-color-card, #ffffff); border: 1px solid var(--mh-color-border-muted, #cbd5e1); border-radius: 18px; padding: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.18); max-width: 440px; width: 100%;">
 							<img class="mh-hero-image-el" data-mh-focus="mh_hero_image" data-mh-image="mh_hero_image" src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $headline ); ?>" style="width: 100%; border-radius: 10px; display: block; cursor: pointer;" />
 						</div>
 					</div>
@@ -462,11 +489,11 @@ function mh_render_hero_markup() {
 					<h1 class="mh-hero-headline" data-mh-focus="mh_hero_headline" style="font-size: clamp(34px, 5vw, 60px); font-weight: 900; line-height: 1.15; color: var(--mh-color-text-heading, #0f172a); margin: 0 0 20px; cursor: text;">
 						<?php echo esc_html( $headline ); ?>
 					</h1>
-					<p class="mh-hero-subtitle" data-mh-focus="mh_hero_subtitle" style="font-size: 18px; line-height: 1.6; color: var(--mh-color-text-main, #475569); margin: 0 auto 32px; cursor: text;">
+					<p class="mh-hero-subtitle" data-mh-focus="mh_hero_subtitle" style="font-size: 18px; line-height: 1.6; color: var(--mh-color-text-muted, #64748b); margin: 0 auto 32px; cursor: text;">
 						<?php echo esc_html( $subtitle ); ?>
 					</p>
 					<?php if ( ! empty( $cta1_text ) ) : ?>
-						<a href="<?php echo esc_url( $cta1_url ); ?>" class="mh-hero-cta1 btn-primary" data-mh-focus="mh_hero_cta_primary_text" data-mh-link="mh_hero_cta_primary_url" style="background: #2563eb; color: #fff; padding: 14px 34px; font-size: 15px; font-weight: 700; border-radius: 6px; text-decoration: none; display: inline-block; cursor: pointer;">
+						<a href="<?php echo esc_url( $cta1_url ); ?>" class="mh-hero-cta1 btn-primary" data-mh-focus="mh_hero_cta_primary_text" data-mh-link="mh_hero_cta_primary_url" style="background: var(--mh-color-cta-base, #ff3366); color: var(--mh-color-text-inverse, #ffffff); padding: 14px 34px; font-size: 15px; font-weight: 700; border-radius: 6px; text-decoration: none; display: inline-block; cursor: pointer; box-shadow: 0 4px 14px color-mix(in srgb, var(--mh-color-cta-base, #ff3366) 35%, transparent);">
 							<?php echo esc_html( $cta1_text ); ?>
 						</a>
 					<?php endif; ?>

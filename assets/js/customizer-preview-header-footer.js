@@ -39,7 +39,10 @@
 		'<div id="mh-header-preview-handle" class="mh-preview-badge-wrap">' +
 			'<div class="mh-preview-badge">' +
 				'<button type="button" class="mh-preview-btn" data-action="header-options">' +
-					'<span class="dashicons dashicons-admin-customizer"></span> Header Layout' +
+					'<span class="dashicons dashicons-admin-customizer"></span> Header Settings' +
+				'</button>' +
+				'<button type="button" class="mh-preview-btn" data-action="header-layout">' +
+					'<span class="dashicons dashicons-layout"></span> Cycle Layout' +
 				'</button>' +
 				'<button type="button" class="mh-preview-btn" data-action="header-menus">' +
 					'<span class="dashicons dashicons-menu"></span> Menus' +
@@ -68,7 +71,10 @@
 		'<div id="mh-footer-preview-handle" class="mh-preview-badge-wrap">' +
 			'<div class="mh-preview-badge">' +
 				'<button type="button" class="mh-preview-btn" data-action="footer-options">' +
-					'<span class="dashicons dashicons-admin-customizer"></span> Footer Layout' +
+					'<span class="dashicons dashicons-admin-customizer"></span> Footer Settings' +
+				'</button>' +
+				'<button type="button" class="mh-preview-btn" data-action="footer-layout">' +
+					'<span class="dashicons dashicons-layout"></span> Cycle Layout' +
 				'</button>' +
 				'<button type="button" class="mh-preview-btn" data-action="footer-menus">' +
 					'<span class="dashicons dashicons-menu"></span> Menus' +
@@ -158,6 +164,13 @@
 			if (parentApi.section && parentApi.section('magic_hat_header')) {
 				parentApi.section('magic_hat_header').focus();
 			}
+		} else if (action === 'header-layout') {
+			var headerLayouts = ['standard', 'centered', 'split', 'minimal'];
+			var currentHeaderLayout = parentApi('mh_header_layout') ? parentApi('mh_header_layout').get() : 'standard';
+			var nextHeaderIdx = (headerLayouts.indexOf(currentHeaderLayout) + 1) % headerLayouts.length;
+			if (parentApi('mh_header_layout')) {
+				parentApi('mh_header_layout').set(headerLayouts[nextHeaderIdx]);
+			}
 		} else if (action === 'hero-options') {
 			if (parentApi.section && parentApi.section('mh_front_page_hero')) {
 				parentApi.section('mh_front_page_hero').focus();
@@ -178,6 +191,13 @@
 		} else if (action === 'footer-options') {
 			if (parentApi.section && parentApi.section('magic_hat_footer')) {
 				parentApi.section('magic_hat_footer').focus();
+			}
+		} else if (action === 'footer-layout') {
+			var footerLayouts = ['columns_4', 'columns_3', 'minimal_centered', 'split'];
+			var currentFooterLayout = parentApi('mh_footer_layout') ? parentApi('mh_footer_layout').get() : 'columns_4';
+			var nextFooterIdx = (footerLayouts.indexOf(currentFooterLayout) + 1) % footerLayouts.length;
+			if (parentApi('mh_footer_layout')) {
+				parentApi('mh_footer_layout').set(footerLayouts[nextFooterIdx]);
 			}
 		} else if (action === 'header-menus' || action === 'footer-menus') {
 			if (parentApi.panel && parentApi.panel('nav_menus')) {
@@ -356,6 +376,77 @@
 						window.mhCanvasInstance.stop();
 					}
 				}
+			} );
+		} );
+
+		// Live Preview: Typography settings
+		wp.customize( 'mh_font_family', function( value ) {
+			value.bind( function( newFont ) {
+				if ( ! newFont ) return;
+				var fontName = newFont.split(',')[0].trim();
+				var linkId = 'mh-preview-google-font';
+				var $link = $( '#' + linkId );
+				var fontUrl = 'https://fonts.googleapis.com/css2?family=' + encodeURIComponent(fontName) + ':wght@300;400;500;600;700;800;900&display=swap';
+				if ( ! $link.length ) {
+					$( 'head' ).append( '<link id="' + linkId + '" rel="stylesheet" href="' + fontUrl + '">' );
+				} else {
+					$link.attr( 'href', fontUrl );
+				}
+				document.documentElement.style.setProperty( '--mh-font-family', newFont );
+				document.documentElement.style.setProperty( '--mh-font-heading', newFont );
+				document.documentElement.style.setProperty( '--mh-font-body', newFont );
+			} );
+		} );
+
+		var typographyVariables = {
+			'mh_font_size': { prop: '--mh-font-size', unit: 'px' },
+			'mh_line_height': { prop: '--mh-line-height', unit: '' },
+			'mh_heading_weight': { prop: '--mh-heading-weight', unit: '' },
+			'mh_heading_line_height': { prop: '--mh-heading-line-height', unit: '' },
+			'mh_font_size_h1': { prop: '--mh-font-size-h1', unit: 'px' },
+			'mh_font_size_h2': { prop: '--mh-font-size-h2', unit: 'px' },
+			'mh_font_size_h3': { prop: '--mh-font-size-h3', unit: 'px' },
+			'mh_font_size_h4': { prop: '--mh-font-size-h4', unit: 'px' },
+			'mh_font_size_h5': { prop: '--mh-font-size-h5', unit: 'px' },
+			'mh_font_size_h6': { prop: '--mh-font-size-h6', unit: 'px' }
+		};
+
+		$.each( typographyVariables, function( settingId, meta ) {
+			wp.customize( settingId, function( value ) {
+				value.bind( function( newVal ) {
+					document.documentElement.style.setProperty( meta.prop, newVal + meta.unit );
+				} );
+			} );
+		} );
+
+		// Live Preview: Spacing & Layout settings
+		wp.customize( 'mh_space_base', function( value ) {
+			value.bind( function( to ) {
+				var base = parseFloat( to ) || 8;
+				document.documentElement.style.setProperty( '--mh-space-base', base + 'px' );
+				document.documentElement.style.setProperty( '--mh-space-1', ( base * 0.5 ) + 'px' );
+				document.documentElement.style.setProperty( '--mh-space-2', ( base * 1 ) + 'px' );
+				document.documentElement.style.setProperty( '--mh-space-3', ( base * 1.5 ) + 'px' );
+				document.documentElement.style.setProperty( '--mh-space-4', ( base * 2 ) + 'px' );
+				document.documentElement.style.setProperty( '--mh-space-5', ( base * 3 ) + 'px' );
+				document.documentElement.style.setProperty( '--mh-space-6', ( base * 4 ) + 'px' );
+				document.documentElement.style.setProperty( '--mh-space-7', ( base * 6 ) + 'px' );
+				document.documentElement.style.setProperty( '--mh-space-8', ( base * 8 ) + 'px' );
+			} );
+		} );
+		wp.customize( 'mh_content_width', function( value ) {
+			value.bind( function( to ) {
+				document.documentElement.style.setProperty( '--mh-content-width', to + 'px' );
+			} );
+		} );
+		wp.customize( 'mh_radius_base', function( value ) {
+			value.bind( function( to ) {
+				document.documentElement.style.setProperty( '--mh-border-radius', to + 'px' );
+			} );
+		} );
+		wp.customize( 'mh_border_width', function( value ) {
+			value.bind( function( to ) {
+				document.documentElement.style.setProperty( '--mh-border-width', to + 'px' );
 			} );
 		} );
 	}

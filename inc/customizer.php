@@ -10,6 +10,58 @@ function mh_is_stylebook_preview() {
 	return ( isset( $_GET['magic_hat_stylebook'] ) && $_GET['magic_hat_stylebook'] == '1' );
 }
 
+/**
+ * Canonical 28-token Design Token Palette definitions for Light (Day), Twilight, and Dark (Night) modes.
+ * Single Source of Truth for Customizer, Circadian Rhythm Engine, and Gutenberg Palette.
+ *
+ * @return array
+ */
+function mh_get_color_definitions() {
+	return array(
+		// Brand
+		'brand-base'    => array( 'group' => 'Brand', 'label' => 'Base',          'name' => 'Brand Base',   'slug' => 'brand-base',   'light' => '#2563eb', 'twilight' => '#38bdf8', 'dark' => '#62c9ff' ),
+		'brand-hover'   => array( 'group' => 'Brand', 'label' => 'Hover',         'name' => 'Brand Hover',  'slug' => 'brand-hover',  'light' => '#3b82f6', 'twilight' => '#7dd3fc', 'dark' => '#8be0ff' ),
+		'brand-active'  => array( 'group' => 'Brand', 'label' => 'Active',        'name' => 'Brand Active', 'slug' => 'brand-active', 'light' => '#1d4ed8', 'twilight' => '#0284c7', 'dark' => '#40a0df' ),
+		'brand-muted'   => array( 'group' => 'Brand', 'label' => 'Muted',         'name' => 'Brand Muted',  'slug' => 'brand-muted',  'light' => '#dbeafe', 'twilight' => '#0c4a6e', 'dark' => '#1a3a4d' ),
+
+		// Action (CTA)
+		'cta-base'      => array( 'group' => 'Action (CTA)', 'label' => 'Base',   'name' => 'Action Base',   'slug' => 'cta-base',      'light' => '#ff3366', 'twilight' => '#fb7185', 'dark' => '#ff3366' ),
+		'cta-hover'     => array( 'group' => 'Action (CTA)', 'label' => 'Hover',  'name' => 'Action Hover',  'slug' => 'cta-hover',     'light' => '#ff668c', 'twilight' => '#fda4af', 'dark' => '#ff668c' ),
+		'cta-active'    => array( 'group' => 'Action (CTA)', 'label' => 'Active', 'name' => 'Action Active', 'slug' => 'cta-active',    'light' => '#e62050', 'twilight' => '#f43f5e', 'dark' => '#e62050' ),
+		'cta-muted'     => array( 'group' => 'Action (CTA)', 'label' => 'Muted',  'name' => 'Action Muted',  'slug' => 'cta-muted',     'light' => '#ffe4e6', 'twilight' => '#4c0519', 'dark' => '#4d1a26' ),
+
+		// Links
+		'link'          => array( 'group' => 'Links', 'label' => 'Default',       'name' => 'Link Default', 'slug' => 'link-default', 'light' => '#2563eb', 'twilight' => '#38bdf8', 'dark' => '#62c9ff' ),
+		'link-hover'    => array( 'group' => 'Links', 'label' => 'Hover',         'name' => 'Link Hover',   'slug' => 'link-hover',   'light' => '#ff3366', 'twilight' => '#fb7185', 'dark' => '#ff3366' ),
+		'link-active'   => array( 'group' => 'Links', 'label' => 'Active',        'name' => 'Link Active',  'slug' => 'link-active',  'light' => '#1d4ed8', 'twilight' => '#fda4af', 'dark' => '#e62050' ),
+		'link-visited'  => array( 'group' => 'Links', 'label' => 'Visited',       'name' => 'Link Visited', 'slug' => 'link-visited', 'light' => '#7c3aed', 'twilight' => '#a78bfa', 'dark' => '#9b59b6' ),
+
+		// Text
+		'text-heading'  => array( 'group' => 'Text', 'label' => 'Heading',        'name' => 'Text Heading', 'slug' => 'text-heading', 'light' => '#0f172a', 'twilight' => '#f8fafc', 'dark' => '#ffffff' ),
+		'text-main'     => array( 'group' => 'Text', 'label' => 'Main',           'name' => 'Text Main',    'slug' => 'text-main',    'light' => '#334155', 'twilight' => '#e2e8f0', 'dark' => '#f8fafc' ),
+		'text-muted'    => array( 'group' => 'Text', 'label' => 'Muted',          'name' => 'Text Muted',   'slug' => 'text-muted',   'light' => '#64748b', 'twilight' => '#94a3b8', 'dark' => '#94a3b8' ),
+		'text-inverse'  => array( 'group' => 'Text', 'label' => 'Inverse',        'name' => 'Text Inverse', 'slug' => 'text-inverse', 'light' => '#ffffff', 'twilight' => '#0f172a', 'dark' => '#0a0b10' ),
+
+		// Surfaces & Layers
+		'body'          => array( 'group' => 'Surfaces & Layers', 'label' => 'Body (Base)',      'name' => 'Body (Base)',      'slug' => 'surface-body',    'light' => '#ffffff', 'twilight' => '#0f172a', 'dark' => '#0a0b10' ),
+		'main'          => array( 'group' => 'Surfaces & Layers', 'label' => 'Main Background', 'name' => 'Main Background', 'slug' => 'surface-main',    'light' => '#ffffff', 'twilight' => '#1e293b', 'dark' => '#0f172a' ),
+		'section'       => array( 'group' => 'Surfaces & Layers', 'label' => 'Section',         'name' => 'Section Layer',    'slug' => 'surface-section', 'light' => '#f8fafc', 'twilight' => '#162235', 'dark' => 'rgba(255, 255, 255, 0.03)' ),
+		'card'          => array( 'group' => 'Surfaces & Layers', 'label' => 'Card',            'name' => 'Card Layer',       'slug' => 'surface-card',    'light' => '#ffffff', 'twilight' => '#1e293b', 'dark' => 'rgba(255, 255, 255, 0.05)' ),
+
+		// Borders & Lines
+		'border-base'   => array( 'group' => 'Borders & Lines', 'label' => 'Base',          'name' => 'Border Base',  'slug' => 'border-base',  'light' => '#e2e8f0', 'twilight' => '#334155', 'dark' => 'rgba(255, 255, 255, 0.12)' ),
+		'border-hover'  => array( 'group' => 'Borders & Lines', 'label' => 'Hover',         'name' => 'Border Hover', 'slug' => 'border-hover', 'light' => '#cbd5e1', 'twilight' => '#475569', 'dark' => '#62c9ff' ),
+		'border-focus'  => array( 'group' => 'Borders & Lines', 'label' => 'Focus',         'name' => 'Border Focus', 'slug' => 'border-focus', 'light' => '#2563eb', 'twilight' => '#38bdf8', 'dark' => '#62c9ff' ),
+		'border-muted'  => array( 'group' => 'Borders & Lines', 'label' => 'Muted/Divider', 'name' => 'Border Muted', 'slug' => 'border-muted', 'light' => '#e2e8f0', 'twilight' => '#1e293b', 'dark' => 'rgba(255, 255, 255, 0.06)' ),
+
+		// Status System
+		'success'       => array( 'group' => 'Status System', 'label' => 'Success', 'name' => 'Status Success', 'slug' => 'status-success', 'light' => '#10b981', 'twilight' => '#34d399', 'dark' => '#10b981' ),
+		'warning'       => array( 'group' => 'Status System', 'label' => 'Warning', 'name' => 'Status Warning', 'slug' => 'status-warning', 'light' => '#f59e0b', 'twilight' => '#fbbf24', 'dark' => '#f59e0b' ),
+		'danger'        => array( 'group' => 'Status System', 'label' => 'Danger',  'name' => 'Status Danger',  'slug' => 'status-danger',  'light' => '#ef4444', 'twilight' => '#f87171', 'dark' => '#ef4444' ),
+		'info'          => array( 'group' => 'Status System', 'label' => 'Info',    'name' => 'Status Info',    'slug' => 'status-info',    'light' => '#3b82f6', 'twilight' => '#60a5fa', 'dark' => '#3b82f6' ),
+	);
+}
+
 function xophz_magic_hat_customize_register( $wp_customize ) {
 
 	// Custom Range Slider Control
@@ -27,7 +79,7 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 						max="<?php echo esc_attr( $this->input_attrs['max'] ?? 100 ); ?>" 
 						step="<?php echo esc_attr( $this->input_attrs['step'] ?? 1 ); ?>"
 						style="flex: 1;"
-						oninput="this.nextElementSibling.value = this.value + '<?php echo esc_attr( $this->input_attrs['unit'] ?? '' ); ?>'"
+						oninput="this.nextElementSibling.value = this.value + '<?php echo esc_attr( $this->input_attrs['unit'] ?? '' ); ?>'; if (window.jQuery) { jQuery(this).trigger('change'); }"
 					/>
 					<input type="text" 
 						value="<?php echo esc_attr( $this->value() ); ?>" 
@@ -36,18 +88,6 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 					/>
 				</div>
 			</label>
-			<?php
-		}
-	}
-
-	// Custom Color Triad Row Header Control
-	class Magic_Hat_Color_Row_Header_Control extends WP_Customize_Control {
-		public $type = 'mh_color_row_header';
-		public function render_content() {
-			?>
-			<div class="mh-color-row-heading" style="width: 100%; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; margin-top: 10px; margin-bottom: 6px;">
-				<span style="font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #334155;"><?php echo esc_html( $this->label ); ?></span>
-			</div>
 			<?php
 		}
 	}
@@ -315,6 +355,7 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 		public $type = 'mh-page-builder-control';
 
 		public function render_content() {
+			$is_active = class_exists( 'Xophz_Compass_Magic_Wand' ) || defined( 'XOPHZ_COMPASS_MAGIC_WAND_VERSION' );
 			$show_on_front = get_option( 'show_on_front', 'posts' );
 			$is_magic_hat = ( $show_on_front === 'page' );
 			?>
@@ -382,7 +423,7 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	$wp_customize->add_section( 'mh_ai_page_architect', array(
 		'title'       => __( '✨ AI Page Architect', 'xophz-magic-hat' ),
 		'description' => __( 'Prompt Gemini or the internal layout synthesizer to conjure custom Gutenberg pages across diverse vibes and archetypes.', 'xophz-magic-hat' ),
-		'priority'    => 5,
+		'priority'    => 10,
 	) );
 
 	$wp_customize->add_setting( 'mh_ai_generated_blocks', array(
@@ -397,7 +438,7 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 
 	$wp_customize->add_section( 'mh_page_builder', array(
 		'title'    => __( '🏗️ Page Builder', 'xophz-magic-hat' ),
-		'priority' => 10,
+		'priority' => 90,
 	) );
 
 	// Setting to store JSON data for the page sections
@@ -411,20 +452,41 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 		'section' => 'mh_page_builder',
 	) ) );
 
-	// Add Theme Colors Panel (Because WP does not support nested panels)
-	$wp_customize->add_panel( 'magic_hat_colors_panel', array(
-		'title'           => __( '🎭 Site Colors', 'xophz-magic-hat' ),
-		'description'     => 'Customize your core design system colors and circadian schedule behavior.',
-		'priority'        => 30,
+	// Custom Group Title / Subheading Control
+	class Magic_Hat_Group_Title_Control extends WP_Customize_Control {
+		public $type = 'mh_group_title';
+		public function render_content() {
+			?>
+			<div class="mh-customizer-group-heading" style="margin-top: 14px; margin-bottom: 6px; padding-top: 10px; border-top: 1px solid #dcdcde;">
+				<h4 style="margin: 0; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #1d2327;"><?php echo esc_html( $this->label ); ?></h4>
+				<?php if ( ! empty( $this->description ) ) : ?>
+					<span class="description customize-control-description" style="margin-top: 2px; display: block;"><?php echo esc_html( $this->description ); ?></span>
+				<?php endif; ?>
+			</div>
+			<?php
+		}
+	}
+
+	// ==============================================
+	// PANEL: Site Styles (Parent Panel)
+	// ==============================================
+	$wp_customize->add_panel( 'magic_hat_site_styles', array(
+		'title'       => __( '🎨 Site Styles', 'xophz-magic-hat' ),
+		'description' => __( 'Manage global design system styling: background canvas, colors, typography, spacing, buttons, and custom CSS.', 'xophz-magic-hat' ),
+		'priority'    => 30,
 	) );
 
-	// Schedule & Mode Override Section
-	$wp_customize->add_section( 'mh_colors_schedule', array(
-		'title'    => __( '⏱️ Day / Night Schedule & Color Mode', 'xophz-magic-hat' ),
-		'panel'    => 'magic_hat_colors_panel',
-		'priority' => 1,
+	// ==============================================
+	// SECTION: Site Colors (Nested inside Site Styles)
+	// ==============================================
+	$wp_customize->add_section( 'magic_hat_colors', array(
+		'title'       => __( '🎭 Site Colors', 'xophz-magic-hat' ),
+		'description' => __( 'Customize your core design system colors and circadian schedule behavior.', 'xophz-magic-hat' ),
+		'priority'    => 20,
+		'panel'       => 'magic_hat_site_styles',
 	) );
 
+	// Schedule & Mode Override
 	$wp_customize->add_setting( 'mh_color_schedule_mode', array(
 		'default'           => 'circadian',
 		'sanitize_callback' => 'sanitize_text_field',
@@ -433,7 +495,7 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 
 	$wp_customize->add_control( 'mh_color_schedule_mode', array(
 		'type'        => 'select',
-		'section'     => 'mh_colors_schedule',
+		'section'     => 'magic_hat_colors',
 		'label'       => __( 'Color Schedule Behavior', 'xophz-magic-hat' ),
 		'description' => __( 'Select whether theme colors dynamically shift with the 24-hour astronomical circadian clock or stay permanently locked to Light, Twilight, or Dark.', 'xophz-magic-hat' ),
 		'choices'     => array(
@@ -444,86 +506,53 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 		),
 	) );
 
-	// Define the groups and their settings
-	$color_groups = array(
-		'Brand' => array(
-			'mh_color_brand_base'  => array('label' => 'Base', 'default' => '#2563eb'),
-			'mh_color_brand_hover' => array('label' => 'Hover', 'default' => '#3b82f6'),
-			'mh_color_brand_active'=> array('label' => 'Active', 'default' => '#1d4ed8'),
-			'mh_color_brand_muted' => array('label' => 'Muted', 'default' => '#dbeafe'),
-		),
-		'Action (CTA)' => array(
-			'mh_color_cta_base'    => array('label' => 'Base', 'default' => '#ff3366'),
-			'mh_color_cta_hover'   => array('label' => 'Hover', 'default' => '#ff668c'),
-			'mh_color_cta_active'  => array('label' => 'Active', 'default' => '#e62050'),
-			'mh_color_cta_muted'   => array('label' => 'Muted', 'default' => '#ffe4e6'),
-		),
-		'Links' => array(
-			'mh_color_link'        => array('label' => 'Default', 'default' => '#2563eb'),
-			'mh_color_link_hover'  => array('label' => 'Hover', 'default' => '#ff3366'),
-			'mh_color_link_active' => array('label' => 'Active', 'default' => '#1d4ed8'),
-			'mh_color_link_visited'=> array('label' => 'Visited', 'default' => '#7c3aed'),
-		),
-		'Text' => array(
-			'mh_color_text_heading'=> array('label' => 'Heading', 'default' => '#0f172a', 'default_dark' => '#ffffff'),
-			'mh_color_text_main'   => array('label' => 'Main', 'default' => '#334155', 'default_dark' => '#f8fafc'),
-			'mh_color_text_muted'  => array('label' => 'Muted', 'default' => '#64748b', 'default_dark' => '#94a3b8'),
-			'mh_color_text_inverse'=> array('label' => 'Inverse', 'default' => '#ffffff', 'default_dark' => '#0f172a'),
-		),
-		'Surfaces & Layers' => array(
-			'mh_color_body'        => array('label' => 'Body (Base)', 'default' => '#ffffff', 'default_dark' => '#0a0b10'),
-			'mh_color_main'        => array('label' => 'Main Background', 'default' => '#ffffff', 'default_dark' => '#0f172a'),
-			'mh_color_section'     => array('label' => 'Section', 'default' => '#f8fafc', 'default_dark' => 'rgba(255, 255, 255, 0.02)'),
-			'mh_color_card'        => array('label' => 'Card', 'default' => '#ffffff', 'default_dark' => 'rgba(255, 255, 255, 0.05)'),
-		),
-		'Borders & Lines' => array(
-			'mh_color_border_base'  => array('label' => 'Base', 'default' => '#e2e8f0'),
-			'mh_color_border_hover' => array('label' => 'Hover', 'default' => '#cbd5e1'),
-			'mh_color_border_focus' => array('label' => 'Focus', 'default' => '#2563eb'),
-			'mh_color_border_muted' => array('label' => 'Muted/Divider', 'default' => '#e2e8f0'),
-		),
-		'Status System' => array(
-			'mh_color_success'     => array('label' => 'Success', 'default' => '#10b981'),
-			'mh_color_warning'     => array('label' => 'Warning', 'default' => '#f59e0b'),
-			'mh_color_danger'      => array('label' => 'Danger', 'default' => '#ef4444'),
-			'mh_color_info'        => array('label' => 'Info', 'default' => '#3b82f6'),
-		),
-	);
+	// Group the canonical definitions for Customizer section
+	$color_defs = mh_get_color_definitions();
+	$color_groups = array();
+	foreach ( $color_defs as $key => $data ) {
+		$group = $data['group'];
+		$setting_id = 'mh_color_' . str_replace( '-', '_', $key );
+		if ( ! isset( $color_groups[ $group ] ) ) {
+			$color_groups[ $group ] = array();
+		}
+		$color_groups[ $group ][ $setting_id ] = $data;
+	}
 
-	$div_count = 0;
 	foreach ( $color_groups as $group_label => $settings ) {
-		$div_count++;
-		$section_id = 'mh_colors_' . sanitize_title( $group_label );
-		
-		$wp_customize->add_section( $section_id, array(
-			'title'    => $group_label,
-			'panel'    => 'magic_hat_colors_panel',
-			'priority' => 10 + $div_count,
+		$group_slug = sanitize_title( $group_label );
+		$dummy_setting_id = 'mh_title_' . $group_slug;
+		$wp_customize->add_setting( $dummy_setting_id, array(
+			'default'           => '',
+			'sanitize_callback' => 'sanitize_text_field',
 		) );
+		$wp_customize->add_control( new Magic_Hat_Group_Title_Control( $wp_customize, $dummy_setting_id, array(
+			'label'   => $group_label,
+			'section' => 'magic_hat_colors',
+		) ) );
 
 		foreach ( $settings as $id => $data ) {
-			// Triad Header Control (Row label spanning full width)
-			$header_id = 'mh_header_' . $id;
-			$wp_customize->add_setting( $header_id, array( 'default' => '', 'sanitize_callback' => 'sanitize_text_field' ) );
-			$wp_customize->add_control( new Magic_Hat_Color_Row_Header_Control( $wp_customize, $header_id, array(
-				'label'   => $data['label'],
-				'section' => $section_id,
+			// Light Mode
+			$wp_customize->add_setting( $id, array( 'default' => $data['light'], 'sanitize_callback' => 'sanitize_text_field', 'transport' => 'refresh' ) );
+			$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, $id, array(
+				'label'   => $data['label'] . ' (Light)',
+				'section' => 'magic_hat_colors',
 			) ) );
 
-			// Light Mode (Column 1)
-			$wp_customize->add_setting( $id, array( 'default' => $data['default'], 'sanitize_callback' => 'sanitize_text_field', 'transport' => 'refresh' ) );
-			$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, $id, array( 'label' => '☀️ Light', 'section' => $section_id ) ) );
-
-			// Twilight Mode (Column 2)
+			// Twilight Mode
 			$twi_id = $id . '_twilight';
-			$wp_customize->add_setting( $twi_id, array( 'default' => $data['default'], 'sanitize_callback' => 'sanitize_text_field', 'transport' => 'refresh' ) );
-			$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, $twi_id, array( 'label' => '🌅 Twilight', 'section' => $section_id ) ) );
+			$wp_customize->add_setting( $twi_id, array( 'default' => $data['twilight'], 'sanitize_callback' => 'sanitize_text_field', 'transport' => 'refresh' ) );
+			$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, $twi_id, array(
+				'label'   => $data['label'] . ' (Twilight)',
+				'section' => 'magic_hat_colors',
+			) ) );
 
-			// Dark Mode (Column 3)
+			// Dark Mode
 			$dark_id = $id . '_dark';
-			$dark_default = isset($data['default_dark']) ? $data['default_dark'] : $data['default'];
-			$wp_customize->add_setting( $dark_id, array( 'default' => $dark_default, 'sanitize_callback' => 'sanitize_text_field', 'transport' => 'refresh' ) );
-			$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, $dark_id, array( 'label' => '🌙 Dark', 'section' => $section_id ) ) );
+			$wp_customize->add_setting( $dark_id, array( 'default' => $data['dark'], 'sanitize_callback' => 'sanitize_text_field', 'transport' => 'refresh' ) );
+			$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, $dark_id, array(
+				'label'   => $data['label'] . ' (Dark)',
+				'section' => 'magic_hat_colors',
+			) ) );
 		}
 	}
 
@@ -533,8 +562,22 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	$wp_customize->add_section( 'magic_hat_background', array(
 		'title'       => __( '🎨 Site Background & Canvas', 'xophz-magic-hat' ),
 		'description' => __( 'Configure your site canvas: choose standard daylight theme surface, solid color, gradient, or one of 21 interactive generative animated canvas backgrounds.', 'xophz-magic-hat' ),
-		'priority'    => 29,
+		'priority'    => 10,
+		'panel'       => 'magic_hat_site_styles',
 	) );
+
+	// Contextual active callbacks for background mode controls
+	function mh_is_bg_mode_solid( $control ) {
+		return $control->manager->get_setting( 'mh_bg_mode' ) && $control->manager->get_setting( 'mh_bg_mode' )->value() === 'solid';
+	}
+
+	function mh_is_bg_mode_gradient( $control ) {
+		return $control->manager->get_setting( 'mh_bg_mode' ) && $control->manager->get_setting( 'mh_bg_mode' )->value() === 'gradient';
+	}
+
+	function mh_is_bg_mode_canvas( $control ) {
+		return $control->manager->get_setting( 'mh_bg_mode' ) && $control->manager->get_setting( 'mh_bg_mode' )->value() === 'canvas';
+	}
 
 	// Background Mode
 	$wp_customize->add_setting( 'mh_bg_mode', array(
@@ -555,26 +598,28 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 		),
 	) );
 
-	// Solid Color
+	// Solid Color (Only shown when mode is solid)
 	$wp_customize->add_setting( 'mh_bg_solid_color', array(
 		'default'           => '#0a0b10',
 		'sanitize_callback' => 'sanitize_text_field',
 		'transport'         => 'refresh',
 	) );
 	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mh_bg_solid_color', array(
-		'label'       => __( 'Solid Background Color', 'xophz-magic-hat' ),
-		'section'     => 'magic_hat_background',
+		'label'           => __( 'Solid Background Color', 'xophz-magic-hat' ),
+		'section'         => 'magic_hat_background',
+		'active_callback' => 'mh_is_bg_mode_solid',
 	) ) );
 
-	// Gradient Start & End
+	// Gradient Start & End (Only shown when mode is gradient)
 	$wp_customize->add_setting( 'mh_bg_gradient_start', array(
 		'default'           => '#0f172a',
 		'sanitize_callback' => 'sanitize_text_field',
 		'transport'         => 'refresh',
 	) );
 	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mh_bg_gradient_start', array(
-		'label'       => __( 'Gradient Start Color', 'xophz-magic-hat' ),
-		'section'     => 'magic_hat_background',
+		'label'           => __( 'Gradient Start Color', 'xophz-magic-hat' ),
+		'section'         => 'magic_hat_background',
+		'active_callback' => 'mh_is_bg_mode_gradient',
 	) ) );
 
 	$wp_customize->add_setting( 'mh_bg_gradient_end', array(
@@ -583,21 +628,23 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 		'transport'         => 'refresh',
 	) );
 	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mh_bg_gradient_end', array(
-		'label'       => __( 'Gradient End Color', 'xophz-magic-hat' ),
-		'section'     => 'magic_hat_background',
+		'label'           => __( 'Gradient End Color', 'xophz-magic-hat' ),
+		'section'         => 'magic_hat_background',
+		'active_callback' => 'mh_is_bg_mode_gradient',
 	) ) );
 
-	// Canvas Preset (21 Presets)
+	// Canvas Preset (21 Presets - Only shown when mode is canvas)
 	$wp_customize->add_setting( 'mh_bg_canvas_preset', array(
 		'default'           => 'electric-wave',
 		'sanitize_callback' => 'sanitize_text_field',
 		'transport'         => 'postMessage',
 	) );
 	$wp_customize->add_control( 'mh_bg_canvas_preset', array(
-		'type'        => 'select',
-		'section'     => 'magic_hat_background',
-		'label'       => __( 'Animated Canvas Preset', 'xophz-magic-hat' ),
-		'choices'     => array(
+		'type'            => 'select',
+		'section'         => 'magic_hat_background',
+		'label'           => __( 'Animated Canvas Preset', 'xophz-magic-hat' ),
+		'active_callback' => 'mh_is_bg_mode_canvas',
+		'choices'         => array(
 			'electric-wave'     => __( '⚡ Electric Waves', 'xophz-magic-hat' ),
 			'aurora-smoke'      => __( '🌌 Aurora Smoke', 'xophz-magic-hat' ),
 			'celestial-cosmos'  => __( '✨ Celestial Cosmos', 'xophz-magic-hat' ),
@@ -622,52 +669,57 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 		),
 	) );
 
-	// Canvas Tint Color
+	// Canvas Tint Color (Only shown when mode is canvas)
 	$wp_customize->add_setting( 'mh_bg_canvas_color', array(
 		'default'           => '#2563eb',
 		'sanitize_callback' => 'sanitize_text_field',
 		'transport'         => 'postMessage',
 	) );
 	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mh_bg_canvas_color', array(
-		'label'       => __( 'Canvas Accent / Tint Color', 'xophz-magic-hat' ),
-		'section'     => 'magic_hat_background',
+		'label'           => __( 'Canvas Accent / Tint Color', 'xophz-magic-hat' ),
+		'section'         => 'magic_hat_background',
+		'active_callback' => 'mh_is_bg_mode_canvas',
 	) ) );
 
-	// Canvas Opacity
+	// Canvas Opacity (Only shown when mode is canvas)
 	$wp_customize->add_setting( 'mh_bg_canvas_opacity', array(
 		'default'           => '0.6',
 		'sanitize_callback' => 'sanitize_text_field',
 		'transport'         => 'postMessage',
 	) );
 	$wp_customize->add_control( 'mh_bg_canvas_opacity', array(
-		'type'        => 'number',
-		'section'     => 'magic_hat_background',
-		'label'       => __( 'Canvas Opacity (0.1 - 1.0)', 'xophz-magic-hat' ),
-		'input_attrs' => array( 'min' => '0.1', 'max' => '1.0', 'step' => '0.05' ),
+		'type'            => 'number',
+		'section'         => 'magic_hat_background',
+		'label'           => __( 'Canvas Opacity (0.1 - 1.0)', 'xophz-magic-hat' ),
+		'active_callback' => 'mh_is_bg_mode_canvas',
+		'input_attrs'     => array( 'min' => '0.1', 'max' => '1.0', 'step' => '0.05' ),
 	) );
 
-	// Canvas Speed
+	// Canvas Speed (Only shown when mode is canvas)
 	$wp_customize->add_setting( 'mh_bg_canvas_speed', array(
 		'default'           => '1.0',
 		'sanitize_callback' => 'sanitize_text_field',
 		'transport'         => 'postMessage',
 	) );
 	$wp_customize->add_control( 'mh_bg_canvas_speed', array(
-		'type'        => 'number',
-		'section'     => 'magic_hat_background',
-		'label'       => __( 'Animation Speed Multiplier (0.2 - 3.0)', 'xophz-magic-hat' ),
-		'input_attrs' => array( 'min' => '0.2', 'max' => '3.0', 'step' => '0.1' ),
+		'type'            => 'number',
+		'section'         => 'magic_hat_background',
+		'label'           => __( 'Animation Speed Multiplier (0.2 - 3.0)', 'xophz-magic-hat' ),
+		'active_callback' => 'mh_is_bg_mode_canvas',
+		'input_attrs'     => array( 'min' => '0.2', 'max' => '3.0', 'step' => '0.1' ),
 	) );
 
-	// ==============================================
-	// SECTION: Editor Settings
-	// ==============================================
-	$wp_customize->add_section( 'mh_colors_editor_settings', array(
-		'title'    => __( 'Editor Settings', 'xophz-magic-hat' ),
-		'panel'    => 'magic_hat_colors_panel',
-		'priority' => 99,
+	// Editor Settings inside magic_hat_colors
+	$dummy_editor_title = 'mh_title_editor_settings';
+	$wp_customize->add_setting( $dummy_editor_title, array(
+		'default'           => '',
+		'sanitize_callback' => 'sanitize_text_field',
 	) );
-	
+	$wp_customize->add_control( new Magic_Hat_Group_Title_Control( $wp_customize, $dummy_editor_title, array(
+		'label'   => __( 'Editor Settings', 'xophz-magic-hat' ),
+		'section' => 'magic_hat_colors',
+	) ) );
+
 	$wp_customize->add_setting( 'mh_enforce_site_colors', array(
 		'default'           => false,
 		'sanitize_callback' => 'rest_sanitize_boolean',
@@ -675,7 +727,7 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	
 	$wp_customize->add_control( 'mh_enforce_site_colors', array(
 		'type'        => 'checkbox',
-		'section'     => 'mh_colors_editor_settings',
+		'section'     => 'magic_hat_colors',
 		'label'       => __( 'Enforce Site Colors', 'xophz-magic-hat' ),
 		'description' => __( 'When enabled, editors can only choose from the colors defined above.', 'xophz-magic-hat' ),
 	) );
@@ -685,13 +737,15 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	// ==============================================
 	$wp_customize->add_section( 'magic_hat_typography', array(
 		'title'           => __( '🪶 Typography', 'xophz-magic-hat' ),
-		'priority'        => 31,
+		'priority'        => 30,
+		'panel'           => 'magic_hat_site_styles',
 	) );
 
 	// Base Font Family
 	$wp_customize->add_setting( 'mh_font_family', array(
 		'default'           => 'Inter, sans-serif',
 		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
 	) );
 	
 	$google_fonts = array(
@@ -795,7 +849,11 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	) ) );
 
 	// Base Font Size
-	$wp_customize->add_setting( 'mh_font_size', array( 'default' => '16' ) );
+	$wp_customize->add_setting( 'mh_font_size', array(
+		'default'           => '16',
+		'sanitize_callback' => 'absint',
+		'transport'         => 'postMessage',
+	) );
 	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_font_size', array(
 		'label'       => __( 'Base / Paragraph Font Size (px)', 'xophz-magic-hat' ),
 		'section'     => 'magic_hat_typography',
@@ -803,7 +861,11 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	) ) );
 
 	// Base Line Height
-	$wp_customize->add_setting( 'mh_line_height', array( 'default' => '1.6' ) );
+	$wp_customize->add_setting( 'mh_line_height', array(
+		'default'           => '1.6',
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
 	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_line_height', array(
 		'label'       => __( 'Base Line Height', 'xophz-magic-hat' ),
 		'section'     => 'magic_hat_typography',
@@ -811,7 +873,11 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	) ) );
 
 	// Heading Weight
-	$wp_customize->add_setting( 'mh_heading_weight', array( 'default' => '600' ) );
+	$wp_customize->add_setting( 'mh_heading_weight', array(
+		'default'           => '600',
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
 	$wp_customize->add_control( 'mh_heading_weight', array(
 		'label'    => __( 'Heading Font Weight', 'xophz-magic-hat' ),
 		'section'  => 'magic_hat_typography',
@@ -828,7 +894,11 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	) );
 
 	// Heading Line Height
-	$wp_customize->add_setting( 'mh_heading_line_height', array( 'default' => '1.2' ) );
+	$wp_customize->add_setting( 'mh_heading_line_height', array(
+		'default'           => '1.2',
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
 	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_heading_line_height', array(
 		'label'       => __( 'Heading Line Height', 'xophz-magic-hat' ),
 		'section'     => 'magic_hat_typography',
@@ -845,7 +915,11 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 		'6' => 16,
 	);
 	foreach ( $headings as $level => $default_size ) {
-		$wp_customize->add_setting( 'mh_font_size_h' . $level, array( 'default' => $default_size ) );
+		$wp_customize->add_setting( 'mh_font_size_h' . $level, array(
+			'default'           => $default_size,
+			'sanitize_callback' => 'absint',
+			'transport'         => 'postMessage',
+		) );
 		$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_font_size_h' . $level, array(
 			'label'       => sprintf( __( 'H%s Font Size (px)', 'xophz-magic-hat' ), $level ),
 			'section'     => 'magic_hat_typography',
@@ -858,10 +932,15 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	// ==============================================
 	$wp_customize->add_section( 'magic_hat_spacing', array(
 		'title'           => __( '📏 Spacing & Layout', 'xophz-magic-hat' ),
-		'priority'        => 32,
+		'priority'        => 40,
+		'panel'           => 'magic_hat_site_styles',
 	) );
 	
-	$wp_customize->add_setting( 'mh_space_base', array( 'default' => '8' ) );
+	$wp_customize->add_setting( 'mh_space_base', array(
+		'default'           => '8',
+		'sanitize_callback' => 'absint',
+		'transport'         => 'postMessage',
+	) );
 	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_space_base', array(
 		'label'       => __( 'Base Spacing Unit (px)', 'xophz-magic-hat' ),
 		'description' => __( 'This is the master unit. All spacing scales proportionally from this base value.', 'xophz-magic-hat' ),
@@ -869,21 +948,33 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 		'input_attrs' => array( 'min' => 2, 'max' => 24, 'step' => 1 ),
 	) ) );
 	
-	$wp_customize->add_setting( 'mh_content_width', array( 'default' => '1200' ) );
+	$wp_customize->add_setting( 'mh_content_width', array(
+		'default'           => '1200',
+		'sanitize_callback' => 'absint',
+		'transport'         => 'postMessage',
+	) );
 	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_content_width', array(
 		'label'       => __( 'Max Content Width (px)', 'xophz-magic-hat' ),
 		'section'     => 'magic_hat_spacing',
 		'input_attrs' => array( 'min' => 600, 'max' => 2400, 'step' => 10 ),
 	) ) );
 
-	$wp_customize->add_setting( 'mh_radius_base', array( 'default' => '4' ) );
+	$wp_customize->add_setting( 'mh_radius_base', array(
+		'default'           => '4',
+		'sanitize_callback' => 'absint',
+		'transport'         => 'postMessage',
+	) );
 	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_radius_base', array(
 		'label'       => __( 'Base Border Radius (px)', 'xophz-magic-hat' ),
 		'section'     => 'magic_hat_spacing',
 		'input_attrs' => array( 'min' => 0, 'max' => 50, 'step' => 1 ),
 	) ) );
 
-	$wp_customize->add_setting( 'mh_border_width', array( 'default' => '1' ) );
+	$wp_customize->add_setting( 'mh_border_width', array(
+		'default'           => '1',
+		'sanitize_callback' => 'absint',
+		'transport'         => 'postMessage',
+	) );
 	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_border_width', array(
 		'label'       => __( 'Global Border Width (px)', 'xophz-magic-hat' ),
 		'section'     => 'magic_hat_spacing',
@@ -895,7 +986,8 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	// ==============================================
 	$wp_customize->add_section( 'magic_hat_buttons', array(
 		'title'           => __( '👆 Buttons', 'xophz-magic-hat' ),
-		'priority'        => 33,
+		'priority'        => 50,
+		'panel'           => 'magic_hat_site_styles',
 	) );
 
 	$wp_customize->add_setting( 'mh_button_font_weight', array( 'default' => '600' ) );
@@ -946,12 +1038,12 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	}
 
 	// ==============================================
-	// SECTION: Header Options
+	// SECTION: Header Settings
 	// ==============================================
 	$wp_customize->add_section( 'magic_hat_header', array(
-		'title'       => __( '🎩 Header Options', 'xophz-magic-hat' ),
+		'title'       => __( '🎩 Header Settings', 'xophz-magic-hat' ),
 		'description' => __( 'Configure header layout, navigation menu, sticky behavior, and mobile drawer.', 'xophz-magic-hat' ),
-		'priority'    => 33,
+		'priority'    => 70,
 	) );
 
 	// Header Layout
@@ -1053,12 +1145,12 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 	) );
 
 	// ==============================================
-	// SECTION: Footer Options
+	// SECTION: Footer Settings
 	// ==============================================
 	$wp_customize->add_section( 'magic_hat_footer', array(
-		'title'       => __( '🦶 Footer Options', 'xophz-magic-hat' ),
+		'title'       => __( '🦶 Footer Settings', 'xophz-magic-hat' ),
 		'description' => __( 'Configure footer layout, background theme, navigation columns, and copyright.', 'xophz-magic-hat' ),
-		'priority'    => 34,
+		'priority'    => 100,
 	) );
 
 	// Footer Layout
@@ -1192,8 +1284,50 @@ function xophz_magic_hat_customize_register( $wp_customize ) {
 			'render_callback'     => 'mh_render_footer_markup',
 		) );
 	}
+
+	// Reorder core sections and panels to align with the design hierarchy
+	if ( $wp_customize->get_section( 'title_tagline' ) ) {
+		$wp_customize->get_section( 'title_tagline' )->priority = 20;
+	}
+	if ( $wp_customize->get_section( 'custom_css' ) ) {
+		$wp_customize->get_section( 'custom_css' )->panel    = 'magic_hat_site_styles';
+		$wp_customize->get_section( 'custom_css' )->priority = 60;
+	}
+	if ( $wp_customize->get_section( 'static_front_page' ) ) {
+		$wp_customize->get_section( 'static_front_page' )->priority = 40;
+	}
+	if ( $wp_customize->get_panel( 'woocommerce' ) ) {
+		$wp_customize->get_panel( 'woocommerce' )->title    = __( '🛍️ Shop Settings', 'xophz-magic-hat' );
+		$wp_customize->get_panel( 'woocommerce' )->priority = 50;
+	}
+	if ( $wp_customize->get_section( 'woocommerce' ) ) {
+		$wp_customize->get_section( 'woocommerce' )->title    = __( '🛍️ Shop Settings', 'xophz-magic-hat' );
+		$wp_customize->get_section( 'woocommerce' )->priority = 50;
+	}
+	if ( $wp_customize->get_panel( 'nav_menus' ) ) {
+		$wp_customize->get_panel( 'nav_menus' )->priority = 60;
+	}
 }
 add_action( 'customize_register', 'xophz_magic_hat_customize_register' );
+
+/**
+ * Late Customizer panel/section adjustments for WooCommerce and third-party plugins
+ */
+function xophz_magic_hat_late_customizer_adjustments( $wp_customize ) {
+	if ( $wp_customize->get_panel( 'woocommerce' ) ) {
+		$wp_customize->get_panel( 'woocommerce' )->title    = __( '🛍️ Shop Settings', 'xophz-magic-hat' );
+		$wp_customize->get_panel( 'woocommerce' )->priority = 50;
+	}
+	if ( $wp_customize->get_section( 'woocommerce' ) ) {
+		$wp_customize->get_section( 'woocommerce' )->title    = __( '🛍️ Shop Settings', 'xophz-magic-hat' );
+		$wp_customize->get_section( 'woocommerce' )->priority = 50;
+	}
+	if ( $wp_customize->get_section( 'custom_css' ) ) {
+		$wp_customize->get_section( 'custom_css' )->panel    = 'magic_hat_site_styles';
+		$wp_customize->get_section( 'custom_css' )->priority = 60;
+	}
+}
+add_action( 'customize_register', 'xophz_magic_hat_late_customizer_adjustments', 999 );
 
 function mh_render_footer_brand() {
 	?>
@@ -1384,103 +1518,9 @@ function xophz_magic_hat_customize_controls_scripts() {
 			});
 
 
-
+			});
 		});
 	</script>
-	<style>
-		/* Magic Hat Styles Panel Styling */
-		#accordion-panel-magic_hat_options > h3.accordion-section-title {
-			background: linear-gradient(135deg, #1e1e2f 0%, #10101b 100%);
-			color: #fff !important;
-			border-left: 4px solid #62c9ff;
-			box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-			transition: all 0.3s ease;
-		}
-		#accordion-panel-magic_hat_options > h3.accordion-section-title:hover {
-			background: linear-gradient(135deg, #2a2a3f 0%, #1a1a2b 100%);
-			color: #62c9ff !important;
-			border-left-color: #ff3366;
-		}
-		#accordion-panel-magic_hat_options > h3.accordion-section-title:after {
-			color: rgba(255, 255, 255, 0.7);
-		}
-		#accordion-panel-magic_hat_options > h3.accordion-section-title:hover:after {
-			color: #fff;
-		}
-		
-		/* 3-Column Color Controls via Flexbox */
-		ul[id*="sub-accordion-section-mh_colors_"],
-		.control-section[id*="mh_colors_"] .accordion-section-content {
-			display: flex !important;
-			flex-wrap: wrap !important;
-			gap: 6px !important;
-			align-content: flex-start !important;
-			padding: 12px 10px !important;
-		}
-		ul[id*="sub-accordion-section-mh_colors_"] > li,
-		.control-section[id*="mh_colors_"] .accordion-section-content > li {
-			box-sizing: border-box !important;
-			margin: 0 !important;
-			padding: 0 !important;
-		}
-		ul[id*="sub-accordion-section-mh_colors_"] > li.customize-control-mh_color_row_header,
-		.control-section[id*="mh_colors_"] .accordion-section-content > li.customize-control-mh_color_row_header {
-			width: 100% !important;
-			flex: 0 0 100% !important;
-			clear: both !important;
-			margin-top: 8px !important;
-			margin-bottom: 2px !important;
-		}
-		ul[id*="sub-accordion-section-mh_colors_"] > li.customize-control-color,
-		.control-section[id*="mh_colors_"] .accordion-section-content > li.customize-control-color {
-			width: calc(33.333% - 4px) !important;
-			flex: 0 0 calc(33.333% - 4px) !important;
-			clear: none !important;
-			margin-bottom: 6px !important;
-		}
-		ul[id*="sub-accordion-section-mh_colors_"] li.customize-control-color .customize-control-title,
-		.control-section[id*="mh_colors_"] .accordion-section-content li.customize-control-color .customize-control-title {
-			font-size: 10px !important;
-			white-space: nowrap !important;
-			overflow: hidden !important;
-			text-overflow: ellipsis !important;
-			margin-bottom: 3px !important;
-			font-weight: 500 !important;
-			display: block !important;
-		}
-		ul[id*="sub-accordion-section-mh_colors_"] .wp-picker-container,
-		.control-section[id*="mh_colors_"] .accordion-section-content .wp-picker-container {
-			display: block !important;
-			position: relative !important;
-		}
-		ul[id*="sub-accordion-section-mh_colors_"] .wp-color-result,
-		.control-section[id*="mh_colors_"] .accordion-section-content .wp-color-result {
-			width: 100% !important;
-			box-sizing: border-box !important;
-			margin: 0 !important;
-			padding-left: 22px !important;
-			height: 26px !important;
-			border-radius: 4px !important;
-		}
-		ul[id*="sub-accordion-section-mh_colors_"] .wp-color-result-text,
-		.control-section[id*="mh_colors_"] .accordion-section-content .wp-color-result-text {
-			font-size: 0 !important;
-			line-height: 24px !important;
-		}
-		ul[id*="sub-accordion-section-mh_colors_"] .wp-color-result-text:before,
-		.control-section[id*="mh_colors_"] .accordion-section-content .wp-color-result-text:before {
-			content: "Pick" !important;
-			font-size: 10px !important;
-			color: #334155 !important;
-		}
-		ul[id*="sub-accordion-section-mh_colors_"] .wp-picker-holder,
-		.control-section[id*="mh_colors_"] .accordion-section-content .wp-picker-holder {
-			position: absolute !important;
-			z-index: 999999 !important;
-			left: 0 !important;
-			top: 100% !important;
-		}
-	</style>
 	<?php
 }
 add_action( 'customize_controls_print_footer_scripts', 'xophz_magic_hat_customize_controls_scripts' );
@@ -1513,38 +1553,18 @@ function xophz_magic_hat_customizer_css() {
 	$font_name = trim( explode(',', $font_family)[0] );
 	$font_url = 'https://fonts.googleapis.com/css2?family=' . urlencode($font_name) . ':wght@300;400;500;600;700;800;900&display=swap';
 	
-	// Fetch Colors
-	$colors = array(
-		'brand-base'    => get_theme_mod( 'mh_color_brand_base', '#62c9ff' ),
-		'brand-hover'   => get_theme_mod( 'mh_color_brand_hover', '#8be0ff' ),
-		'brand-active'  => get_theme_mod( 'mh_color_brand_active', '#40a0df' ),
-		'brand-muted'   => get_theme_mod( 'mh_color_brand_muted', '#1a3a4d' ),
-		
-		'cta-base'      => get_theme_mod( 'mh_color_cta_base', '#ff3366' ),
-		'cta-hover'     => get_theme_mod( 'mh_color_cta_hover', '#ff668c' ),
-		'cta-active'    => get_theme_mod( 'mh_color_cta_active', '#e62050' ),
-		'cta-muted'     => get_theme_mod( 'mh_color_cta_muted', '#4d1a26' ),
-		'link'          => get_theme_mod( 'mh_color_link', '#62c9ff' ),
-		'link-hover'    => get_theme_mod( 'mh_color_link_hover', '#ff3366' ),
-		'link-active'   => get_theme_mod( 'mh_color_link_active', '#e62050' ),
-		'link-visited'  => get_theme_mod( 'mh_color_link_visited', '#9b59b6' ),
-		'body'          => get_theme_mod( 'mh_color_body', '#0a0b10' ),
-		'main'          => get_theme_mod( 'mh_color_main', '#0f172a' ),
-		'section'       => get_theme_mod( 'mh_color_section', 'rgba(255, 255, 255, 0.02)' ),
-		'card'          => get_theme_mod( 'mh_color_card', 'rgba(255, 255, 255, 0.05)' ),
-		'border-base'   => get_theme_mod( 'mh_color_border_base', '#334155' ),
-		'border-hover'  => get_theme_mod( 'mh_color_border_hover', '#475569' ),
-		'border-focus'  => get_theme_mod( 'mh_color_border_focus', '#62c9ff' ),
-		'border-muted'  => get_theme_mod( 'mh_color_border_muted', '#1e293b' ),
-		'text-heading'  => get_theme_mod( 'mh_color_text_heading', '#111827' ),
-		'text-main'     => get_theme_mod( 'mh_color_text_main', '#334155' ),
-		'text-muted'    => get_theme_mod( 'mh_color_text_muted', '#94a3b8' ),
-		'text-inverse'  => get_theme_mod( 'mh_color_text_inverse', '#0f172a' ),
-		'success'       => get_theme_mod( 'mh_color_success', '#10b981' ),
-		'warning'       => get_theme_mod( 'mh_color_warning', '#f59e0b' ),
-		'danger'        => get_theme_mod( 'mh_color_danger', '#ef4444' ),
-		'info'          => get_theme_mod( 'mh_color_info', '#3b82f6' ),
-	);
+	// Fetch Colors from canonical definitions
+	$color_defs = mh_get_color_definitions();
+
+	// Pre-calculate server circadian rhythm for initial SSR/no-FOUC state
+	$now_hours = (float) current_time( 'H' ) + ( (float) current_time( 'i' ) / 60 );
+	$server_ratio = ( cos( ( $now_hours - 12 ) * M_PI / 12 ) + 1 ) / 2;
+	$server_is_day = ( $server_ratio >= 0.5 );
+	$server_phase_class = $server_is_day ? 'phase-day' : 'phase-night';
+	$server_phase_percent = $server_is_day 
+		? number_format( ( $server_ratio - 0.5 ) * 200, 2, '.', '' ) . '%' 
+		: number_format( $server_ratio * 200, 2, '.', '' ) . '%';
+	$server_daylight = number_format( $server_ratio * 100, 2, '.', '' ) . '%';
 	?>
 	<style type="text/css">
 		@import url('<?php echo esc_url($font_url); ?>');
@@ -1576,16 +1596,27 @@ function xophz_magic_hat_customizer_css() {
 			--mh-font-size-h5: <?php echo esc_attr( get_theme_mod( 'mh_font_size_h5', 20 ) ); ?>px;
 			--mh-font-size-h6: <?php echo esc_attr( get_theme_mod( 'mh_font_size_h6', 16 ) ); ?>px;
 
-			<?php foreach ( $colors as $key => $val ) : 
-				$twi_val  = get_theme_mod( 'mh_color_' . str_replace('-', '_', $key) . '_twilight', $val );
-				$dark_val = get_theme_mod( 'mh_color_' . str_replace('-', '_', $key) . '_dark', $val );
+			--mh-phase-primary: <?php echo esc_attr( $server_phase_percent ); ?>;
+			--mh-daylight: <?php echo esc_attr( $server_daylight ); ?>;
+
+			<?php foreach ( $color_defs as $key => $data ) : 
+				$light_val = get_theme_mod( 'mh_color_' . str_replace('-', '_', $key), $data['light'] );
+				$twi_val   = get_theme_mod( 'mh_color_' . str_replace('-', '_', $key) . '_twilight', $data['twilight'] );
+				$dark_val  = get_theme_mod( 'mh_color_' . str_replace('-', '_', $key) . '_dark', $data['dark'] );
 			?>
-			--mh-color-<?php echo esc_attr($key); ?>-light: <?php echo esc_attr( $val ); ?>;
+			--mh-color-<?php echo esc_attr($key); ?>-light: <?php echo esc_attr( $light_val ); ?>;
 			--mh-color-<?php echo esc_attr($key); ?>-twi: <?php echo esc_attr( $twi_val ); ?>;
 			--mh-color-<?php echo esc_attr($key); ?>-dark: <?php echo esc_attr( $dark_val ); ?>;
 			
-			/* Fallback to Light */
-			--mh-color-<?php echo esc_attr($key); ?>: var(--mh-color-<?php echo esc_attr($key); ?>-light);
+			/* Default fallback matches server-calculated circadian phase */
+			<?php if ( $server_is_day ) : ?>
+			--mh-color-<?php echo esc_attr($key); ?>: color-mix(in oklch, var(--mh-color-<?php echo esc_attr($key); ?>-light) var(--mh-phase-primary, <?php echo esc_attr( $server_phase_percent ); ?>), var(--mh-color-<?php echo esc_attr($key); ?>-twi));
+			<?php else : ?>
+			--mh-color-<?php echo esc_attr($key); ?>: color-mix(in oklch, var(--mh-color-<?php echo esc_attr($key); ?>-twi) var(--mh-phase-primary, <?php echo esc_attr( $server_phase_percent ); ?>), var(--mh-color-<?php echo esc_attr($key); ?>-dark));
+			<?php endif; ?>
+
+			/* Synchronize Gutenberg Core & FSE block color presets with Magic Hat tokens */
+			--wp--preset--color--<?php echo esc_attr( $data['slug'] ); ?>: var(--mh-color-<?php echo esc_attr( $key ); ?>);
 			<?php endforeach; ?>
 			
 			--mh-font-family: <?php echo esc_attr( $font_family ); ?>;
@@ -1602,35 +1633,48 @@ function xophz_magic_hat_customizer_css() {
 
 		if ( $schedule_mode === 'light' ) : ?>
 		:root, html {
-			<?php foreach ( $colors as $key => $val ) : ?>
+			<?php foreach ( $color_defs as $key => $data ) : ?>
 			--mh-color-<?php echo esc_attr($key); ?>: var(--mh-color-<?php echo esc_attr($key); ?>-light) !important;
 			<?php endforeach; ?>
 		}
 		<?php elseif ( $schedule_mode === 'twilight' ) : ?>
 		:root, html {
-			<?php foreach ( $colors as $key => $val ) : ?>
+			<?php foreach ( $color_defs as $key => $data ) : ?>
 			--mh-color-<?php echo esc_attr($key); ?>: var(--mh-color-<?php echo esc_attr($key); ?>-twi) !important;
 			<?php endforeach; ?>
 		}
 		<?php elseif ( $schedule_mode === 'dark' ) : ?>
 		:root, html {
-			<?php foreach ( $colors as $key => $val ) : ?>
+			<?php foreach ( $color_defs as $key => $data ) : ?>
 			--mh-color-<?php echo esc_attr($key); ?>: var(--mh-color-<?php echo esc_attr($key); ?>-dark) !important;
 			<?php endforeach; ?>
 		}
 		<?php else : ?>
-		:root.phase-day, html[data-theme="light"].phase-day {
-			<?php foreach ( $colors as $key => $val ) : ?>
+		:root.phase-day, html.phase-day, body.phase-day {
+			<?php foreach ( $color_defs as $key => $data ) : ?>
 			--mh-color-<?php echo esc_attr($key); ?>: color-mix(in oklch, var(--mh-color-<?php echo esc_attr($key); ?>-light) var(--mh-phase-primary, 100%), var(--mh-color-<?php echo esc_attr($key); ?>-twi));
 			<?php endforeach; ?>
 		}
 		
-		:root.phase-night, html[data-theme="dark"].phase-night {
-			<?php foreach ( $colors as $key => $val ) : ?>
+		:root.phase-night, html.phase-night, body.phase-night {
+			<?php foreach ( $color_defs as $key => $data ) : ?>
 			--mh-color-<?php echo esc_attr($key); ?>: color-mix(in oklch, var(--mh-color-<?php echo esc_attr($key); ?>-twi) var(--mh-phase-primary, 100%), var(--mh-color-<?php echo esc_attr($key); ?>-dark));
 			<?php endforeach; ?>
 		}
 		<?php endif; ?>
+
+		/* Circadian Smooth Transitions */
+		body,
+		header,
+		footer,
+		main,
+		section,
+		.mh-header,
+		.mh-front-page-hero,
+		.mh-section,
+		[data-mw-type] {
+			transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+		}
 
 		<?php if ( $bg_mode === 'solid' ) : ?>
 		body {
@@ -1661,6 +1705,25 @@ function xophz_magic_hat_customizer_css() {
 		<?php endif; ?>
 		body {
 			font-family: var(--mh-font-family);
+			color: var(--mh-color-text-main);
+		}
+		h1, h2, h3, h4, h5, h6 {
+			font-family: var(--mh-font-heading);
+			font-weight: var(--mh-heading-weight);
+			line-height: var(--mh-heading-line-height);
+			color: var(--mh-color-text-heading);
+			margin-top: 0;
+			margin-bottom: var(--mh-space-3);
+		}
+		h1, .wp-block-heading h1, h1.wp-block-heading { font-size: var(--mh-font-size-h1); }
+		h2, .wp-block-heading h2, h2.wp-block-heading { font-size: var(--mh-font-size-h2); }
+		h3, .wp-block-heading h3, h3.wp-block-heading { font-size: var(--mh-font-size-h3); }
+		h4, .wp-block-heading h4, h4.wp-block-heading { font-size: var(--mh-font-size-h4); }
+		h5, .wp-block-heading h5, h5.wp-block-heading { font-size: var(--mh-font-size-h5); }
+		h6, .wp-block-heading h6, h6.wp-block-heading { font-size: var(--mh-font-size-h6); }
+		p, .wp-block-paragraph {
+			font-size: var(--mh-font-size);
+			line-height: var(--mh-line-height);
 			color: var(--mh-color-text-main);
 		}
 		a {
@@ -1755,6 +1818,20 @@ function xophz_magic_hat_stylebook_template() {
 add_action( 'template_redirect', 'xophz_magic_hat_stylebook_template' );
 
 /**
+ * Add Circadian Phase to Body Classes for immediate CSS matching
+ */
+function mh_circadian_body_class( $classes ) {
+	$schedule_mode = get_theme_mod( 'mh_color_schedule_mode', 'circadian' );
+	if ( $schedule_mode === 'circadian' ) {
+		$now_hours = (float) current_time( 'H' ) + ( (float) current_time( 'i' ) / 60 );
+		$ratio     = ( cos( ( $now_hours - 12 ) * M_PI / 12 ) + 1 ) / 2;
+		$classes[] = ( $ratio >= 0.5 ) ? 'phase-day' : 'phase-night';
+	}
+	return $classes;
+}
+add_filter( 'body_class', 'mh_circadian_body_class' );
+
+/**
  * 24-Hour Circadian Rhythm Calculator
  */
 function mh_circadian_rhythm_scripts() {
@@ -1771,28 +1848,40 @@ function mh_circadian_rhythm_scripts() {
 				// cos((hours - 12) * PI / 12) = 1 at 12:00 (Noon), -1 at 00:00 (Midnight)
 				var ratio = (Math.cos((hours - 12) * Math.PI / 12) + 1) / 2;
 				var phasePercent;
-				if (ratio >= 0.5) {
+				var isDay = ratio >= 0.5;
+				if (isDay) {
 					// Day Phase: Mix Light (100%) and Twilight (0%)
 					phasePercent = ((ratio - 0.5) * 200).toFixed(2) + '%';
 					document.documentElement.classList.remove('phase-night');
 					document.documentElement.classList.add('phase-day');
+					if (document.body) {
+						document.body.classList.remove('phase-night');
+						document.body.classList.add('phase-day');
+					}
 				} else {
 					// Night Phase: Mix Twilight (100%) and Dark (0%)
 					phasePercent = (ratio * 200).toFixed(2) + '%';
 					document.documentElement.classList.remove('phase-day');
 					document.documentElement.classList.add('phase-night');
+					if (document.body) {
+						document.body.classList.remove('phase-day');
+						document.body.classList.add('phase-night');
+					}
 				}
 				
 				document.documentElement.style.setProperty('--mh-phase-primary', phasePercent);
 				document.documentElement.style.setProperty('--mh-daylight', (ratio * 100).toFixed(2) + '%');
 			}
 			updateDaylight();
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', updateDaylight);
+			}
 			setInterval(updateDaylight, 60000); // Update every minute
 		})();
 	</script>
 	<?php
 }
-add_action( 'wp_head', 'mh_circadian_rhythm_scripts', 5 );
+add_action( 'wp_head', 'mh_circadian_rhythm_scripts', 1 );
 
 /**
  * Render Ambient Background Canvas
@@ -1859,9 +1948,10 @@ add_filter( 'body_class', function( $classes ) {
 add_filter('the_content', function ($content) {
 	global $post;
 	if (is_customize_preview() && $post && $post->post_type === 'page') {
-		
+		$is_active = class_exists('Xophz_Compass_Magic_Wand') || defined('XOPHZ_COMPASS_MAGIC_WAND_VERSION');
+
 		// If Magic Wand isn't active, show the floating install prompt
-		if ( ! class_exists('Xophz_Compass_Magic_Wand') ) {
+		if ( ! $is_active ) {
 			include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 			if ( file_exists( WP_PLUGIN_DIR . '/xophz-compass-magic-wand/xophz-compass-magic-wand.php' ) ) {
 				$action_url = wp_nonce_url( self_admin_url('plugins.php?action=activate&plugin=xophz-compass-magic-wand/xophz-compass-magic-wand.php&plugin_status=all&paged=1&s'), 'activate-plugin_xophz-compass-magic-wand/xophz-compass-magic-wand.php' );
@@ -1880,19 +1970,23 @@ add_filter('the_content', function ($content) {
 			$content .= $prompt;
 		}
 
-		// Add Section block in content
-		$is_active = class_exists('Xophz_Compass_Magic_Wand');
-		$add_section = '
-		<div class="mh-add-section-preview" style="margin-top: 40px; padding: 60px 0; border: 2px dashed var(--mh-color-border-muted, #cbd5e1); text-align: center; background: #f8fafc; border-radius: 8px;">';
-			if ( $is_active ) {
-				$add_section .= '<button type="button" class="mh-add-section" onclick="if(typeof parent.mhOpenAddSectionPanel === \'function\') { parent.mhOpenAddSectionPanel(); } else { parent.wp.customize.section(\'mh_page_builder\').focus(); }" style="background: #2563eb; border: none; color: #fff; padding: 12px 32px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border-radius: 6px; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 8px rgba(37,99,235,0.25);">' . __('+ Add Section', 'xophz-magic-hat') . '</button>';
-			} else {
-				$add_section .= '<button type="button" class="btn-primary" style="background: #2563eb; border-color: #2563eb; text-transform: uppercase; letter-spacing: 1px;" onclick="if(window.parent && window.parent.wp && window.parent.wp.customize){ window.parent.wp.customize.section(\'mh_page_builder\').focus(); }">
-				' . esc_html__('+ ADD SECTION', 'xophz-magic-hat') . '
-			</button>';
-			}
-		$add_section .= '</div>';
-		$content .= $add_section;
+		// Only append Add Section helper if page is in Magic Hat canvas mode or has sections
+		$show_on_front = get_option( 'show_on_front', 'posts' );
+		$is_canvas = ( $show_on_front === 'page' && is_front_page() );
+		$page_sections = get_post_meta( $post->ID, '_mh_page_sections', true );
+		if ( $is_canvas || ! empty( $page_sections ) ) {
+			$add_section = '
+			<div class="mh-add-section-preview" style="margin-top: 40px; padding: 60px 0; border: 2px dashed var(--mh-color-border-muted, #cbd5e1); text-align: center; background: var(--mh-color-section, #f8fafc); border-radius: 8px;">';
+				if ( $is_active ) {
+					$add_section .= '<button type="button" class="mh-add-section" onclick="if(typeof parent.mhOpenAddSectionPanel === \'function\') { parent.mhOpenAddSectionPanel(); } else { parent.wp.customize.section(\'mh_page_builder\').focus(); }" style="background: var(--mh-color-cta-base, #2563eb); border: none; color: var(--mh-color-text-inverse, #fff); padding: 12px 32px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border-radius: 6px; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 8px rgba(37,99,235,0.25);">' . __('+ Add Section', 'xophz-magic-hat') . '</button>';
+				} else {
+					$add_section .= '<button type="button" class="btn-primary" style="background: #2563eb; border-color: #2563eb; text-transform: uppercase; letter-spacing: 1px;" onclick="if(window.parent && window.parent.wp && window.parent.wp.customize){ window.parent.wp.customize.section(\'mh_page_builder\').focus(); }">
+					' . esc_html__('+ ADD SECTION', 'xophz-magic-hat') . '
+				</button>';
+				}
+			$add_section .= '</div>';
+			$content .= $add_section;
+		}
 	}
 	return $content;
 }, PHP_INT_MAX);
