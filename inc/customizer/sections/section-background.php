@@ -21,8 +21,8 @@ function mh_register_background_section( $wp_customize ) {
 	$wp_customize->add_section( 'magic_hat_background', array(
 		'title'       => __( '🖼️ Site Background & Canvas', 'xophz-magic-hat' ),
 		'description' => __( 'Configure your site canvas: choose standard daylight theme surface, solid color, gradient, custom image, or one of 21 interactive generative animated canvas backgrounds.', 'xophz-magic-hat' ),
-		'priority'    => 10,
-		'panel'       => 'magic_hat_site_styles',
+		'priority'    => 40,
+		'panel'       => 'magic_hat_general_settings',
 	) );
 
 	// Background Mode

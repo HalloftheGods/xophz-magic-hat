@@ -68,9 +68,142 @@ function xophz_magic_hat_customize_controls_scripts() {
 			opacity: 0.7;
 			cursor: not-allowed;
 		}
+		/* Accordion Toggle Control Styles */
+		.customize-control-mh_accordion_toggle {
+			margin: 10px 0 4px 0 !important;
+			padding: 0 !important;
+			cursor: pointer;
+		}
+		.mh-accordion-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			background: #ffffff;
+			border: 1px solid #dcdcde;
+			border-radius: 4px;
+			padding: 8px 12px;
+			cursor: pointer;
+			user-select: none;
+			transition: background 0.15s ease, border-color 0.15s ease;
+		}
+		.mh-accordion-header:hover, .mh-accordion-header:focus {
+			background: #f6f7f7;
+			border-color: #2271b1;
+			outline: none;
+		}
+		.mh-accordion-header.is-expanded {
+			background: #f0f6fc;
+			border-color: #2271b1;
+		}
+		.mh-accordion-title-wrap {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			pointer-events: none;
+		}
+		.mh-accordion-title {
+			font-size: 12px;
+			font-weight: 600;
+			color: #1d2327;
+			pointer-events: none;
+		}
+		.mh-accordion-badge {
+			font-size: 10px;
+			color: #64748b;
+			background: #e2e8f0;
+			padding: 1px 6px;
+			border-radius: 8px;
+			pointer-events: none;
+		}
+		.mh-accordion-icon {
+			font-size: 18px;
+			width: 18px;
+			height: 18px;
+			color: #50575e;
+			transition: transform 0.2s ease;
+			pointer-events: none;
+		}
+		.mh-accordion-header.is-expanded .mh-accordion-icon {
+			transform: rotate(180deg);
+			color: #2271b1;
+		}
 	</style>
 	<script>
 		jQuery(document).ready(function($) {
+			// Helper to get child controls belonging to an accordion toggle
+			function getAccordionChildren($toggleLi) {
+				return $toggleLi.nextUntil('.customize-control-mh_accordion_toggle');
+			}
+
+			// Initialize and synchronize open/closed accordion states
+			function initAccordions() {
+				var $toggles = $('.customize-control-mh_accordion_toggle');
+				if (!$toggles.length) return;
+
+				$toggles.each(function() {
+					var $toggleLi = $(this);
+					var $header = $toggleLi.find('.mh-accordion-header');
+					var isExpanded = $header.hasClass('is-expanded');
+					var $children = getAccordionChildren($toggleLi);
+
+					if (isExpanded) {
+						$children.show();
+					} else {
+						$children.hide();
+					}
+				});
+			}
+
+			// Click handler for accordion toggles
+			$(document).on('click', '.customize-control-mh_accordion_toggle, .mh-accordion-header', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+
+				var $toggleLi = $(this).closest('.customize-control-mh_accordion_toggle');
+				var $header = $toggleLi.find('.mh-accordion-header');
+				var willExpand = !$header.hasClass('is-expanded');
+				var $children = getAccordionChildren($toggleLi);
+
+				if (willExpand) {
+					// Collapse sibling accordion groups in this section
+					var $siblingToggles = $toggleLi.siblings('.customize-control-mh_accordion_toggle');
+					$siblingToggles.each(function() {
+						var $otherToggle = $(this);
+						var $otherHeader = $otherToggle.find('.mh-accordion-header');
+						if ($otherHeader.hasClass('is-expanded')) {
+							$otherHeader.removeClass('is-expanded').attr('aria-expanded', 'false');
+							getAccordionChildren($otherToggle).stop(true, true).slideUp(150);
+						}
+					});
+
+					$header.addClass('is-expanded').attr('aria-expanded', 'true');
+					$children.stop(true, true).slideDown(150);
+				} else {
+					$header.removeClass('is-expanded').attr('aria-expanded', 'false');
+					$children.stop(true, true).slideUp(150);
+				}
+			});
+
+			// Keyboard navigation support
+			$(document).on('keydown', '.mh-accordion-header', function(e) {
+				if (e.which === 13 || e.which === 32) {
+					e.preventDefault();
+					$(this).closest('.customize-control-mh_accordion_toggle').trigger('click');
+				}
+			});
+
+			// Auto-expand accordion group when any child control receives focus
+			$(document).on('focusin', 'li.customize-control:not(.customize-control-mh_accordion_toggle)', function() {
+				var $controlLi = $(this);
+				var $prevToggle = $controlLi.prevAll('.customize-control-mh_accordion_toggle').first();
+				if ($prevToggle.length) {
+					var $header = $prevToggle.find('.mh-accordion-header');
+					if (!$header.hasClass('is-expanded')) {
+						$prevToggle.trigger('click');
+					}
+				}
+			});
+
 			// Add hover styles matching the native Customizer X button
 			$('head').append('<style>#mh-toggle-sb:hover, #mh-toggle-home:hover, #mh-toggle-dark:hover { background: #f0f0f1; color: #2271b1 !important; }</style>');
 			
@@ -97,6 +230,18 @@ function xophz_magic_hat_customize_controls_scripts() {
 
 			// Anchor scrolling in Style Guide when sections or panels are expanded
 			wp.customize.bind('ready', function() {
+				initAccordions();
+				setTimeout(initAccordions, 100);
+				setTimeout(initAccordions, 400);
+
+				if (wp.customize.section('magic_hat_colors')) {
+					wp.customize.section('magic_hat_colors').expanded.bind(function(isExpanded) {
+						if (isExpanded) {
+							setTimeout(initAccordions, 50);
+						}
+					});
+				}
+
 				wp.customize.state('expandedSection').bind(function(section) {
 					if (section) {
 						var map = {
@@ -117,7 +262,7 @@ function xophz_magic_hat_customize_controls_scripts() {
 					}
 				});
 				wp.customize.state('expandedPanel').bind(function(panel) {
-					if (panel && panel.id === 'magic_hat_colors_panel') {
+					if (panel && (panel.id === 'magic_hat_colors_panel' || panel.id === 'magic_hat_general_settings')) {
 						wp.customize.previewer.send('mh-scroll-to', 'section-colors');
 					}
 				});

@@ -280,7 +280,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 		<nav class="stylebook-nav">
 			<div class="nav-header">Design Tokens</div>
 			<ul>
-				<li><a href="#section-colors" data-customizer-target="magic_hat_colors_panel">Colors</a></li>
+				<li><a href="#section-colors" data-customizer-target="magic_hat_colors">Colors</a></li>
 				<li><a href="#section-typography" data-customizer-target="magic_hat_typography">Typography</a></li>
 				<li><a href="#section-spacing" data-customizer-target="magic_hat_spacing">Spacing & Layout</a></li>
 			</ul>
@@ -970,7 +970,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					}
 					var expandedPanel = window.parent.wp.customize.state('expandedPanel');
 					if (expandedPanel && expandedPanel.get()) {
-						if (expandedPanel.get().id === 'magic_hat_colors_panel' || expandedPanel.get().id === 'magic_hat_site_styles') {
+						if (expandedPanel.get().id === 'magic_hat_colors_panel' || expandedPanel.get().id === 'magic_hat_site_styles' || expandedPanel.get().id === 'magic_hat_general_settings') {
 							// Kept for compatibility with active panel states
 						}
 					}

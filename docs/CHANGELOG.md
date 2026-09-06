@@ -5,6 +5,22 @@ All notable changes to the Xophz Magic Hat theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [26.5.31] - 2026-09-06
+
+### Added
+- Accordion Toggle Control (`inc/customizer/controls/class-accordion-control.php`): Introduced `Magic_Hat_Accordion_Toggle_Control` enabling collapsible groups inside Customizer sections.
+- General Settings Panel (`inc/customizer/sections/panel-general-settings.php`): Registered unified `magic_hat_general_settings` parent panel consolidating Site Identity, Homepage Settings, Site Colors, and design system sections.
+
+### Changed
+- Customizer Hierarchy Streamlining (`inc/customizer/sections/reorder-hierarchy.php`): Consolidated top-level navigation into a 7-item spatial structure: Header (10), General Settings (20), Shop Settings (30), Menu Settings (40), Hero (50), Page Settings / AI Architect (60 / 65), and Footer (70).
+- Accordion Site Colors Section (`inc/customizer/sections/section-site-colors.php`): Converted Site Colors from a standalone top-level panel into a streamlined section inside General Settings with 8 collapsible accordion rows (Schedule Mode, Brand, Action CTA, Links, Text, Surfaces, Borders, Status, Editor Settings).
+- Design System Sections Reparenting (`inc/customizer/sections/section-*.php`): Reparented Background, Typography, Spacing, Buttons, and Custom CSS into the General Settings panel.
+- Controls UI Accordion Interactions (`inc/customizer/controls-ui.php`): Added accordion header CSS styling and animated toggle folding handlers with accessibility aria-expanded support.
+- Stylebook Deep-Linking Updates (`inc/stylebook-template.php`): Updated Colors navigation target to `magic_hat_colors` and expanded panel checks for `magic_hat_general_settings`.
+
+### Fixed
+- Accordion Child DOM Resolution (`inc/customizer/controls-ui.php`): Resolved accordion collapse failure by switching child control resolution to jQuery `nextUntil('.customize-control-mh_accordion_toggle')`. WordPress core `WP_Customize_Color_Control` ignores `input_attrs`, causing selector lookups to fail. Also added focus detection to auto-expand accordion groups on deep-link.
+
 ## [26.5.30] - 2026-09-06
 
 ### Changed

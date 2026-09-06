@@ -20,8 +20,8 @@ function mh_register_buttons_section( $wp_customize ) {
 	// ==============================================
 	$wp_customize->add_section( 'magic_hat_buttons', array(
 		'title'    => __( '👆 Buttons', 'xophz-magic-hat' ),
-		'priority' => 40,
-		'panel'    => 'magic_hat_site_styles',
+		'priority' => 70,
+		'panel'    => 'magic_hat_general_settings',
 	) );
 
 	$wp_customize->add_setting( 'mh_button_font_weight', array( 'default' => '600' ) );
