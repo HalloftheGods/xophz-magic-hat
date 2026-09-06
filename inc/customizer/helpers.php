@@ -110,7 +110,7 @@ function mh_is_bg_mode_canvas( $control ) {
 }
 
 /**
- * Polyfill window.crypto.randomUUID for insecure HTTP / local development
+ * Polyfill window.crypto.randomUUID, window.rdt, and window.snaptr for local development and ad-blocker environments.
  */
 function xophz_magic_hat_polyfill_random_uuid() {
 	?>
@@ -123,6 +123,13 @@ function xophz_magic_hat_polyfill_random_uuid() {
 						return (c ^ (window.crypto.getRandomValues ? window.crypto.getRandomValues(new Uint8Array(1))[0] : Math.floor(Math.random() * 256)) & 15 >> c / 4).toString(16);
 					});
 				};
+			}
+			var safeNoop = function() {};
+			if (typeof window.rdt !== 'function') {
+				window.rdt = safeNoop;
+			}
+			if (typeof window.snaptr !== 'function') {
+				window.snaptr = safeNoop;
 			}
 		}
 	</script>

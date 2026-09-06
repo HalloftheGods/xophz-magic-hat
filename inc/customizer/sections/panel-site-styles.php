@@ -18,6 +18,6 @@ function mh_register_site_styles_panel( $wp_customize ) {
 	$wp_customize->add_panel( 'magic_hat_site_styles', array(
 		'title'       => __( '🧑‍🎨 Site Styles', 'xophz-magic-hat' ),
 		'description' => __( 'Manage global design system styling: background canvas, colors, typography, spacing, buttons, and custom CSS.', 'xophz-magic-hat' ),
-		'priority'    => 30,
+		'priority'    => 55,
 	) );
 }

@@ -32,7 +32,7 @@ function mh_register_header_section( $wp_customize ) {
 	$wp_customize->add_section( 'magic_hat_header', array(
 		'title'       => __( '🎩 Header Settings', 'xophz-magic-hat' ),
 		'description' => __( 'Configure header layout, navigation menu, sticky behavior, and mobile drawer.', 'xophz-magic-hat' ),
-		'priority'    => 70,
+		'priority'    => 10,
 	) );
 
 	// Header Layout

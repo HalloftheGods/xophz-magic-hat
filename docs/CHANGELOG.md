@@ -5,6 +5,26 @@ All notable changes to the Xophz Magic Hat theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [26.5.30] - 2026-09-06
+
+### Changed
+- Customizer Page Sections Transport (`inc/customizer/sections/section-page-builder.php`): Switched `mh_page_sections` setting transport from `refresh` to `postMessage`, preventing jarring full-page iframe reloads during section customization and content saves.
+
+### Fixed
+- Debounced Keyup Text Saving (`assets/js/customizer-preview-header-footer.js`): Added 750ms keyup debounce delay to inline text editing (`[data-mh-focus]`), preventing instantaneous saves and partial re-renders from interrupting typing mid-word. Implemented caret offset tracking and automatic restoration across selective refresh cycles.
+- In-Canvas Inline Text Focus Retention (`assets/js/customizer-preview-header-footer.js`): Prevented `[data-mh-focus]` click handlers from unconditionally stealing browser focus and forcing sidebar control focus on direct text element clicks. In-place content editing now retains focus directly within the preview canvas, reserving sidebar navigation for Shift-click interactions or explicit settings buttons.
+
+## [26.5.29] - 2026-09-06
+
+### Changed
+- Customizer Anatomical Reordering (`inc/customizer/sections/*` & `inc/hero.php`): Reordered Customizer sections and panels to model the website as a person from head to toe with the Hat on top (`🎩 Header Settings` at priority 10) and Boots anchoring the bottom (`🥾 Footer Settings` at priority 100).
+- Section Hierarchy Priorities: Standardized priorities across standard and late hooks: Header Settings (10), Site Identity (15), Homepage Settings (20), Shop Settings (25), Menu Settings (30), Hero Settings (35), Page Settings (40), AI Page Architect (45), Site Colors (50), Site Styles (55), and Footer Settings (100).
+- Stylebook Customizer Toggle Icon (`inc/customizer/controls-ui.php`): Changed the `#mh-toggle-sb` header shortcut button icon from `🎩` to the open book `📖`, resolving visual conflict with Header Settings.
+- Section Nomenclature (`inc/customizer/sections/section-page-builder.php` & `reorder-hierarchy.php`): Renamed "🏗️ Page Builder" to "🏗️ Page Settings".
+
+### Fixed
+- Tracking Script Fallback Stubs (`inc/customizer/helpers.php`): Added early safe fallback definitions for `window.rdt` and `window.snaptr`, eliminating uncaught "Function rdt not implemented" and "Function snaptr not implemented" errors from WooCommerce tracking plugins in development and ad-blocker environments.
+
 ## [26.5.28] - 2026-09-06
 
 ### Added

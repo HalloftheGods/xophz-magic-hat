@@ -21,7 +21,7 @@ function mh_register_site_colors_panel( $wp_customize ) {
 	$wp_customize->add_panel( 'magic_hat_colors_panel', array(
 		'title'       => __( '🎨 Site Colors', 'xophz-magic-hat' ),
 		'description' => __( 'Customize your core design system colors and circadian schedule behavior.', 'xophz-magic-hat' ),
-		'priority'    => 35,
+		'priority'    => 50,
 	) );
 
 	// Schedule & Mode Override Section

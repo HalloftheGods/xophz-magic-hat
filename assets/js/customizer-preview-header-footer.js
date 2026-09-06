@@ -219,25 +219,138 @@
 		});
 	}
 
-	// Click to focus Customizer control
+	// Click on in-canvas elements:
+	// Direct text click retains focus in-place for instant on-site editing without jumping to sidepanel.
+	// Shift-click routes to parent Customizer sidebar control when explicitly requested.
 	$(document).on('click', '[data-mh-focus]', function(e) {
-		var settingId = $(this).attr('data-mh-focus');
-		if ( settingId && parentApi.control && parentApi.control(settingId) ) {
-			parentApi.control(settingId).focus();
+		var $el = $(this);
+		var isTextEditable = ! $el.is('img') && ! $el.is('input');
+
+		if ( isTextEditable ) {
+			if ( e.shiftKey ) {
+				var settingId = $el.attr('data-mh-focus');
+				if ( settingId && parentApi.control && parentApi.control(settingId) ) {
+					parentApi.control(settingId).focus();
+				} else if ( parentApi.section && parentApi.section('mh_front_page_hero') ) {
+					parentApi.section('mh_front_page_hero').focus();
+				}
+				return;
+			}
+
+			// Maintain focus directly on the site text element
+			e.stopPropagation();
+			if ( $el.attr('contenteditable') !== 'true' ) {
+				$el.attr('contenteditable', 'true').attr('spellcheck', 'false');
+			}
+			$el.focus();
+			return;
+		}
+
+		// Non-text elements (e.g. images) route to Customizer control
+		var imgSetting = $el.attr('data-mh-focus');
+		if ( imgSetting && parentApi.control && parentApi.control(imgSetting) ) {
+			parentApi.control(imgSetting).focus();
 		} else if ( parentApi.section && parentApi.section('mh_front_page_hero') ) {
 			parentApi.section('mh_front_page_hero').focus();
 		}
 	});
 
-	// Sync inline typing back to Customizer setting
-	$(document).on('input blur', '[data-mh-focus]', function() {
-		var $el = $(this);
-		if ( $el.is('img') ) return;
+	// Sync inline typing back to Customizer setting with keyup debounce delay
+	var inlineDebounceTimer = null;
+	var activeFocusSettingId = null;
+	var activeFocusCaret = null;
+
+	function getCaretCharacterOffsetWithin(element) {
+		var caretOffset = 0;
+		var doc = element.ownerDocument || element.document;
+		var win = doc.defaultView || doc.parentWindow;
+		var sel;
+		if ( typeof win.getSelection !== 'undefined' ) {
+			sel = win.getSelection();
+			if ( sel.rangeCount > 0 ) {
+				var range = sel.getRangeAt(0);
+				var preCaretRange = range.cloneRange();
+				preCaretRange.selectNodeContents(element);
+				preCaretRange.setEnd(range.endContainer, range.endOffset);
+				caretOffset = preCaretRange.toString().length;
+			}
+		}
+		return caretOffset;
+	}
+
+	function setCaretPosition(el, offset) {
+		var range = document.createRange();
+		var sel = window.getSelection();
+		var nodeStack = [el], node, found = false, current = 0;
+		range.setStart(el, 0);
+		range.collapse(true);
+
+		while ( ! found && ( node = nodeStack.pop() ) ) {
+			if ( node.nodeType === 3 ) {
+				var next = current + node.length;
+				if ( offset >= current && offset <= next ) {
+					range.setStart(node, offset - current);
+					range.collapse(true);
+					found = true;
+				}
+				current = next;
+			} else {
+				var i = node.childNodes.length;
+				while ( i-- ) {
+					nodeStack.push(node.childNodes[i]);
+				}
+			}
+		}
+		if ( found && sel ) {
+			sel.removeAllRanges();
+			sel.addRange(range);
+		}
+	}
+
+	function commitInlineChange($el) {
+		if ( ! $el || ! $el.length || $el.is('img') || $el.is('input') ) return;
 		var settingId = $el.attr('data-mh-focus');
 		var newText = $el.text().trim();
 		if ( settingId && parentApi(settingId) && parentApi(settingId).get() !== newText ) {
+			if ( $el.is(':focus') ) {
+				activeFocusSettingId = settingId;
+				activeFocusCaret = getCaretCharacterOffsetWithin($el[0]);
+			} else {
+				activeFocusSettingId = null;
+				activeFocusCaret = null;
+			}
 			parentApi(settingId).set(newText);
 		}
+	}
+
+	$(document).on('keyup input', '[data-mh-focus]', function(e) {
+		var $el = $(this);
+		if ( $el.is('img') || $el.is('input') ) return;
+
+		// Ignore modifier and navigation keys on keyup
+		if ( e.type === 'keyup' && ['Shift', 'Control', 'Alt', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].indexOf(e.key) !== -1 ) {
+			return;
+		}
+
+		if ( inlineDebounceTimer ) {
+			clearTimeout(inlineDebounceTimer);
+		}
+
+		inlineDebounceTimer = setTimeout(function() {
+			commitInlineChange($el);
+			inlineDebounceTimer = null;
+		}, 750);
+	});
+
+	$(document).on('blur', '[data-mh-focus]', function() {
+		var $el = $(this);
+		if ( $el.is('img') || $el.is('input') ) return;
+
+		if ( inlineDebounceTimer ) {
+			clearTimeout(inlineDebounceTimer);
+			inlineDebounceTimer = null;
+		}
+		commitInlineChange($el);
 	});
 
 	// Hero Image replacement via WP Media Library
@@ -323,7 +436,18 @@
 				setTimeout(function() {
 					positionHandles();
 					initHeroEditables();
-				}, 200);
+					if ( activeFocusSettingId ) {
+						var $target = $('[data-mh-focus="' + activeFocusSettingId + '"]');
+						if ( $target.length && $target.is(':visible') ) {
+							$target.attr('contenteditable', 'true').attr('spellcheck', 'false').focus();
+							if ( activeFocusCaret !== null ) {
+								setCaretPosition($target[0], activeFocusCaret);
+							}
+						}
+						activeFocusSettingId = null;
+						activeFocusCaret = null;
+					}
+				}, 100);
 			}
 		});
 	}

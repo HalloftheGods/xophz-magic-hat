@@ -18,7 +18,7 @@ function mh_register_ai_page_architect_section( $wp_customize ) {
 	$wp_customize->add_section( 'mh_ai_page_architect', array(
 		'title'       => __( '✨ AI Page Architect', 'xophz-magic-hat' ),
 		'description' => __( 'Prompt Gemini or the internal layout synthesizer to conjure custom Gutenberg pages across diverse vibes and archetypes.', 'xophz-magic-hat' ),
-		'priority'    => 10,
+		'priority'    => 45,
 	) );
 
 	$wp_customize->add_setting( 'mh_ai_generated_blocks', array(
