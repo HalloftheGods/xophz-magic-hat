@@ -255,7 +255,15 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			if ( window.parent && window.parent.wp && window.parent.wp.customize ) {
 				var control = window.parent.wp.customize.control( controlId );
 				if ( control ) {
-					control.focus();
+					var sectionId = control.section();
+					var isMhColorSection = sectionId && (sectionId.indexOf('mh_colors_') === 0 || sectionId === 'magic_hat_colors');
+					
+					if (isMhColorSection && window.parent.wp.customize.panel( 'magic_hat_colors_panel' )) {
+						window.parent.wp.customize.panel( 'magic_hat_colors_panel' ).expand();
+						setTimeout(function() { control.focus(); }, 350);
+					} else {
+						control.focus();
+					}
 				}
 			}
 		}
@@ -272,7 +280,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 		<nav class="stylebook-nav">
 			<div class="nav-header">Design Tokens</div>
 			<ul>
-				<li><a href="#section-colors" data-customizer-target="magic_hat_colors">Colors</a></li>
+				<li><a href="#section-colors" data-customizer-target="magic_hat_colors_panel">Colors</a></li>
 				<li><a href="#section-typography" data-customizer-target="magic_hat_typography">Typography</a></li>
 				<li><a href="#section-spacing" data-customizer-target="magic_hat_spacing">Spacing & Layout</a></li>
 			</ul>
