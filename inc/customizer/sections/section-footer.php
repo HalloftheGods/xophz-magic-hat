@@ -25,16 +25,26 @@ function mh_register_footer_section( $wp_customize ) {
 	) );
 
 	$footer_layouts = array(
-		'columns_4'        => __( '4-Column Mega Footer (Brand + 4 Menu Cols)', 'xophz-magic-hat' ),
-		'columns_3'        => __( '3-Column Balanced Footer (Brand + 2 Menu Cols)', 'xophz-magic-hat' ),
-		'minimal_centered' => __( 'Centered Minimal (Logo, Inline Nav, Copyright)', 'xophz-magic-hat' ),
-		'split'            => __( 'Split Modern (Brand Left, Menus/Social Right)', 'xophz-magic-hat' ),
-		'bento'            => __( 'Bento Grid Footer (Asymmetrical Cards + Status)', 'xophz-magic-hat' ),
-		'big_statement'    => __( 'Big Statement CTA (Giant Headline + Action Bar)', 'xophz-magic-hat' ),
-		'newsletter_first' => __( 'Newsletter Lead-In (Full Banner + 3 Menu Cols)', 'xophz-magic-hat' ),
-		'floating_dock'    => __( 'Floating Dock (Compact Single-Row Horizontal Dock)', 'xophz-magic-hat' ),
-		'sitemap_dense'    => __( 'Site Directory / Sitemap (5 Structured Cols + Status)', 'xophz-magic-hat' ),
-		'social_hub'       => __( 'Creator & Community Social Hub (Interactive Cards)', 'xophz-magic-hat' ),
+		'columns_4'          => __( '4-Column Mega Footer (Brand + 4 Menu Cols)', 'xophz-magic-hat' ),
+		'columns_3'          => __( '3-Column Balanced Footer (Brand + 2 Menu Cols)', 'xophz-magic-hat' ),
+		'minimal_centered'   => __( 'Centered Minimal (Logo, Inline Nav, Copyright)', 'xophz-magic-hat' ),
+		'split'              => __( 'Split Modern (Brand Left, Menus/Social Right)', 'xophz-magic-hat' ),
+		'bento'              => __( 'Bento Grid Footer (Asymmetrical Cards + Status)', 'xophz-magic-hat' ),
+		'big_statement'      => __( 'Big Statement CTA (Giant Headline + Action Bar)', 'xophz-magic-hat' ),
+		'newsletter_first'   => __( 'Newsletter Lead-In (Full Banner + 3 Menu Cols)', 'xophz-magic-hat' ),
+		'floating_dock'      => __( 'Floating Dock (Compact Single-Row Horizontal Dock)', 'xophz-magic-hat' ),
+		'sitemap_dense'      => __( 'Site Directory / Sitemap (5 Structured Cols + Status)', 'xophz-magic-hat' ),
+		'social_hub'         => __( 'Creator & Community Social Hub (Interactive Cards)', 'xophz-magic-hat' ),
+		'app_download'       => __( 'App Download Strip (App Store + Google Play + QR)', 'xophz-magic-hat' ),
+		'award_trust'        => __( 'Trust & Compliance (SOC-2 + ISO + Encryption Seals)', 'xophz-magic-hat' ),
+		'developer_terminal' => __( 'Developer Terminal (Copyable CLI Snippet + Latency)', 'xophz-magic-hat' ),
+		'ecommerce_store'    => __( 'Commerce Store (Category Directory + Payment Badges)', 'xophz-magic-hat' ),
+		'contact_cards'      => __( 'Global Hubs (Multi-Office Cards + Local Times)', 'xophz-magic-hat' ),
+		'editorial_quote'    => __( 'Philosophy & Manifesto (Large Editorial Quote + Cite)', 'xophz-magic-hat' ),
+		'status_incident'    => __( 'Operations & Uptime (Live Beacon Card + Status SLA)', 'xophz-magic-hat' ),
+		'interactive_faq'    => __( 'Accordion FAQ Quick-Help (Pre-Footer Question Drawer)', 'xophz-magic-hat' ),
+		'podcast_media'      => __( 'Media Stream Player (Podcast Teaser + Channel Badges)', 'xophz-magic-hat' ),
+		'minimal_colophon'   => __( 'Swiss Colophon (Monospace Specifications + Grid)', 'xophz-magic-hat' ),
 	);
 
 	// Footer Layout
@@ -45,7 +55,7 @@ function mh_register_footer_section( $wp_customize ) {
 	) );
 	$wp_customize->add_control( new Magic_Hat_Layout_Picker_Control( $wp_customize, 'mh_footer_layout', array(
 		'label'       => __( 'Footer Layout Style', 'xophz-magic-hat' ),
-		'description' => __( 'Choose from 8 curated layout templates.', 'xophz-magic-hat' ),
+		'description' => __( 'Choose from 20 curated layout templates.', 'xophz-magic-hat' ),
 		'section'     => 'magic_hat_footer',
 		'layout_type' => 'footer',
 		'layouts'     => $footer_layouts,
@@ -239,6 +249,78 @@ function mh_register_footer_section( $wp_customize ) {
 		'type'        => 'text',
 	) );
 
+	// Developer Terminal: CLI Command
+	$wp_customize->add_setting( 'mh_footer_cli_command', array(
+		'default'           => 'npm install @xophz/magic-hat',
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_cli_command', array(
+		'label'       => __( 'Developer CLI Command Snippet', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'text',
+	) );
+
+	// Manifesto: Quote
+	$wp_customize->add_setting( 'mh_footer_manifesto_quote', array(
+		'default'           => __( '"The best way to predict the future is to architect it with precision, beauty, and unwavering intent."', 'xophz-magic-hat' ),
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_manifesto_quote', array(
+		'label'       => __( 'Manifesto Editorial Quote', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'textarea',
+	) );
+
+	// Manifesto: Author Attribution
+	$wp_customize->add_setting( 'mh_footer_manifesto_author', array(
+		'default'           => __( 'Xophz Philosophy: Project Compass', 'xophz-magic-hat' ),
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_manifesto_author', array(
+		'label'       => __( 'Manifesto Author Attribution', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'text',
+	) );
+
+	// Operations: Status Message
+	$wp_customize->add_setting( 'mh_footer_status_text', array(
+		'default'           => __( 'All Systems Fully Operational', 'xophz-magic-hat' ),
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_status_text', array(
+		'label'       => __( 'System Status Banner Text', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'text',
+	) );
+
+	// Operations: Status URL
+	$wp_customize->add_setting( 'mh_footer_status_url', array(
+		'default'           => '#status',
+		'sanitize_callback' => 'esc_url_raw',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_status_url', array(
+		'label'       => __( 'System Status Target URL', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'text',
+	) );
+
+	// Podcast Teaser: Episode Title
+	$wp_customize->add_setting( 'mh_footer_podcast_title', array(
+		'default'           => __( 'Ep. 42 - The Magic Hat Quantum Leap & Circadian Engines', 'xophz-magic-hat' ),
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_podcast_title', array(
+		'label'       => __( 'Podcast Episode Teaser Title', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'text',
+	) );
+
 	$wp_customize->get_setting( 'blogname' )->transport        = 'postMessage';
 	$wp_customize->get_setting( 'blogdescription' )->transport = 'postMessage';
 
@@ -264,6 +346,12 @@ function mh_register_footer_section( $wp_customize ) {
 				'mh_header_ticker_url',
 				'mh_header_secondary_cta_text',
 				'mh_header_secondary_cta_url',
+				'mh_header_app_env',
+				'mh_header_highlight_badge',
+				'mh_header_highlight_url',
+				'mh_header_tel_number',
+				'mh_header_docs_version',
+				'mh_header_swiss_meta',
 				'blogname',
 				'custom_logo',
 			),
@@ -288,6 +376,12 @@ function mh_register_footer_section( $wp_customize ) {
 				'mh_footer_newsletter_title',
 				'mh_footer_newsletter_desc',
 				'mh_footer_newsletter_btn_text',
+				'mh_footer_cli_command',
+				'mh_footer_manifesto_quote',
+				'mh_footer_manifesto_author',
+				'mh_footer_status_text',
+				'mh_footer_status_url',
+				'mh_footer_podcast_title',
 				'mh_social_facebook',
 				'mh_social_twitter',
 				'mh_social_instagram',

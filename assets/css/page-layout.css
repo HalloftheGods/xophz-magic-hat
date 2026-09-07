@@ -1,0 +1,224 @@
+/**
+ * Page Layout & Sidebar Grid Architecture
+ *
+ * Implements standard WordPress content container layouts (No Sidebar, Left Sidebar,
+ * Right Sidebar, 3-Column) decoupled completely from masthead and colophon.
+ */
+
+:root {
+  --mh-sidebar-width: 280px;
+}
+
+/* ── Content Container ────────────────────────────────────────────────────── */
+.mh-content-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ── Desktop Grid Layouts (>= 1024px) ─────────────────────────────────────── */
+@media (min-width: 1024px) {
+  .mh-content-container {
+    display: grid;
+    gap: 36px;
+    padding: 40px 24px;
+    align-items: start;
+  }
+
+  /* 1. No Sidebar (Full Width / Single Column) */
+  .mh-content-container.mh-layout-no_sidebar {
+    grid-template-columns: 1fr;
+    display: block;
+    padding: 0;
+  }
+
+  /* 2. Left Sidebar Layout */
+  .mh-content-container.mh-layout-left_sidebar {
+    grid-template-columns: var(--mh-sidebar-width, 280px) minmax(0, 1fr);
+  }
+  .mh-content-container.mh-layout-left_sidebar .mh-sidebar-left {
+    grid-column: 1 / 2;
+  }
+  .mh-content-container.mh-layout-left_sidebar .site-main,
+  .mh-content-container.mh-layout-left_sidebar .mh-page-main,
+  .mh-content-container.mh-layout-left_sidebar .mh-front-page-main,
+  .mh-content-container.mh-layout-left_sidebar .mw-template-part {
+    grid-column: 2 / 3;
+    min-width: 0;
+  }
+
+  /* 3. Right Sidebar Layout */
+  .mh-content-container.mh-layout-right_sidebar {
+    grid-template-columns: minmax(0, 1fr) var(--mh-sidebar-width, 280px);
+  }
+  .mh-content-container.mh-layout-right_sidebar .site-main,
+  .mh-content-container.mh-layout-right_sidebar .mh-page-main,
+  .mh-content-container.mh-layout-right_sidebar .mh-front-page-main,
+  .mh-content-container.mh-layout-right_sidebar .mw-template-part {
+    grid-column: 1 / 2;
+    min-width: 0;
+  }
+  .mh-content-container.mh-layout-right_sidebar .mh-sidebar-right {
+    grid-column: 2 / 3;
+  }
+
+  /* 4. Classic 3-Column Layout */
+  .mh-content-container.mh-layout-three_column {
+    grid-template-columns: var(--mh-sidebar-width, 280px) minmax(0, 1fr) var(--mh-sidebar-width, 280px);
+  }
+  .mh-content-container.mh-layout-three_column .mh-sidebar-left {
+    grid-column: 1 / 2;
+  }
+  .mh-content-container.mh-layout-three_column .site-main,
+  .mh-content-container.mh-layout-three_column .mh-page-main,
+  .mh-content-container.mh-layout-three_column .mh-front-page-main,
+  .mh-content-container.mh-layout-three_column .mw-template-part {
+    grid-column: 2 / 3;
+    min-width: 0;
+  }
+  .mh-content-container.mh-layout-three_column .mh-sidebar-right {
+    grid-column: 3 / 4;
+  }
+
+  /* Desktop Sticky Sidebar */
+  .mh-sidebar-inner {
+    position: sticky;
+    top: 96px;
+  }
+}
+
+/* ── Mobile Responsive Stacking (< 1024px) ────────────────────────────────── */
+@media (max-width: 1023px) {
+  .mh-content-container {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding: 24px 16px;
+  }
+
+  .mh-content-container.mh-layout-no_sidebar {
+    display: block;
+    padding: 0;
+  }
+
+  /* Main content renders first on mobile */
+  .mh-content-container .site-main,
+  .mh-content-container .mh-page-main,
+  .mh-content-container .mh-front-page-main,
+  .mh-content-container .mw-template-part {
+    order: 1;
+    width: 100%;
+  }
+
+  .mh-content-container .mh-sidebar-left {
+    order: 2;
+    width: 100%;
+  }
+
+  .mh-content-container .mh-sidebar-right {
+    order: 3;
+    width: 100%;
+  }
+}
+
+/* ── Sidebar & Widget Styling ─────────────────────────────────────────────── */
+.mh-sidebar {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.mh-sidebar-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.mh-sidebar .widget {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 20px;
+  box-sizing: border-box;
+  color: #94a3b8;
+}
+
+.mh-sidebar .widget-title,
+.mh-sidebar .mh-widget-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #62c9ff;
+  margin: 0 0 14px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #1e293b;
+}
+
+.mh-sidebar .widget ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mh-sidebar .widget a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 13.5px;
+  transition: color 0.15s ease;
+}
+
+.mh-sidebar .widget a:hover {
+  color: #ffffff;
+}
+
+/* ── Clean Empty State (Zero synthetic mock data) ─────────────────────────── */
+.mh-sidebar-empty-state {
+  width: 100%;
+}
+
+.mh-sidebar-empty-card {
+  background: #0f172a;
+  border: 1px dashed #334155;
+  border-radius: 8px;
+  padding: 24px 16px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.mh-sidebar-empty-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #62c9ff;
+  margin-bottom: 8px;
+}
+
+.mh-sidebar-empty-text {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0 0 14px 0;
+}
+
+.mh-sidebar-empty-btn {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #62c9ff;
+  background: rgba(98, 201, 255, 0.1);
+  border: 1px solid rgba(98, 201, 255, 0.3);
+  border-radius: 4px;
+  padding: 5px 12px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.mh-sidebar-empty-btn:hover {
+  background: #62c9ff;
+  color: #0b1120;
+}

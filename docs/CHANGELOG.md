@@ -5,6 +5,46 @@ All notable changes to the Xophz Magic Hat theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [26.9.11] - 2026-09-07
+
+### Added
+- 20 Bespoke Header Archetypes (`inc/header-footer.php`, `inc/customizer/sections/section-header.php`, `assets/css/header-footer.css`, `assets/js/customizer-preview-header-footer.js`, `assets/js/customizer-layout-modal.js`): Expanded header layouts to 20 unique archetypes. New additions include:
+  - Console App Header (`app_header`): Developer console bar with workspace environment pill, live notification beacon, and user menu action.
+  - Mega Menu Directory (`mega_menu_bar`): Enterprise directory navigation with section indicators, sales telephone link, and action CTA.
+  - Center Feature Badge (`badge_highlight`): Centered glowing launch announcement badge pill flanked by primary navigation and conversion CTA.
+  - Direct Contact Telephone (`contact_tel`): Emergency utility bar with telephone hotlink, live status beacon, and booking button.
+  - Store and Live Cart (`ecommerce_cart`): E-commerce navigation bar with currency and region selector, live shopping bag counter badge, and checkout button.
+  - Documentation Subnav (`docs_subnav`): Two-tier technical header with version selector pill, docs breadcrumb trail, and GitHub star counter badge.
+  - Vertical Sidebar Dock (`vertical_sidebar`): Left-aligned vertical dock rail for web applications with vertical icons, links, and avatar action.
+  - Aurora Glass Ribbon (`glass_blur_gradient`): High-end translucent glassmorphic bar with ambient aurora gradient glow and frosted backdrop filter.
+  - Social Creator Bar (`social_prominent`): Creator header prioritizing social channel buttons, subscriber follower count badge, and newsletter action.
+  - Swiss Monospace Grid (`minimal_underline`): Architectural Swiss graphic design layout with clean uppercase monospace labels and crisp line dividers.
+- 20 Bespoke Footer Archetypes (`inc/header-footer.php`, `inc/customizer/sections/section-footer.php`, `assets/css/header-footer.css`, `assets/js/customizer-preview-header-footer.js`, `assets/js/customizer-layout-modal.js`): Expanded footer layouts to 20 unique archetypes (400 total header and footer combinations). New additions include:
+  - Mobile App Showcase (`app_download`): Footer with native App Store and Google Play download badges alongside interactive QR code scan card.
+  - Trust and Compliance Badges (`award_trust`): Enterprise security credentials with SOC-2 Type II, ISO 27001, HIPAA, and 256-Bit SSL trust cards.
+  - Interactive CLI Terminal (`developer_terminal`): Developer console footer with interactive copyable terminal command line and live latency ping monitor.
+  - Store Care and Payment Rails (`ecommerce_store`): E-commerce footer with payment method badges (Visa, Mastercard, Amex, Apple Pay) and customer care highlights.
+  - Multi-Location HQ Cards (`contact_cards`): Global office directory cards for San Francisco, London, Tokyo, and Cyberspace with local time clocks.
+  - Manifesto Quote Display (`editorial_quote`): High-impact display manifesto quotation card with author attribution above minimalist legal navigation.
+  - Live System Status Beacon (`status_incident`): Real-time platform operational health panel with 99.998% uptime badge and direct link to status dashboard.
+  - Accordion FAQ Panel (`interactive_faq`): Integrated collapsible FAQ question drawer panel for rapid objection handling before user navigates away.
+  - Podcast and Audio Player (`podcast_media`): Rich media footer spotlighting latest podcast episode with play controls, audio wave bars, and streaming links.
+  - Swiss Monospace Colophon (`minimal_colophon`): Swiss editorial colophon with typographic specifications, coordinates, timestamp, and legal navigation columns.
+- Customizer Layout Library 40-Template Catalog (`assets/js/customizer-layout-modal.js`): Added 20 new handcrafted vector SVG wireframes for all new archetypes, updated catalog count badges to 40 total templates (20 headers, 20 footers), and aligned preview canvas mockups.
+- Standard WordPress Page Layout and Sidebar Architecture (`inc/page-layout.php`, `functions.php`, `page.php`, `front-page.php`, `index.php`, `inc/customizer/sections/section-page-builder.php`, `assets/css/page-layout.css`):
+  - Aligned theme architecture with WordPress industry standards (Astra, GeneratePress, Kadence), completely decoupling the masthead (`header.php`) and colophon (`footer.php`) from page layout and sidebars.
+  - Registered standard dynamic widget areas `mh-sidebar-left` (Left Sidebar) and `mh-sidebar-right` (Right Sidebar) in `functions.php`.
+  - Created `inc/page-layout.php` providing layout query helpers (`mh_get_page_layout`, `mh_has_left_sidebar`, `mh_has_right_sidebar`, `mh_render_sidebar`, `mh_get_content_container_classes`).
+  - Added Page Layout selector (`no_sidebar`, `left_sidebar`, `right_sidebar`, `three_column`) and desktop sidebar width slider to Customizer `🪄 Page Settings`.
+  - Implemented scoped grid styling in `assets/css/page-layout.css` for `.mh-content-container` with zero styling hacks on `body`.
+  - Added responsive mobile stacking (< 1024px) ensuring page content displays first before sidebar widgets.
+  - Formatted layout 16 as App Dock Bar with high-contrast capsule navigation, live status beacon, and action dock.
+  - Clean widget empty states with zero mock synthetic data, displaying direct admin links when editable.
+
+### Fixed
+- Customizer Preview Hover and Edit Style Isolation (`assets/css/header-footer.css`, `assets/js/customizer-preview-header-footer.js`): Removed bleeding `[data-mh-focus]` outline rules and `.mh-canvas-url-popover` classes from global production stylesheet `header-footer.css`. Relocated URL popover styles to `handleCss` in `customizer-preview-header-footer.js`, ensuring edit outlines and inspector popovers strictly render within the Customizer preview iframe (`customize_preview_init`) and never on live front-end pages.
+- Hero and Template Inline Cursor Cleanup (`inc/hero.php`, `index.php`): Removed inline `cursor: text` and `cursor: pointer` attributes from hero headlines, subtitles, badges, and images across editorial, app, split, and video layouts. Removed static dashed outline from the main dropzone container in `index.php`.
+
 ## [26.9.10] - 2026-09-07
 
 ### Added

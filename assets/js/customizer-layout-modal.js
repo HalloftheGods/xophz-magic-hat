@@ -110,6 +110,96 @@
 			badge: 'High Conversion',
 			tags: ['Dual CTA', 'Ghost + Primary', 'SaaS Funnel']
 		},
+		{
+			id: 'app_header',
+			type: 'header',
+			name: 'Console App Header',
+			desc: 'Developer console bar with workspace environment pill, live notification beacon, and user menu action.',
+			category: 'header',
+			badge: 'Console / WebApp',
+			tags: ['Workspace Pill', 'Notification Beacon', 'App Bar']
+		},
+		{
+			id: 'mega_menu_bar',
+			type: 'header',
+			name: 'Mega Menu Directory',
+			desc: 'Enterprise directory navigation bar with section indicator dropdowns, sales telephone link, and action CTA.',
+			category: 'header',
+			badge: 'Enterprise Directory',
+			tags: ['Mega Nav', 'Sales Link', 'Directory']
+		},
+		{
+			id: 'badge_highlight',
+			type: 'header',
+			name: 'Center Feature Badge',
+			desc: 'Centered glowing launch announcement badge pill flanked by primary navigation and conversion CTA.',
+			category: 'header',
+			badge: 'Product Launch',
+			tags: ['Glow Badge', 'Centered Pill', 'Product Hunt']
+		},
+		{
+			id: 'contact_tel',
+			type: 'header',
+			name: 'Direct Contact Telephone',
+			desc: 'Emergency telephone utility bar with live status beacon, telephone hotlink, and book call action.',
+			category: 'header',
+			badge: 'Direct Response',
+			tags: ['Live Phone', 'Status Beacon', 'Emergency CTA']
+		},
+		{
+			id: 'ecommerce_cart',
+			type: 'header',
+			name: 'Store & Live Cart',
+			desc: 'E-commerce navigation bar with currency/region selector, live shopping bag counter badge, and checkout CTA.',
+			category: 'header',
+			badge: 'E-Commerce',
+			tags: ['Live Cart', 'Currency Select', 'Storefront']
+		},
+		{
+			id: 'docs_subnav',
+			type: 'header',
+			name: 'Documentation Subnav',
+			desc: 'Two-tier technical header with version selector pill, docs breadcrumb trail, and GitHub star counter badge.',
+			category: 'header',
+			badge: 'Technical Docs',
+			tags: ['Version Pill', 'Breadcrumbs', 'GitHub Star']
+		},
+		{
+			id: 'vertical_sidebar',
+			type: 'header',
+			name: 'App Dock Bar',
+			desc: 'High-tech application masthead featuring capsule navigation, live status beacon, and action dock.',
+			category: 'header',
+			badge: 'App Masthead',
+			tags: ['Capsule Nav', 'Status Beacon', 'Action Dock']
+		},
+		{
+			id: 'glass_blur_gradient',
+			type: 'header',
+			name: 'Aurora Glass Ribbon',
+			desc: 'High-end translucent glassmorphic bar with ambient aurora gradient glow and frosted backdrop filter.',
+			category: 'header',
+			badge: 'Design Studio',
+			tags: ['Aurora Glow', 'Frosted Glass', 'Next-Gen']
+		},
+		{
+			id: 'social_prominent',
+			type: 'header',
+			name: 'Social Creator Bar',
+			desc: 'Creator header prioritizing social channel icons, subscriber follower count badge, and newsletter action.',
+			category: 'header',
+			badge: 'Creator / Media',
+			tags: ['Channel Icons', 'Follower Badge', 'Creator CTA']
+		},
+		{
+			id: 'minimal_underline',
+			type: 'header',
+			name: 'Swiss Monospace Grid',
+			desc: 'Architectural Swiss graphic design layout with clean uppercase monospace labels and crisp line dividers.',
+			category: 'header',
+			badge: 'Swiss Graphic',
+			tags: ['Monospace', 'Grid Lines', 'Architectural']
+		},
 
 		// ── FOOTER TEMPLATES ───────────────────────────
 		{
@@ -201,6 +291,96 @@
 			category: 'footer',
 			badge: 'Community',
 			tags: ['Social Cards', 'Community Hub', 'Newsletter']
+		},
+		{
+			id: 'app_download',
+			type: 'footer',
+			name: 'Mobile App Showcase',
+			desc: 'Footer with native App Store and Google Play download badges alongside interactive QR code scan card.',
+			category: 'footer',
+			badge: 'Mobile App',
+			tags: ['App Store', 'Google Play', 'QR Code']
+		},
+		{
+			id: 'award_trust',
+			type: 'footer',
+			name: 'Trust & Compliance Badges',
+			desc: 'Enterprise security credentials with SOC-2 Type II, ISO 27001, HIPAA, and 256-Bit SSL trust cards.',
+			category: 'footer',
+			badge: 'Security & Trust',
+			tags: ['SOC-2', 'ISO 27001', 'HIPAA', 'SSL Shield']
+		},
+		{
+			id: 'developer_terminal',
+			type: 'footer',
+			name: 'Interactive CLI Terminal',
+			desc: 'Developer console footer with interactive copyable terminal command line and live latency ping monitor.',
+			category: 'footer',
+			badge: 'Developer Tool',
+			tags: ['CLI Box', 'Copy Command', 'Latency Ping']
+		},
+		{
+			id: 'ecommerce_store',
+			type: 'footer',
+			name: 'Store Care & Payment Rails',
+			desc: 'E-commerce footer with payment method badges (Visa, Mastercard, Amex, Apple Pay) and buyer protection highlights.',
+			category: 'footer',
+			badge: 'Storefront',
+			tags: ['Payment Badges', 'Apple Pay', 'Buyer Protection']
+		},
+		{
+			id: 'contact_cards',
+			type: 'footer',
+			name: 'Multi-Location HQ Cards',
+			desc: 'Global office directory cards for San Francisco, London, Tokyo, and Cyberspace with local time clocks.',
+			category: 'footer',
+			badge: 'Global Presence',
+			tags: ['4 Global Hubs', 'Local Times', 'HQ Cards']
+		},
+		{
+			id: 'editorial_quote',
+			type: 'footer',
+			name: 'Manifesto Quote Display',
+			desc: 'High-impact display manifesto quotation card with author attribution above minimalist legal navigation.',
+			category: 'footer',
+			badge: 'Brand Manifesto',
+			tags: ['Display Quote', 'Attribution', 'Editorial']
+		},
+		{
+			id: 'status_incident',
+			type: 'footer',
+			name: 'Live System Status Beacon',
+			desc: 'Real-time platform operational health panel with 99.998% uptime badge and direct link to status dashboard.',
+			category: 'footer',
+			badge: 'Operational Health',
+			tags: ['99.998% Uptime', 'Green Beacon', 'Incident Log']
+		},
+		{
+			id: 'interactive_faq',
+			type: 'footer',
+			name: 'Accordion FAQ Panel',
+			desc: 'Integrated collapsible FAQ question drawer panel for rapid objection handling before user navigates away.',
+			category: 'footer',
+			badge: 'Objection Handling',
+			tags: ['Collapsible FAQ', 'Objection Handling', 'Support']
+		},
+		{
+			id: 'podcast_media',
+			type: 'footer',
+			name: 'Podcast & Audio Player',
+			desc: 'Rich media footer spotlighting latest podcast episode with play controls, audio wave bars, and streaming links.',
+			category: 'footer',
+			badge: 'Podcast & Media',
+			tags: ['Audio Wave', 'Play Controls', 'Spotify / Apple']
+		},
+		{
+			id: 'minimal_colophon',
+			type: 'footer',
+			name: 'Swiss Monospace Colophon',
+			desc: 'Swiss editorial colophon with typographic specifications, coordinates, timestamp, and legal navigation columns.',
+			category: 'footer',
+			badge: 'Swiss Colophon',
+			tags: ['Specifications', 'Coordinates', 'Monospace']
 		}
 	];
 
@@ -417,6 +597,210 @@
 			}
 			svg += '<line x1="18" y1="60" x2="222" y2="60" stroke="' + muted + '" stroke-width="1"/>';
 			svg += '<rect x="18" y="66" width="80" height="4" rx="1" fill="' + muted + '"/>';
+		} else if (tmpl.id === 'app_header') {
+			svg += '<rect x="10" y="24" width="220" height="36" rx="4" fill="' + bg + '" stroke="' + muted + '"/>';
+			svg += '<rect x="18" y="34" width="28" height="14" rx="2" fill="' + c + '"/>';
+			svg += '<rect x="52" y="36" width="38" height="11" rx="5" fill="#1e293b" stroke="' + slate + '" stroke-width="0.75"/>';
+			svg += '<circle cx="59" cy="41" r="2" fill="#10b981"/>';
+			svg += '<rect x="65" y="39" width="18" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="102" y="39" width="20" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="128" y="39" width="20" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<circle cx="184" cy="41" r="4" fill="#334155"/>';
+			svg += '<circle cx="187" cy="38" r="1.5" fill="' + c + '"/>';
+			svg += '<rect x="194" y="32" width="28" height="18" rx="3" fill="' + c + '"/>';
+		} else if (tmpl.id === 'mega_menu_bar') {
+			svg += '<rect x="10" y="22" width="220" height="40" rx="4" fill="' + bg + '" stroke="' + muted + '"/>';
+			svg += '<rect x="18" y="34" width="32" height="14" rx="2" fill="' + c + '"/>';
+			svg += '<rect x="62" y="39" width="24" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<polygon points="89,39 93,43 97,39" fill="' + slate + '"/>';
+			svg += '<rect x="104" y="39" width="24" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<polygon points="131,39 135,43 139,39" fill="' + slate + '"/>';
+			svg += '<rect x="150" y="39" width="28" height="4" rx="1" fill="' + c + '"/>';
+			svg += '<rect x="186" y="32" width="36" height="18" rx="3" fill="' + c + '"/>';
+		} else if (tmpl.id === 'badge_highlight') {
+			svg += '<rect x="10" y="22" width="220" height="40" rx="4" fill="' + bg + '" stroke="' + muted + '"/>';
+			svg += '<rect x="18" y="34" width="30" height="14" rx="2" fill="' + c + '"/>';
+			svg += '<rect x="56" y="39" width="18" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="80" y="39" width="18" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="106" y="34" width="62" height="14" rx="7" fill="#1e293b" stroke="' + c + '" stroke-width="1"/>';
+			svg += '<circle cx="114" cy="41" r="2" fill="' + c + '"/>';
+			svg += '<rect x="120" y="39" width="40" height="4" rx="1" fill="' + c + '"/>';
+			svg += '<rect x="182" y="32" width="40" height="18" rx="3" fill="' + c + '"/>';
+		} else if (tmpl.id === 'contact_tel') {
+			svg += '<rect x="10" y="10" width="220" height="16" rx="2" fill="#1e293b"/>';
+			svg += '<circle cx="22" cy="18" r="3" fill="#10b981"/>';
+			svg += '<rect x="30" y="15" width="50" height="5" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="156" y="15" width="64" height="5" rx="1" fill="' + c + '"/>';
+			svg += '<rect x="10" y="28" width="220" height="42" rx="2" fill="' + bg + '" stroke="' + muted + '"/>';
+			svg += '<rect x="18" y="42" width="36" height="14" rx="2" fill="' + c + '"/>';
+			svg += '<rect x="85" y="47" width="24" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="117" y="47" width="24" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="175" y="40" width="45" height="18" rx="3" fill="' + c + '"/>';
+		} else if (tmpl.id === 'ecommerce_cart') {
+			svg += '<rect x="10" y="22" width="220" height="40" rx="4" fill="' + bg + '" stroke="' + muted + '"/>';
+			svg += '<rect x="18" y="34" width="34" height="14" rx="2" fill="' + c + '"/>';
+			svg += '<rect x="68" y="39" width="22" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="96" y="39" width="22" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="124" y="39" width="22" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="156" y="35" width="22" height="12" rx="2" fill="#1e293b"/>';
+			svg += '<rect x="186" y="32" width="36" height="18" rx="3" fill="#1e293b" stroke="' + c + '" stroke-width="1"/>';
+			svg += '<circle cx="214" cy="32" r="4" fill="' + c + '"/>';
+		} else if (tmpl.id === 'docs_subnav') {
+			svg += '<rect x="10" y="10" width="220" height="34" rx="2" fill="' + bg + '" stroke="' + muted + '"/>';
+			svg += '<rect x="18" y="20" width="28" height="13" rx="2" fill="' + c + '"/>';
+			svg += '<rect x="52" y="22" width="24" height="9" rx="4" fill="#1e293b" stroke="' + slate + '" stroke-width="0.75"/>';
+			svg += '<rect x="110" y="24" width="20" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="136" y="24" width="20" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="175" y="18" width="45" height="15" rx="3" fill="#1e293b" stroke="' + c + '" stroke-width="0.75"/>';
+			svg += '<rect x="10" y="46" width="220" height="24" rx="2" fill="#1e293b"/>';
+			svg += '<rect x="18" y="55" width="30" height="5" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="54" y="55" width="45" height="5" rx="1" fill="' + c + '"/>';
+		} else if (tmpl.id === 'vertical_sidebar') {
+			svg += '<rect x="10" y="20" width="220" height="42" rx="6" fill="' + bg + '" stroke="' + c + '" stroke-width="1"/>';
+			svg += '<rect x="18" y="32" width="30" height="18" rx="2" fill="' + c + '"/>';
+			svg += '<rect x="62" y="28" width="86" height="26" rx="13" fill="#1e293b" stroke="' + slate + '" stroke-width="0.75"/>';
+			svg += '<circle cx="74" cy="41" r="3" fill="#10b981"/>';
+			svg += '<rect x="84" y="39" width="18" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="108" y="39" width="18" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="132" y="39" width="10" height="4" rx="1" fill="' + c + '"/>';
+			svg += '<rect x="160" y="28" width="62" height="26" rx="4" fill="#0f172a" stroke="' + c + '" stroke-width="0.75"/>';
+			svg += '<rect x="172" y="39" width="38" height="4" rx="1" fill="' + c + '"/>';
+		} else if (tmpl.id === 'glass_blur_gradient') {
+			svg += '<rect x="10" y="8" width="220" height="69" rx="4" fill="#080c14"/>';
+			svg += '<ellipse cx="120" cy="20" rx="70" ry="12" fill="' + c + '" fill-opacity="0.25"/>';
+			svg += '<rect x="18" y="18" width="204" height="38" rx="8" fill="' + bg + '" fill-opacity="0.8" stroke="' + c + '" stroke-width="1.2"/>';
+			svg += '<line x1="26" y1="18" x2="214" y2="18" stroke="' + c + '" stroke-width="1"/>';
+			svg += '<rect x="30" y="30" width="34" height="14" rx="2" fill="' + c + '"/>';
+			svg += '<rect x="80" y="35" width="22" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="108" y="35" width="22" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="136" y="35" width="22" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="174" y="27" width="38" height="18" rx="4" fill="' + c + '"/>';
+		} else if (tmpl.id === 'social_prominent') {
+			svg += '<rect x="10" y="22" width="220" height="40" rx="4" fill="' + bg + '" stroke="' + muted + '"/>';
+			svg += '<rect x="18" y="34" width="32" height="14" rx="2" fill="' + c + '"/>';
+			svg += '<rect x="64" y="39" width="22" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="92" y="39" width="22" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<circle cx="132" cy="41" r="5" fill="#1e293b" stroke="' + slate + '" stroke-width="0.75"/>';
+			svg += '<circle cx="146" cy="41" r="5" fill="#1e293b" stroke="' + slate + '" stroke-width="0.75"/>';
+			svg += '<circle cx="160" cy="41" r="5" fill="#1e293b" stroke="' + slate + '" stroke-width="0.75"/>';
+			svg += '<rect x="174" y="32" width="48" height="18" rx="3" fill="' + c + '"/>';
+		} else if (tmpl.id === 'minimal_underline') {
+			svg += '<rect x="10" y="20" width="220" height="44" rx="0" fill="' + bg + '" stroke="' + muted + '"/>';
+			svg += '<rect x="18" y="34" width="36" height="12" rx="0" fill="' + c + '"/>';
+			svg += '<line x1="62" y1="20" x2="62" y2="64" stroke="' + muted + '" stroke-width="1"/>';
+			svg += '<rect x="70" y="38" width="24" height="4" rx="0" fill="' + slate + '"/>';
+			svg += '<rect x="100" y="38" width="24" height="4" rx="0" fill="' + slate + '"/>';
+			svg += '<line x1="130" y1="20" x2="130" y2="64" stroke="' + muted + '" stroke-width="1"/>';
+			svg += '<rect x="136" y="38" width="34" height="4" rx="0" fill="' + slate + '"/>';
+			svg += '<line x1="176" y1="20" x2="176" y2="64" stroke="' + muted + '" stroke-width="1"/>';
+			svg += '<rect x="182" y="32" width="40" height="18" rx="0" fill="' + c + '"/>';
+		} else if (tmpl.id === 'app_download') {
+			svg += '<rect x="10" y="6" width="220" height="73" rx="4" fill="' + bg + '" stroke="' + muted + '"/>';
+			svg += '<rect x="18" y="14" width="38" height="12" rx="2" fill="' + c + '"/>';
+			svg += '<rect x="18" y="30" width="80" height="5" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="18" y="44" width="42" height="16" rx="3" fill="#1e293b" stroke="' + slate + '" stroke-width="0.75"/>';
+			svg += '<rect x="64" y="44" width="42" height="16" rx="3" fill="#1e293b" stroke="' + slate + '" stroke-width="0.75"/>';
+			svg += '<rect x="168" y="14" width="52" height="52" rx="4" fill="#ffffff"/>';
+			svg += '<rect x="174" y="20" width="16" height="16" fill="' + bg + '"/>';
+			svg += '<rect x="196" y="20" width="16" height="16" fill="' + bg + '"/>';
+			svg += '<rect x="174" y="42" width="16" height="16" fill="' + bg + '"/>';
+			svg += '<rect x="196" y="42" width="16" height="16" fill="' + bg + '"/>';
+		} else if (tmpl.id === 'award_trust') {
+			svg += '<rect x="10" y="6" width="220" height="73" rx="4" fill="' + bg + '" stroke="' + muted + '"/>';
+			svg += '<rect x="18" y="14" width="34" height="10" rx="2" fill="' + c + '"/>';
+			svg += '<rect x="18" y="28" width="60" height="4" rx="1" fill="' + slate + '"/>';
+			for (var bi = 0; bi < 4; bi++) {
+				var bx = 18 + bi * 52;
+				svg += '<rect x="' + bx + '" y="38" width="46" height="26" rx="3" fill="#1e293b" stroke="' + c + '" stroke-width="0.75"/>';
+				svg += '<circle cx="' + (bx + 12) + '" cy="51" r="5" fill="' + c + '" fill-opacity="0.3"/>';
+				svg += '<rect x="' + (bx + 20) + '" y="48" width="20" height="5" rx="1" fill="#ffffff"/>';
+			}
+		} else if (tmpl.id === 'developer_terminal') {
+			svg += '<rect x="10" y="6" width="220" height="73" rx="4" fill="' + bg + '" stroke="' + muted + '"/>';
+			svg += '<rect x="18" y="12" width="204" height="34" rx="4" fill="#020617" stroke="' + c + '" stroke-width="1"/>';
+			svg += '<circle cx="28" cy="20" r="2.5" fill="#ef4444"/>';
+			svg += '<circle cx="36" cy="20" r="2.5" fill="#eab308"/>';
+			svg += '<circle cx="44" cy="20" r="2.5" fill="#10b981"/>';
+			svg += '<rect x="26" y="29" width="60" height="7" rx="1" fill="' + c + '"/>';
+			svg += '<rect x="182" y="16" width="32" height="14" rx="2" fill="#1e293b"/>';
+			svg += '<circle cx="24" cy="58" r="3" fill="#10b981"/>';
+			svg += '<rect x="32" y="56" width="45" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="160" y="56" width="60" height="4" rx="1" fill="' + muted + '"/>';
+		} else if (tmpl.id === 'ecommerce_store') {
+			svg += '<rect x="10" y="6" width="220" height="73" rx="4" fill="' + bg + '" stroke="' + muted + '"/>';
+			svg += '<rect x="18" y="14" width="36" height="12" rx="2" fill="' + c + '"/>';
+			svg += '<rect x="80" y="14" width="24" height="5" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="120" y="14" width="24" height="5" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="160" y="14" width="24" height="5" rx="1" fill="' + slate + '"/>';
+			svg += '<line x1="18" y1="36" x2="222" y2="36" stroke="' + muted + '" stroke-width="1"/>';
+			for (var pi = 0; pi < 4; pi++) {
+				var px = 18 + pi * 44;
+				svg += '<rect x="' + px + '" y="44" width="36" height="20" rx="3" fill="#1e293b" stroke="' + muted + '"/>';
+				svg += '<rect x="' + (px + 6) + '" y="51" width="24" height="6" rx="1" fill="' + slate + '"/>';
+			}
+		} else if (tmpl.id === 'contact_cards') {
+			svg += '<rect x="10" y="6" width="220" height="73" rx="4" fill="' + bg + '" stroke="' + muted + '"/>';
+			for (var ci = 0; ci < 4; ci++) {
+				var cx = 18 + ci * 52;
+				svg += '<rect x="' + cx + '" y="12" width="46" height="46" rx="3" fill="#1e293b" stroke="' + muted + '"/>';
+				svg += '<rect x="' + (cx + 6) + '" y="18" width="28" height="5" rx="1" fill="#ffffff"/>';
+				svg += '<circle cx="' + (cx + 10) + '" cy="32" r="3" fill="' + c + '"/>';
+				svg += '<rect x="' + (cx + 16) + '" y="30" width="22" height="4" rx="1" fill="' + slate + '"/>';
+				svg += '<rect x="' + (cx + 6) + '" y="42" width="34" height="8" rx="2" fill="#0f172a"/>';
+			}
+			svg += '<rect x="18" y="64" width="60" height="4" rx="1" fill="' + muted + '"/>';
+		} else if (tmpl.id === 'editorial_quote') {
+			svg += '<rect x="10" y="6" width="220" height="73" rx="4" fill="' + bg + '" stroke="' + muted + '"/>';
+			svg += '<rect x="22" y="16" width="8" height="8" rx="1" fill="' + c + '"/>';
+			svg += '<rect x="36" y="16" width="160" height="8" rx="2" fill="#ffffff"/>';
+			svg += '<rect x="22" y="28" width="180" height="6" rx="2" fill="' + slate + '"/>';
+			svg += '<rect x="22" y="38" width="120" height="6" rx="2" fill="' + slate + '"/>';
+			svg += '<rect x="22" y="50" width="50" height="5" rx="1" fill="' + c + '"/>';
+			svg += '<line x1="22" y1="60" x2="218" y2="60" stroke="' + muted + '" stroke-width="1"/>';
+			svg += '<rect x="22" y="65" width="40" height="4" rx="1" fill="' + muted + '"/>';
+		} else if (tmpl.id === 'status_incident') {
+			svg += '<rect x="10" y="6" width="220" height="73" rx="4" fill="' + bg + '" stroke="' + muted + '"/>';
+			svg += '<rect x="18" y="14" width="204" height="36" rx="4" fill="#1e293b" stroke="#10b981" stroke-width="1"/>';
+			svg += '<circle cx="32" cy="32" r="5" fill="#10b981"/>';
+			svg += '<rect x="44" y="24" width="70" height="6" rx="1" fill="#ffffff"/>';
+			svg += '<rect x="44" y="34" width="90" height="4" rx="1" fill="' + slate + '"/>';
+			svg += '<rect x="160" y="22" width="52" height="20" rx="3" fill="#0f172a" stroke="#10b981" stroke-width="0.75"/>';
+			svg += '<rect x="18" y="58" width="50" height="4" rx="1" fill="' + muted + '"/>';
+			svg += '<rect x="160" y="58" width="60" height="4" rx="1" fill="' + slate + '"/>';
+		} else if (tmpl.id === 'interactive_faq') {
+			svg += '<rect x="10" y="6" width="220" height="73" rx="4" fill="' + bg + '" stroke="' + muted + '"/>';
+			svg += '<rect x="18" y="12" width="40" height="8" rx="2" fill="' + c + '"/>';
+			for (var fi = 0; fi < 3; fi++) {
+				var fy = 24 + fi * 15;
+				svg += '<rect x="18" y="' + fy + '" width="204" height="12" rx="2" fill="#1e293b" stroke="' + muted + '"/>';
+				svg += '<rect x="24" y="' + (fy + 4) + '" width="80" height="4" rx="1" fill="' + slate + '"/>';
+				svg += '<circle cx="212" cy="' + (fy + 6) + '" r="3" fill="' + c + '"/>';
+			}
+		} else if (tmpl.id === 'podcast_media') {
+			svg += '<rect x="10" y="6" width="220" height="73" rx="4" fill="' + bg + '" stroke="' + muted + '"/>';
+			svg += '<rect x="18" y="12" width="204" height="40" rx="4" fill="#1e293b" stroke="' + c + '" stroke-width="1"/>';
+			svg += '<circle cx="36" cy="32" r="10" fill="' + c + '"/>';
+			svg += '<polygon points="34,27 41,32 34,37" fill="#0f172a"/>';
+			svg += '<rect x="54" y="22" width="60" height="6" rx="1" fill="#ffffff"/>';
+			for (var wi = 0; wi < 10; wi++) {
+				var wh = 4 + (wi % 4) * 4;
+				svg += '<rect x="' + (54 + wi * 7) + '" y="' + (36 - wh/2) + '" width="3" height="' + wh + '" rx="1" fill="' + c + '"/>';
+			}
+			svg += '<rect x="162" y="22" width="50" height="18" rx="3" fill="#0f172a"/>';
+			svg += '<rect x="18" y="60" width="60" height="4" rx="1" fill="' + muted + '"/>';
+		} else if (tmpl.id === 'minimal_colophon') {
+			svg += '<rect x="10" y="6" width="220" height="73" rx="0" fill="' + bg + '" stroke="' + muted + '"/>';
+			svg += '<rect x="18" y="14" width="40" height="6" rx="0" fill="' + c + '"/>';
+			svg += '<line x1="18" y1="24" x2="222" y2="24" stroke="' + muted + '" stroke-width="1"/>';
+			svg += '<rect x="18" y="30" width="35" height="4" rx="0" fill="' + slate + '"/>';
+			svg += '<rect x="18" y="38" width="45" height="4" rx="0" fill="' + slate + '"/>';
+			svg += '<rect x="18" y="46" width="30" height="4" rx="0" fill="' + slate + '"/>';
+			svg += '<line x1="75" y1="24" x2="75" y2="70" stroke="' + muted + '" stroke-width="1"/>';
+			svg += '<rect x="85" y="30" width="40" height="4" rx="0" fill="' + slate + '"/>';
+			svg += '<rect x="85" y="38" width="50" height="4" rx="0" fill="' + slate + '"/>';
+			svg += '<line x1="150" y1="24" x2="150" y2="70" stroke="' + muted + '" stroke-width="1"/>';
+			svg += '<rect x="160" y="30" width="40" height="4" rx="0" fill="' + slate + '"/>';
+			svg += '<rect x="160" y="38" width="30" height="4" rx="0" fill="' + slate + '"/>';
 		}
 
 		svg += '</svg>';
@@ -447,9 +831,9 @@
 
 						// Filter Tabs
 						'<div class="mh-source-filter-group">' +
-							'<button type="button" class="mh-source-pill active" data-type="all">All <span class="mh-source-badge" id="mh-layout-count-all">20</span></button>' +
-							'<button type="button" class="mh-source-pill" data-type="header">Headers <span class="mh-source-badge" id="mh-layout-count-header">10</span></button>' +
-							'<button type="button" class="mh-source-pill" data-type="footer">Footers <span class="mh-source-badge" id="mh-layout-count-footer">10</span></button>' +
+							'<button type="button" class="mh-source-pill active" data-type="all">All <span class="mh-source-badge" id="mh-layout-count-all">40</span></button>' +
+							'<button type="button" class="mh-source-pill" data-type="header">Headers <span class="mh-source-badge" id="mh-layout-count-header">20</span></button>' +
+							'<button type="button" class="mh-source-pill" data-type="footer">Footers <span class="mh-source-badge" id="mh-layout-count-footer">20</span></button>' +
 						'</div>' +
 
 						// Search & Close
@@ -472,17 +856,17 @@
 								'<a href="#" class="mh-cat-item active" data-filter="all">' +
 									'<span class="dashicons dashicons-screenoptions"></span>' +
 									'<span class="mh-cat-label">All Templates</span>' +
-									'<span class="mh-cat-count-badge">20</span>' +
+									'<span class="mh-cat-count-badge">40</span>' +
 								'</a>' +
 								'<a href="#" class="mh-cat-item" data-filter="header">' +
 									'<span class="dashicons dashicons-arrow-up-alt2"></span>' +
 									'<span class="mh-cat-label">Header Layouts</span>' +
-									'<span class="mh-cat-count-badge">10</span>' +
+									'<span class="mh-cat-count-badge">20</span>' +
 								'</a>' +
 								'<a href="#" class="mh-cat-item" data-filter="footer">' +
 									'<span class="dashicons dashicons-arrow-down-alt2"></span>' +
 									'<span class="mh-cat-label">Footer Layouts</span>' +
-									'<span class="mh-cat-count-badge">10</span>' +
+									'<span class="mh-cat-count-badge">20</span>' +
 								'</a>' +
 							'</nav>' +
 						'</aside>' +
