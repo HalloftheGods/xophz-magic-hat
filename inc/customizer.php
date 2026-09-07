@@ -22,6 +22,7 @@ require_once __DIR__ . '/customizer/controls/class-ai-architect-control.php';
 require_once __DIR__ . '/customizer/controls/class-page-builder-control.php';
 require_once __DIR__ . '/customizer/controls/class-group-title-control.php';
 require_once __DIR__ . '/customizer/controls/class-accordion-control.php';
+require_once __DIR__ . '/customizer/controls/class-layout-picker-control.php';
 
 // ── 3. Panels & Sections Registration Modules ─────────────────
 require_once __DIR__ . '/customizer/sections/section-ai-page-architect.php';

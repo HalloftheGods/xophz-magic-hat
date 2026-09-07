@@ -96,15 +96,79 @@
 		handleScroll();
 	}
 
+	// Inline Search & Menu Quick-Jump Autocomplete
+	function initInlineSearch() {
+		var container = document.querySelector('.mh-header-search-container');
+		if (!container) return;
+
+		var input = container.querySelector('.mh-header-search-input');
+		var dropdown = container.querySelector('.mh-search-autocomplete-dropdown');
+		if (!input || !dropdown) return;
+
+		var rawData = container.getAttribute('data-menu-items') || '[]';
+		var menuItems = [];
+		try {
+			menuItems = JSON.parse(rawData);
+		} catch (e) {
+			menuItems = [];
+		}
+
+		window.addEventListener('keydown', function(e) {
+			if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+				e.preventDefault();
+				input.focus();
+				input.select();
+			}
+		});
+
+		input.addEventListener('input', function() {
+			var q = input.value.toLowerCase().trim();
+			if (!q) {
+				dropdown.style.display = 'none';
+				dropdown.innerHTML = '';
+				return;
+			}
+
+			var matches = menuItems.filter(function(item) {
+				return item.title && item.title.toLowerCase().indexOf(q) !== -1;
+			});
+
+			if (!matches.length) {
+				dropdown.innerHTML = '<div style="padding: 8px 14px; font-size: 12px; color: #94a3b8;">No direct menu match. Press Enter to search site.</div>';
+				dropdown.style.display = 'block';
+				return;
+			}
+
+			var html = '';
+			matches.slice(0, 6).forEach(function(m) {
+				html += '<a href="' + m.url + '" class="mh-search-autocomplete-item">' +
+					'<span class="dashicons dashicons-admin-links" style="font-size: 14px; width: 14px; height: 14px; color: #62c9ff;"></span>' +
+					'<span>' + m.title + '</span>' +
+				'</a>';
+			});
+
+			dropdown.innerHTML = html;
+			dropdown.style.display = 'block';
+		});
+
+		document.addEventListener('click', function(e) {
+			if (!container.contains(e.target)) {
+				dropdown.style.display = 'none';
+			}
+		});
+	}
+
 	// Initialize on DOM ready
 	if (document.readyState === 'loading') {
 		document.addEventListener('DOMContentLoaded', function() {
 			initMobileMenu();
 			initStickyHeader();
+			initInlineSearch();
 		});
 	} else {
 		initMobileMenu();
 		initStickyHeader();
+		initInlineSearch();
 	}
 
 	// Support WordPress Customizer Selective Refresh re-initialization
@@ -113,6 +177,7 @@
 			if (placement && placement.partial && (placement.partial.id === 'mh_header_partial' || placement.partial.id === 'mh_footer_partial')) {
 				initMobileMenu();
 				initStickyHeader();
+				initInlineSearch();
 			}
 		});
 	}

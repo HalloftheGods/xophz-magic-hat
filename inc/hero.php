@@ -207,7 +207,7 @@ function xophz_magic_hat_register_hero_customizer( $wp_customize ) {
 
 	// Selective Refresh Partials for Hero
 	if ( isset( $wp_customize->selective_refresh ) ) {
-		// Main Hero Section partial for structural layout / height / width changes
+		// Main Hero Section partial for structural layout / height / width / bg changes
 		$wp_customize->selective_refresh->add_partial( 'mh_hero_partial', array(
 			'selector'            => '#mh-front-page-hero',
 			'settings'            => array(
@@ -219,51 +219,6 @@ function xophz_magic_hat_register_hero_customizer( $wp_customize ) {
 			),
 			'render_callback'     => 'mh_render_hero_markup',
 			'container_inclusive' => true,
-		) );
-
-		// Granular Badge partial
-		$wp_customize->selective_refresh->add_partial( 'mh_hero_badge_partial', array(
-			'selector'        => '.mh-hero-badge',
-			'settings'        => array( 'mh_hero_badge' ),
-			'render_callback' => function() {
-				return esc_html( get_theme_mod( 'mh_hero_badge', '⚡ NEW GENERATION THEME' ) );
-			},
-		) );
-
-		// Granular Headline partial
-		$wp_customize->selective_refresh->add_partial( 'mh_hero_headline_partial', array(
-			'selector'        => '.mh-hero-headline',
-			'settings'        => array( 'mh_hero_headline' ),
-			'render_callback' => function() {
-				return esc_html( get_theme_mod( 'mh_hero_headline', 'We Synthesize The Modern Web' ) );
-			},
-		) );
-
-		// Granular Subtitle partial
-		$wp_customize->selective_refresh->add_partial( 'mh_hero_subtitle_partial', array(
-			'selector'        => '.mh-hero-subtitle',
-			'settings'        => array( 'mh_hero_subtitle' ),
-			'render_callback' => function() {
-				return esc_html( get_theme_mod( 'mh_hero_subtitle', 'Create stunning, high-converting digital experiences with modular precision and dynamic circadian lighting.' ) );
-			},
-		) );
-
-		// Granular CTA 1 partial
-		$wp_customize->selective_refresh->add_partial( 'mh_hero_cta1_partial', array(
-			'selector'        => '.mh-hero-cta1',
-			'settings'        => array( 'mh_hero_cta_primary_text' ),
-			'render_callback' => function() {
-				return esc_html( get_theme_mod( 'mh_hero_cta_primary_text', 'Get Started' ) );
-			},
-		) );
-
-		// Granular CTA 2 partial
-		$wp_customize->selective_refresh->add_partial( 'mh_hero_cta2_partial', array(
-			'selector'        => '.mh-hero-cta2',
-			'settings'        => array( 'mh_hero_cta_secondary_text' ),
-			'render_callback' => function() {
-				return esc_html( get_theme_mod( 'mh_hero_cta_secondary_text', 'Explore Architecture' ) );
-			},
 		) );
 	}
 }

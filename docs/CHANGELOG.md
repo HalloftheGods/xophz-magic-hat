@@ -5,6 +5,32 @@ All notable changes to the Xophz Magic Hat theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [26.9.10] - 2026-09-07
+
+### Added
+- 10 Bespoke Header Archetypes (`inc/header-footer.php`, `inc/customizer/sections/section-header.php`, `assets/css/header-footer.css`, `assets/js/customizer-preview-header-footer.js`, `assets/js/customizer-layout-modal.js`): Expanded header layouts to 10 unique archetypes. Added Announcement Ticker (`announcement_ticker`) featuring a top notification strip with active pill badge and direct link above the navbar, and Dual Converter (`dual_cta`) pairing a ghost login link with a high-converting primary CTA button.
+- 10 Bespoke Footer Archetypes (`inc/header-footer.php`, `inc/customizer/sections/section-footer.php`, `assets/css/header-footer.css`, `assets/js/customizer-preview-header-footer.js`, `assets/js/customizer-layout-modal.js`): Expanded footer layouts to 10 unique archetypes (100 total header and footer combinations). Added 5-Column Enterprise Sitemap (`sitemap_dense`) with high-density directory columns and an active system status beacon, and Interactive Social Hub (`social_hub`) with bespoke community cards for GitHub, X, YouTube, and LinkedIn alongside an integrated newsletter form.
+- In-Canvas Floating URL Popover and Direct Component Editing (`assets/js/customizer-preview-header-footer.js`, `assets/css/header-footer.css`, `inc/header-footer.php`): Implemented floating target URL inspector `.mh-canvas-url-popover` for in-canvas buttons and links (`[data-mh-btn-url]`). Users can edit button URLs directly on the canvas without sidebar navigation. Enabled `contenteditable` inline editing on Big Statement and Newsletter footer elements with live `wp.customize` postMessage synchronization.
+- Layout Catalog 20-Template SVG Wireframes (`assets/js/customizer-layout-modal.js`): Added custom vector SVG wireframes for all 4 new archetypes, updated catalog count badges to 20 total templates (10 headers, 10 footers), and aligned preview canvas mockups.
+
+### Fixed
+- Hamburger Menu Alignment and Collision (`assets/css/header-footer.css`): Resolved CSS layout bug where hamburger toggle bars collided into the "Menu" text. Set explicit zero horizontal offsets, flexible shrink guards, and inline flex alignment on `.mh-hamburger-focus`, `.mh-hamburger-box`, and `.mh-hamburger-inner`.
+
+## [26.9.9] - 2026-09-07
+
+### Added
+- Expanded Layout Archetypes (`inc/header-footer.php`, `inc/customizer/sections/section-header.php`, `inc/customizer/sections/section-footer.php`, `assets/css/header-footer.css`): Expanded theme from 4 to 8 header layouts and from 4 to 8 footer layouts (16 total modern internet archetypes). New headers include Floating Glass Island (`floating_pill`), Stacked Utility (`stacked_utility`), Inline Search and Commands (`inline_search`), and Off-Canvas Minimal (`offcanvas_focus`). New footers include Bento Grid (`bento`), Big Statement CTA (`big_statement`), Newsletter Lead-In (`newsletter_first`), and Floating Dock (`floating_dock`).
+- Brand Display Mode and Logo Height Sliders (`functions.php`, `inc/header-footer.php`, `inc/customizer/sections/section-header.php`, `inc/customizer/sections/section-footer.php`): Added `add_theme_support('custom-logo')` and configurable brand display controls (`mh_header_brand_display` and `mh_footer_brand_display` with options: `both`, `logo_only`, `title_only`, `none`). Sites can now display pure image logos without redundant site title text for cleaner, modern navigation bars. Added granular logo height range sliders (`mh_header_logo_height`, `mh_footer_logo_height`, 20px-120px) controlling CSS custom properties `--mh-logo-h`.
+- Customizer Layout Library Modal (`inc/customizer/controls/class-layout-picker-control.php`, `assets/js/customizer-layout-modal.js`, `inc/customizer/controls-ui.php`): Replaced layout dropdown selects with an interactive visual picker card showing the active layout and a "Browse Layouts" modal trigger button. The full-screen layout catalog features category filtering (All, Headers, Footers), real-time search filtering, SVG wireframe mockups for all 16 layouts, responsive viewport previews (desktop, tablet, mobile), and 1-click apply sync to `wp.customize`.
+- Native Search with Autocomplete and Keyboard Shortcuts (`inc/header-footer.php`, `assets/js/header-footer.js`, `assets/js/customizer-preview-header-footer.js`): Implemented a zero-dependency search bar for the Inline Search header with standard WordPress `/?s=` search fallback, `⌘K` / `Ctrl+K` keyboard shortcut autofocus, and client-side menu item autocomplete indexing active navigation links.
+- In-Canvas Layout Browsing (`assets/js/customizer-preview-header-footer.js`): Added a direct "Browse" button alongside the layout cycler inside the Customizer preview canvas, allowing instant modal activation from either the preview iframe or the sidebar controls.
+
+## [26.9.8] - 2026-09-07
+
+### Fixed
+- Customizer Preview Inline Field Cursor Jumping (`assets/js/customizer-preview-header-footer.js`, `inc/hero.php`): Removed disruptive 750ms keyup debounce timer that previously committed settings mid-typing and caused selective refresh DOM destruction and caret jump to index 0. Replaced granular server-side selective refresh partials on text settings with direct `wp.customize` postMessage bindings, guaranteeing uninterrupted native typing in-canvas and instant 0ms latency updates from the sidebar.
+- Style.css Header Conflict Markers (`style.css`): Removed unresolved git conflict markers and bumped theme version to 26.9.8.
+
 ## [26.5.41] - 2026-09-06
 
 ### Added

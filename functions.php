@@ -18,6 +18,14 @@ function xophz_magic_hat_setup() {
     // Support post thumbnails
     add_theme_support( 'post-thumbnails' );
 
+    // Support custom logo upload
+    add_theme_support( 'custom-logo', array(
+        'height'      => 80,
+        'width'       => 280,
+        'flex-height' => true,
+        'flex-width'  => true,
+    ) );
+
     // Support align wide for Gutenberg blocks
     add_theme_support( 'align-wide' );
 
