@@ -5,6 +5,92 @@ All notable changes to the Xophz Magic Hat theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [26.5.41] - 2026-09-06
+
+### Added
+- Google AI Studio Conversational Interface (`inc/customizer/controls/class-ai-architect-control.php`, `assets/js/customizer-ai-architect.js`): Re-architected the Customizer panel into an interactive AI Studio conversational workspace. Users chat with the Architect in an active message thread, review zero-token thought process telemetry in expandable drawers, and iteratively build, modify, and refine Gutenberg layouts in real time.
+- Multi-Turn Contextual Refinement (`inc/class-magic-hat-ai-architect.php`): Updated `handle_page_generation()` and `build_page_ai_prompt()` to accept existing Gutenberg blocks (`current_blocks`) and conversation context. When follow-up prompts are dispatched (such as adding pricing sections or refining headlines), Gemini performs surgical block additions and adjustments while preserving existing layout sections and circadian tokens.
+- Customizer Wide Studio Mode (`inc/customizer/controls-ui.php`, `assets/js/customizer-ai-architect.js`): Added an "Expand" toggle button that smoothly widens the Customizer controls pane from 300px to 480px, providing a spacious AI Studio reading and prompt drafting workspace alongside the live preview canvas.
+- Floating Live Studio HUD in Preview Canvas (`assets/js/customizer-preview-ai.js`): Injected an interactive glassmorphic HUD badge (`🪄 AI Studio: Live Synced`) inside the preview iframe that reflects live synchronization state and allows 1-click focus back to the AI Studio section.
+
+### Changed
+- HTTP 429 Quota Resiliency & Faster Timeouts (`inc/class-magic-hat-ai-architect.php`): Optimized connector execution timeouts from 45s to 20s. Added immediate detection for HTTP 429 rate limits to prevent prolonged UI delays, gracefully cascading to alternative models (`gemini-3.5-flash-lite`, `gemini-2.0-flash`) or returning clear quota guidance.
+- Prioritized Post Content Injection Targets (`assets/js/customizer-preview-ai.js`): Refined container selectors to target `main.mh-front-page-main .entry-content` and `.entry-content` first, ensuring clean block insertion within the Full Site Editing front page template.
+
+## [26.5.40] - 2026-09-06
+
+### Added
+- Auto-Publish Direct to Website (`inc/customizer/controls/class-ai-architect-control.php`, `assets/js/customizer-ai-architect.js`): Added an active "Publish directly to live website" option that defaults the target destination page to the active Front Page (`page_on_front`) and sends `action: apply_to_page`. Concurrently writes synthesized Gutenberg block trees directly to the WordPress post content in the database while live-updating the preview canvas so changes appear immediately on `http://localhost:8000/`.
+- Dynamic Script Enqueue Cache Busting (`inc/customizer/controls-ui.php`, `functions.php`): Enforced `filemtime()` version query parameters on `customizer-ai-architect.js` and `customizer-preview-ai.js` alongside theme version bump to `26.9.6-804`, preventing stale browser cache execution across Customizer reloads.
+- Direct Iframe DOM Injection Fallback (`assets/js/customizer-ai-architect.js`): Added immediate same-origin DOM replacement on `#mw-front-content` and `.mh-front-page-main` to ensure instant visual updates inside the preview canvas alongside postMessage channels.
+
+## [26.5.39] - 2026-09-06
+
+### Added
+- Zero-Token Real-Time AI Thought Stream (`assets/js/customizer-ai-architect.js`, `inc/class-magic-hat-ai-architect.php`): Implemented interactive architectural telemetry and live stepped pipeline visualization in the Customizer status box. Displays intent coordinates, circadian token binding, generative block synthesis, and quantum canvas injection without incurring extra prompt or reasoning tokens. Each conjured layout in the session stores its Thought Stream for historical review.
+- Server-Side Block Rendering for Live Canvas (`inc/class-magic-hat-ai-architect.php`): Passed generated Gutenberg blocks through `do_blocks()` to return `rendered_html` alongside raw `blocks_html`, ensuring Gutenberg dynamic blocks, groups, and layout classes render cleanly in the browser iframe.
+
+### Fixed
+- Customizer Live Preview Block Injection (`assets/js/customizer-preview-ai.js`): Fixed event listener desynchronization where `wp.customize.bind('mh-ai-page-rendered')` failed to receive postMessage events from the controls window. Bound to `wp.customize.preview.bind('mh-ai-page-rendered')`, added direct window method `window.mhInjectAiBlocks()`, added `wp.customize('mh_ai_generated_blocks')` setting sync, and explicitly targeted front page container `#mw-front-content` for smooth DOM replacement and scroll handling.
+- Gutenberg Block Slashing in Save Endpoint (`inc/class-magic-hat-ai-architect.php`): Wrapped `post_content` in `wp_slash()` within `handle_save_page()` to prevent unslashing and JSON corruption of Gutenberg block attribute comments during database updates.
+
+### Changed
+- Section Icons and Fallback Prompt Intelligence (`inc/customizer/sections/section-ai-page-architect.php`, `inc/customizer/sections/reorder-hierarchy.php`, `inc/class-magic-hat-ai-architect.php`): Updated AI Page Architect section title to `🪄 AI Page Architect` with Magic Wand branding, and added intelligent fallback archetype prompt synthesis when the prompt vision input is left blank so the AI always generates a coherent page structure.
+
+## [26.5.38] - 2026-09-06
+
+### Added
+- Circadian-Aware Page Generation Prompts (`inc/class-magic-hat-ai-architect.php`): Updated `build_page_ai_prompt()` and the generator system instruction with explicit rules requiring all AI-generated Gutenberg layouts to use semantic design tokens (`has-surface-body-background-color`, `has-brand-base-color`, `has-text-heading-color`, `var(--mh-color-*)`) instead of static hex colors, ensuring all generated blocks seamlessly adapt to the 24-hour astronomical circadian lighting curve.
+
+## [26.5.37] - 2026-09-06
+
+### Changed
+- Overlapable Four Boxes Gutenberg Column Support (`assets/css/sections/hero-overlap.css`): Added `.mh-section-overlap-four-boxes .wp-block-columns` selector to apply card background, border, border radius, box shadow, and flexbox grouping to native Gutenberg column blocks alongside legacy `.about-four-boxes-innerrow` markup.
+
+## [26.5.36] - 2026-09-06
+
+### Added
+- Golden Hour Twilight Color Architecture (`inc/stylebook-template.php`, `inc/class-magic-hat-ai-architect.php`): Upgraded the AI system prompt and token generator to establish Twilight mode as an intentional, high-chroma Golden Hour chromatic bridge (warm atmospheric dusk surfaces with Lightness 18-28%, radiant sunset amber/gold/coral Brand and CTA accents, and warm ivory text). This resolves the "muted / muddy middle" problem during continuous OKLCH circadian interpolation between Light and Dark.
+- Smart Model Cascading for Color Conjuring (`inc/class-magic-hat-ai-architect.php`): Implemented resilient model cascading in `handle_palette_generation`, attempting preferred smart reasoning models (`gemini-3.1-pro-preview`, `gemini-pro-latest`) before gracefully cascading to `gemini-3.8-flash` and `gemini-3.7-flash` when encountering rate limits or quota boundaries.
+- Instant Stylebook CSS Hydration (`inc/stylebook-template.php`): In `applyPaletteToCustomizer()`, immediately injects updated CSS custom properties directly onto `:root` and triggers the daylight slider recalculation for instantaneous visual feedback without waiting on Customizer iframe reloads.
+
+### Changed
+- Canonical Default Twilight Tokens (`inc/customizer/helpers.php`): Refreshed default canonical tokens in `mh_get_color_definitions()` to provide a true Golden Hour Twilight palette with warm dusk indigo-bronze surfaces (`#181524`, `#221d33`), radiant sunset amber CTA (`#f59e0b`, `#fbbf24`), and warm golden ivory text (`#fef3c7`).
+- Procedural Fallback Synthesis (`inc/class-magic-hat-ai-architect.php`): Upgraded `generate_procedural_palette()` to parse prompt keywords (purple, royal, luxury, green, emerald, starship) and generate authentic Golden Hour Twilight palettes with distinctive atmospheric dusk surfaces and warm complementary accents.
+
+### Fixed
+- Missing Twilight Export Tokens (`inc/stylebook-template.php`): Fixed `FULL_COLOR_KEYS` definition by including all 28 `_twilight` keys alongside Light and Dark keys, restoring complete 84-token palette export and import functionality.
+- Circadian Slider & Mode Tab Desync (`inc/stylebook-template.php`): Updated `updateFromSlider()` to dynamically calculate the active daylight phase and synchronize the `Light`, `Twilight`, and `Dark` mode tabs as well as `window.currentEditMode` as the slider is scrubbed across the 24-hour astronomical clock. Swatch clicks now open the correct phase-specific Customizer control corresponding to what is currently visible on screen.
+
+## [26.5.35] - 2026-09-06
+
+### Added
+- Official Google WP Connector (`WordPress\AiClient\AiClient`): Integrated the official WordPress 7.0 native AI client and `ai-provider-for-google` plugin provider in `Magic_Hat_AI_Architect`.
+- Multi-Model Selection: Added support for modern Gemini models (`gemini-3.8-flash` default, `gemini-3.7-flash`, `gemini-3.6-flash`, `gemini-3.5-flash`, `gemini-3.5-flash-lite`, `gemini-3.1-pro-preview`, `gemini-flash-latest`, `gemini-pro-latest`) plus Anthropic Claude (3.7 Sonnet, 3.5 Sonnet, 3.5 Haiku) and OpenAI (GPT-4o, GPT-4o Mini, o3-mini) with dedicated selector dropdowns in Customizer AI Architect and Magic Wand editor.
+- Automated Reliability Cascade: Added automatic single-attempt fallback retry from `gemini-3.8-flash` to `gemini-3.6-flash` and secondary fallback to direct Google Generative Language REST API when transient 503 capacity limits or network errors occur.
+
+### Changed
+- Comprehensive API Key Discovery: Expanded `get_api_key()` to automatically resolve keys across `GOOGLE_API_KEY`, `GEMINI_API_KEY`, environment variables, WordPress options (`connectors_ai_google_api_key`, `ai_google_api_key`, `compass_gemini_api_key`, `xophz_gemini_api_key`), `wp_get_connectors()`, and active `AiClient` default registry.
+- AI Generation Timeout Filter: Implemented automatic `http_request_args` 45-second timeout override for Google API calls within `WP_AI_Client_HTTP_Client` to prevent cURL 28 timeouts during rich Gutenberg block synthesis.
+- Customizer AI Architect UI: Modernized Customizer panel with connector selector, model selector, clear status indicators, and transparent warning/error feedback badges when procedural fallback occurs.
+- Page Settings Section Icon (`inc/customizer/sections/section-page-builder.php` & `reorder-hierarchy.php`): Updated section icon from 🏗️ to 🪄 (Magic Wand) for cohesive theme branding.
+- Page Settings Direct Section Layout (`inc/customizer/sections/section-page-builder.php`, `inc/customizer/sections/reorder-hierarchy.php`, `inc/customizer/controls/class-page-builder-control.php`): Configured Page Settings (`mh_page_builder`) as a direct root section at priority 60 to eliminate multi-level clicks. Added a native WordPress Customizer sub-navigation row (`#mh-nav-to-homepage-settings`) at the top of the section that seamlessly focuses core Homepage Settings (`static_front_page`) with automatic back navigation chaining, presenting normal page controls and active page indicator directly underneath.
+- Customizer Section & Menu Emoji Sizing (`inc/customizer/controls-ui.php`): Added automatic text node parsing and MutationObserver in Customizer controls to isolate leading emojis across accordion section titles, panel headers, and navigation items into `.mh-section-emoji`, scaling them to 1.45em with subtle depth drop shadow and interactive hover scale.
+
+### Fixed
+- Procedural Fallback Default Bug: Fixed silent 404 failure caused by deprecated `gemini-2.5-flash` model endpoint that triggered unwanted fallbacks to procedural mock synthesis.
+
+## [26.5.34] - 2026-09-06
+
+### Added
+- Dynamic Quantum Atom Gutenberg Block (`xophz-magic-hat/quantum-atom`): Registered dynamic Gutenberg block in `assets/js/editor-blocks.js` with server-side render fallback (`wp.serverSideRender`) and `save: () => null`, keeping `post_content` as the single source of truth without duplicating Vue component templates in PHP.
+- PHP Dynamic Block Registration (`inc/header-footer.php`): Registered `xophz-magic-hat/quantum-atom` server-side with custom `render_callback` producing hydration markup `<x-atom-mount data-atom="..." data-props="...">` for seamless frontend client hydration by `XophzAtoms`.
+
+### Changed
+- Brand Settings Panel (`inc/customizer/sections/panel-brand-settings.php`, `inc/customizer/sections/reorder-hierarchy.php`): Transformed the top-level "General Settings" Customizer panel into "Brand Settings" (`magic_hat_brand_settings`, titled "👁️ Brand Settings") consolidating Site Identity, Site Colors, Background & Canvas, Typography, Spacing, Buttons, and Custom CSS with full backward compatibility for legacy panel callers.
+- Chakra-Aligned Customizer Hierarchy (`inc/customizer/sections/reorder-hierarchy.php`, `inc/hero.php`): Reordered the Customizer into a coherent descending Crown-to-Root spatial hierarchy: Header Settings (10 - Crown), Brand Settings (20 - Third Eye with 👁️), Menu Settings (30 - Throat), Hero Settings (40 - Heart with 💚), AI Page Architect (50 - Solar Plexus), Page Settings (60 - Form/Anatomy), Shop Settings (70 - Sacral), and Footer Settings (80 - Root).
+- Page Settings Panel Architecture (`inc/customizer/sections/section-page-builder.php`, `inc/customizer/sections/reorder-hierarchy.php`): Converted "🏗️ Page Settings" into a parent panel (`magic_hat_page_settings`) containing native clickable sections for "🏠 Homepage Settings" (`static_front_page`, priority 10) and "🏗️ Page Sections" (`mh_page_builder`, priority 20), cleanly relocating front page routing out of Brand Settings without arbitrary inline UI hacks.
+
 ## [26.5.33] - 2026-09-06
 
 ### Added

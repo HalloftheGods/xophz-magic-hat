@@ -213,7 +213,7 @@ function xophz_magic_hat_customize_preview_init() {
         'magic-hat-customize-preview-ai',
         get_template_directory_uri() . '/assets/js/customizer-preview-ai.js',
         array( 'customize-preview', 'jquery' ),
-        wp_get_theme()->get( 'Version' ),
+        file_exists( get_template_directory() . '/assets/js/customizer-preview-ai.js' ) ? filemtime( get_template_directory() . '/assets/js/customizer-preview-ai.js' ) : wp_get_theme()->get( 'Version' ),
         true
     );
 

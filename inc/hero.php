@@ -22,7 +22,7 @@ function xophz_magic_hat_register_hero_customizer( $wp_customize ) {
 
 	// Hero Settings Section
 	$wp_customize->add_section( 'mh_front_page_hero', array(
-		'title'       => __( '🌟 Hero Settings', 'xophz-magic-hat' ),
+		'title'       => __( '💚 Hero Settings', 'xophz-magic-hat' ),
 		'description' => __( 'Configure your hero banner: choose between 5 layouts, customize typography, buttons, and toggle between Full Width and Boxed.', 'xophz-magic-hat' ),
 		'priority'    => 35,
 	) );

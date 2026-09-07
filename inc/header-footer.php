@@ -26,9 +26,47 @@ function mh_register_header_footer_blocks() {
 			'render_callback' => 'mh_render_footer_block',
 			'editor_script'   => 'magic-hat-editor-blocks',
 		) );
+
+		register_block_type( 'xophz-magic-hat/quantum-atom', array(
+			'render_callback' => 'mh_render_quantum_atom_block',
+			'editor_script'   => 'magic-hat-editor-blocks',
+			'attributes'      => array(
+				'atom'  => array(
+					'type'    => 'string',
+					'default' => 'XBtn',
+				),
+				'props' => array(
+					'type'    => 'object',
+					'default' => array(),
+				),
+			),
+		) );
 	}
 }
 add_action( 'init', 'mh_register_header_footer_blocks' );
+
+/**
+ * Block render callback for Quantum Atom
+ *
+ * @param array<string, mixed> $attributes Block attributes.
+ * @param string               $content    Block inner content.
+ * @return string HTML output mounting the atom container.
+ */
+function mh_render_quantum_atom_block( $attributes = array(), $content = '' ) {
+	$atom  = isset( $attributes['atom'] ) ? sanitize_text_field( $attributes['atom'] ) : 'XBtn';
+	$props = isset( $attributes['props'] ) && is_array( $attributes['props'] ) ? $attributes['props'] : array();
+	$tag   = strtolower( preg_replace( '/([a-z])([A-Z])/', '$1-$2', $atom ) );
+
+	$props_json = esc_attr( wp_json_encode( $props ) );
+	return sprintf(
+		'<div class="mh-quantum-atom-container" data-magic-wand-mount data-atom="%s" data-props="%s"><%s>%s</%s></div>',
+		esc_attr( $atom ),
+		$props_json,
+		esc_attr( $tag ),
+		$content,
+		esc_attr( $tag )
+	);
+}
 
 /**
  * Block render callback for Header

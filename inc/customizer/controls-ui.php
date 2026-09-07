@@ -18,7 +18,7 @@ function xophz_magic_hat_customize_controls_enqueue() {
 		'magic-hat-ai-architect-js',
 		get_template_directory_uri() . '/assets/js/customizer-ai-architect.js',
 		array( 'jquery', 'customize-controls', 'wp-api' ),
-		wp_get_theme()->get( 'Version' ),
+		file_exists( get_template_directory() . '/assets/js/customizer-ai-architect.js' ) ? filemtime( get_template_directory() . '/assets/js/customizer-ai-architect.js' ) : wp_get_theme()->get( 'Version' ),
 		true
 	);
 	wp_localize_script(
@@ -43,30 +43,424 @@ function xophz_magic_hat_customize_controls_scripts() {
 			padding: 12px;
 			height: 100%;
 		}
-		/* AI Page Architect Styles */
-		.mh-vibe-pill, .mh-arch-pill {
-			transition: all 0.2s ease;
+		/* Section & Menu Emoji Sizing */
+		.mh-section-emoji,
+		.mh-nav-icon {
+			font-size: 22px !important;
+			line-height: 1 !important;
+			display: inline-flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			vertical-align: middle !important;
+			margin-right: 8px !important;
+			width: 26px !important;
+			text-align: center !important;
+			filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+			transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 		}
-		.mh-vibe-pill:hover, .mh-arch-pill:hover {
-			border-color: #0284c7 !important;
-			color: #0284c7 !important;
+		.accordion-section-title:hover .mh-section-emoji,
+		.accordion-trigger:hover .mh-section-emoji,
+		.customize-section-title:hover .mh-section-emoji,
+		.mh-customizer-nav-item:hover .mh-nav-icon {
+			transform: scale(1.18);
 		}
-		.mh-vibe-pill.active, .mh-arch-pill.active {
-			background: #0284c7 !important;
+		/* AI Studio Conversational Page Architect Styles */
+		.mh-ai-studio-container {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+		}
+		.mh-ai-studio-header {
+			background: linear-gradient(135deg, #090d16 0%, #151d2f 100%);
+			border: 1px solid rgba(98, 201, 255, 0.3);
+			border-radius: 8px;
+			padding: 10px 12px;
+			box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+		}
+		.mh-ai-studio-header-top {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 4px;
+		}
+		.mh-ai-studio-title-wrap {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+		.mh-ai-studio-title {
+			font-size: 11px;
+			font-weight: 800;
+			color: #62c9ff;
+			letter-spacing: 0.8px;
+			text-transform: uppercase;
+		}
+		.mh-ai-badge {
+			font-size: 9px;
+			padding: 2px 6px;
+			border-radius: 4px;
+			font-weight: 600;
+			background: rgba(16, 185, 129, 0.18);
+			color: #10b981;
+		}
+		.mh-ai-studio-actions-top {
+			display: flex;
+			gap: 4px;
+		}
+		.mh-ai-btn-studio {
+			font-size: 10px !important;
+			height: 22px !important;
+			line-height: 20px !important;
+			padding: 0 6px !important;
+			background: rgba(255, 255, 255, 0.08) !important;
+			border-color: rgba(98, 201, 255, 0.25) !important;
+			color: #e2e8f0 !important;
+		}
+		.mh-ai-btn-studio:hover {
+			background: rgba(98, 201, 255, 0.2) !important;
 			color: #ffffff !important;
-			border-color: #0284c7 !important;
+		}
+		.mh-ai-studio-desc {
+			margin: 0;
+			font-size: 11px;
+			color: #94a3b8;
+			line-height: 1.35;
+		}
+		/* Settings Drawer */
+		.mh-ai-settings-drawer {
+			background: #0f172a;
+			border: 1px solid rgba(98, 201, 255, 0.2);
+			border-radius: 6px;
+			padding: 10px;
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+		.mh-ai-drawer-field label {
+			display: block;
+			font-size: 10px;
 			font-weight: 700;
-			box-shadow: 0 1px 4px rgba(2,132,199,0.3);
+			color: #94a3b8;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			margin-bottom: 3px;
+		}
+		.mh-ai-field-label-row {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 3px;
+		}
+		.mh-ai-link {
+			font-size: 10px;
+			color: #62c9ff;
+			text-decoration: none;
+		}
+		.mh-ai-select {
+			width: 100% !important;
+			font-size: 11px !important;
+			background: #1e293b !important;
+			color: #f8fafc !important;
+			border: 1px solid #334155 !important;
+			border-radius: 4px !important;
+		}
+		.mh-ai-checkbox-label {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			font-size: 11px;
+			color: #cbd5e1;
+			margin-top: 6px;
+			cursor: pointer;
+		}
+		/* Starter Chips */
+		.mh-ai-starter-chips-wrap {
+			margin-bottom: 2px;
+		}
+		.mh-ai-chips-caption {
+			display: block;
+			font-size: 10px;
+			font-weight: 700;
+			color: #64748b;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			margin-bottom: 4px;
+		}
+		.mh-ai-starter-chips {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 4px;
+		}
+		.mh-ai-chip-btn {
+			background: #ffffff;
+			border: 1px solid #cbd5e1;
+			border-radius: 12px;
+			padding: 3px 8px;
+			font-size: 10px;
+			font-weight: 600;
+			color: #334155;
+			cursor: pointer;
+			transition: all 0.15s ease;
+		}
+		.mh-ai-chip-btn:hover {
+			background: #f0f9ff;
+			border-color: #0284c7;
+			color: #0284c7;
+		}
+		/* Chat Thread */
+		.mh-ai-chat-thread-container {
+			background: #080c14;
+			border: 1px solid rgba(98, 201, 255, 0.2);
+			border-radius: 8px;
+			padding: 8px;
+			max-height: 380px;
+			min-height: 200px;
+			overflow-y: auto;
+			box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+		}
+		.mh-ai-chat-thread {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+		}
+		.mh-ai-msg {
+			border-radius: 8px;
+			padding: 8px 10px;
+			font-size: 11px;
+			line-height: 1.45;
+		}
+		.mh-ai-msg-user {
+			align-self: flex-end;
+			background: rgba(2, 132, 199, 0.22);
+			border: 1px solid rgba(98, 201, 255, 0.35);
+			color: #f0f9ff;
+			max-width: 90%;
+		}
+		.mh-ai-msg-assistant {
+			align-self: flex-start;
+			background: #0f172a;
+			border: 1px solid rgba(255, 255, 255, 0.12);
+			color: #cbd5e1;
+			width: 100%;
+			box-sizing: border-box;
+		}
+		.mh-ai-msg-header {
+			display: flex;
+			align-items: center;
+			gap: 5px;
+			margin-bottom: 4px;
+		}
+		.mh-ai-msg-avatar {
+			font-size: 12px;
+		}
+		.mh-ai-msg-name {
+			font-weight: 700;
+			font-size: 10px;
+			color: #62c9ff;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+		.mh-ai-msg-time {
+			font-size: 9px;
+			color: #64748b;
+			margin-left: auto;
+		}
+		.mh-ai-msg-body p {
+			margin: 0 0 6px 0;
+		}
+		.mh-ai-msg-body p:last-child {
+			margin-bottom: 0;
+		}
+		.mh-ai-msg-subtext {
+			font-size: 10px;
+			color: #94a3b8;
+		}
+		.mh-ai-thought-box {
+			background: #060911;
+			border: 1px solid rgba(98, 201, 255, 0.2);
+			border-radius: 6px;
+			padding: 6px 8px;
+			margin: 6px 0;
+			font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+			font-size: 10px;
+		}
+		.mh-ai-thought-box summary {
+			cursor: pointer;
+			color: #62c9ff;
+			font-weight: 600;
+			outline: none;
+			padding: 2px 0;
+		}
+		.mh-ai-thought-steps {
+			margin-top: 6px;
+			border-top: 1px solid rgba(255, 255, 255, 0.08);
+			padding-top: 4px;
+		}
+		.mh-ai-thought-step {
+			margin-bottom: 4px;
+			line-height: 1.35;
+		}
+		.mh-ai-thought-step-name {
+			color: #38bdf8;
+			font-weight: 700;
+		}
+		.mh-ai-thought-step-desc {
+			color: #94a3b8;
+		}
+		.mh-ai-msg-actions {
+			display: flex;
+			gap: 6px;
+			margin-top: 8px;
+			padding-top: 6px;
+			border-top: 1px solid rgba(255, 255, 255, 0.08);
+		}
+		.mh-ai-action-chip {
+			background: rgba(255, 255, 255, 0.06);
+			border: 1px solid rgba(255, 255, 255, 0.15);
+			border-radius: 4px;
+			padding: 2px 6px;
+			font-size: 9px;
+			color: #cbd5e1;
+			cursor: pointer;
+			transition: all 0.15s ease;
+		}
+		.mh-ai-action-chip:hover {
+			background: #0284c7;
+			border-color: #0284c7;
+			color: #ffffff;
+		}
+		/* Progress Panel */
+		.mh-ai-status-panel {
+			background: #0a0e1a;
+			border: 1px solid rgba(98, 201, 255, 0.3);
+			border-radius: 6px;
+			padding: 8px 10px;
+			font-size: 11px;
+			color: #cbd5e1;
+		}
+		/* Follow-up chips */
+		.mh-ai-followup-chips-wrap {
+			overflow-x: auto;
+			padding: 2px 0;
+		}
+		.mh-ai-followup-chips {
+			display: flex;
+			gap: 4px;
+			white-space: nowrap;
+		}
+		.mh-ai-followup-chip {
+			background: #f1f5f9;
+			border: 1px solid #cbd5e1;
+			border-radius: 12px;
+			padding: 2px 8px;
+			font-size: 10px;
+			color: #475569;
+			cursor: pointer;
+			transition: all 0.15s ease;
+		}
+		.mh-ai-followup-chip:hover {
+			background: #0284c7;
+			border-color: #0284c7;
+			color: #ffffff;
+		}
+		/* Chat Dock */
+		.mh-ai-chat-dock {
+			background: #ffffff;
+			border: 1px solid #cbd5e1;
+			border-radius: 8px;
+			padding: 6px 8px;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+		}
+		.mh-ai-input-wrap {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+		.mh-ai-chat-input {
+			width: 100% !important;
+			border: none !important;
+			outline: none !important;
+			resize: none !important;
+			padding: 0 !important;
+			font-size: 12px !important;
+			line-height: 1.4 !important;
+			color: #1e293b !important;
+			background: transparent !important;
+			box-shadow: none !important;
+		}
+		.mh-ai-chat-input:focus {
+			box-shadow: none !important;
+		}
+		.mh-ai-input-actions {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+		.mh-ai-input-hints {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+		.mh-ai-mini-model-pill {
+			font-size: 9px;
+			padding: 1px 5px;
+			background: #f1f5f9;
+			border: 1px solid #e2e8f0;
+			border-radius: 4px;
+			color: #64748b;
+			font-weight: 600;
+		}
+		.mh-ai-key-hint {
+			font-size: 9px;
+			color: #94a3b8;
+		}
+		.mh-ai-send-btn {
+			height: 28px !important;
+			line-height: 26px !important;
+			padding: 0 10px !important;
+			background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+			border-color: #0284c7 !important;
+			font-size: 11px !important;
+			font-weight: 700 !important;
+			display: inline-flex !important;
+			align-items: center !important;
+			gap: 4px !important;
+		}
+		/* Checkpoints bar */
+		.mh-ai-checkpoints-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 2px 0;
+		}
+		.mh-ai-checkpoint-btn {
+			background: transparent;
+			border: none;
+			color: #64748b;
+			font-size: 10px;
+			cursor: pointer;
+			padding: 2px 4px;
+			border-radius: 4px;
+		}
+		.mh-ai-checkpoint-btn:hover {
+			color: #0284c7;
+			background: #f8fafc;
+		}
+		/* Wide Studio Mode for Customizer */
+		body.mh-ai-studio-wide #customize-controls {
+			width: 480px !important;
+			transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+		}
+		body.mh-ai-studio-wide .wp-full-overlay.expanded {
+			margin-left: 480px !important;
+			transition: margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 		}
 		@keyframes mhSpin {
 			100% { transform: rotate(360deg); }
 		}
 		.dashicons.spin {
 			animation: mhSpin 1.2s linear infinite;
-		}
-		#mh-ai-conjure-btn.loading {
-			opacity: 0.7;
-			cursor: not-allowed;
 		}
 		/* Default folded state for Site Colors accordion child controls */
 		#sub-accordion-section-magic_hat_colors li.customize-control:not(.customize-control-mh_accordion_toggle):not(#customize-control-mh_color_schedule_mode) {
@@ -399,7 +793,7 @@ function xophz_magic_hat_customize_controls_scripts() {
 					}
 				});
 				wp.customize.state('expandedPanel').bind(function(panel) {
-					if (panel && (panel.id === 'magic_hat_colors_panel' || panel.id === 'magic_hat_general_settings')) {
+					if (panel && (panel.id === 'magic_hat_colors_panel' || panel.id === 'magic_hat_brand_settings' || panel.id === 'magic_hat_general_settings')) {
 						wp.customize.previewer.send('mh-scroll-to', 'section-colors');
 					}
 				});
@@ -439,6 +833,100 @@ function xophz_magic_hat_customize_controls_scripts() {
 					wp.customize('mh_bg_mode').bind(updateBgControlsVisibility);
 				}
 			});
+
+			// Automatic Customizer Section & Menu Emoji Sizing
+			(function() {
+				var emojiRegex = /(\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic})*)/gu;
+
+				function wrapEmojisInTree(root) {
+					if (!root) return;
+
+					var targets = root.querySelectorAll ? root.querySelectorAll('.accordion-section-title, .accordion-trigger, .customize-section-title h3, .customize-panel-title, .mh-customizer-nav-item .mh-nav-item-title') : [];
+					var all = Array.prototype.slice.call(targets);
+					if (root.matches && (root.matches('.accordion-section-title') || root.matches('.accordion-trigger') || root.matches('.customize-section-title h3') || root.matches('.customize-panel-title') || root.matches('.mh-customizer-nav-item .mh-nav-item-title'))) {
+						all.unshift(root);
+					}
+
+					for (var i = 0; i < all.length; i++) {
+						var el = all[i];
+						if (!el || el.querySelector('.mh-section-emoji')) continue;
+
+						var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+						var textNodes = [];
+						var currentNode;
+						while ((currentNode = walker.nextNode())) {
+							var parent = currentNode.parentElement;
+							if (parent && (parent.classList.contains('screen-reader-text') || parent.classList.contains('mh-section-emoji') || parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE')) {
+								continue;
+							}
+							textNodes.push(currentNode);
+						}
+
+						for (var t = 0; t < textNodes.length; t++) {
+							var textNode = textNodes[t];
+							var text = textNode.nodeValue;
+							if (!text || !emojiRegex.test(text)) continue;
+							emojiRegex.lastIndex = 0;
+
+							var frag = document.createDocumentFragment();
+							var lastIdx = 0;
+							var match;
+							while ((match = emojiRegex.exec(text)) !== null) {
+								if (match.index > lastIdx) {
+									frag.appendChild(document.createTextNode(text.substring(lastIdx, match.index)));
+								}
+								var span = document.createElement('span');
+								span.className = 'mh-section-emoji';
+								span.textContent = match[1];
+								frag.appendChild(span);
+								lastIdx = emojiRegex.lastIndex;
+							}
+							if (lastIdx < text.length) {
+								frag.appendChild(document.createTextNode(text.substring(lastIdx)));
+							}
+							if (textNode.parentNode) {
+								textNode.parentNode.replaceChild(frag, textNode);
+							}
+						}
+					}
+				}
+
+				function scan() {
+					var container = document.getElementById('customize-theme-controls') || document.getElementById('customize-controls') || document.body;
+					wrapEmojisInTree(container);
+				}
+
+				// Execute scan immediately
+				scan();
+
+				// Execute scan on document ready
+				if (document.readyState === 'loading') {
+					document.addEventListener('DOMContentLoaded', scan);
+				} else {
+					scan();
+				}
+
+				// Execute scan via WordPress Customizer ready lifecycle
+				if (window.wp && window.wp.customize) {
+					window.wp.customize(scan);
+				}
+
+				// Observe dynamic Customizer accordion insertions and panel expansions
+				if (window.MutationObserver) {
+					var scheduled = false;
+					var observer = new MutationObserver(function() {
+						if (!scheduled) {
+							scheduled = true;
+							requestAnimationFrame(function() {
+								scheduled = false;
+								scan();
+							});
+						}
+					});
+					var targetContainer = document.getElementById('customize-controls') || document.body;
+					observer.observe(targetContainer, { childList: true, subtree: true });
+				}
+			})();
 		});
 	</script>
 	<?php

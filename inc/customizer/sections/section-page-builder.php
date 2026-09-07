@@ -16,8 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function mh_register_page_builder_section( $wp_customize ) {
 	$wp_customize->add_section( 'mh_page_builder', array(
-		'title'    => __( '🏗️ Page Settings', 'xophz-magic-hat' ),
-		'priority' => 40,
+		'title'       => __( '🪄 Page Settings', 'xophz-magic-hat' ),
+		'priority'    => 60,
+		'description' => __( 'Configure front page routing and modular page builder sections.', 'xophz-magic-hat' ),
 	) );
 
 	// Setting to store JSON data for the page sections

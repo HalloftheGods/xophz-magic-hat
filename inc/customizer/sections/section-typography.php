@@ -21,7 +21,7 @@ function mh_register_typography_section( $wp_customize ) {
 	$wp_customize->add_section( 'magic_hat_typography', array(
 		'title'    => __( '🪶 Typography', 'xophz-magic-hat' ),
 		'priority' => 50,
-		'panel'    => 'magic_hat_general_settings',
+		'panel'    => 'magic_hat_brand_settings',
 	) );
 
 	// Base Font Family
