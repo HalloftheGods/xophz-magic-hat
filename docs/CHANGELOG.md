@@ -5,6 +5,15 @@ All notable changes to the Xophz Magic Hat theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [26.5.34] - 2026-09-07
+
+### Added
+- Animated Canvases Expansion (`assets/js/canvases/magic-hat-canvases.js`, `assets/js/canvases/canvases-manifest.json`): Integrated 6 new generative canvas engines (`nimbus`, `helios`, `welcome-u`, `cafeteria`, `nexos`, `noosphere`), bringing total canvas suite to 27 procedural presets.
+- Dynamic Canvas Manifest (`assets/js/canvases/canvases-manifest.json`): Generated compile-time JSON manifest containing complete metadata for all 27 generative canvas presets.
+
+### Changed
+- Customizer Canvas Selector Ingestion (`inc/customizer/sections/section-background.php`): Updated `mh_get_canvas_preset_choices()` to dynamically load canvas options from `canvases-manifest.json` with robust fallback defaults, establishing Single Source of Truth synchronization across Vue applets, the theme Customizer, and companion plugins.
+
 ## [26.5.33] - 2026-09-06
 
 ### Added

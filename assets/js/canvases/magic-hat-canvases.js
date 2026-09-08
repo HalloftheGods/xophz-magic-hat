@@ -1079,7 +1079,404 @@
     }
   };
 
-  // ── MANAGER CONTROLLER ─────────────────────────────────────────
+  // -- 22. NIMBUS ATMOSPHERIC -----------------------------------------
+  presets['nimbus'] = {
+    name: 'Nimbus Atmospheric',
+    init: function(c, ctx, opt) {
+      this.clouds = [];
+      this.particles = [];
+      var w = c.width;
+      var h = c.height;
+      for (var i = 0; i < 7; i++) {
+        this.clouds.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          radius: 120 + Math.random() * 180,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3 - 0.1,
+          phase: Math.random() * Math.PI * 2,
+          opacity: 0.06 + Math.random() * 0.08,
+          isGold: i % 2 === 0
+        });
+      }
+      for (var j = 0; j < 30; j++) {
+        this.particles.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          radius: Math.random() * 2 + 1,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: -Math.random() * 0.5 - 0.2,
+          alpha: Math.random() * 0.5 + 0.2
+        });
+      }
+    },
+    render: function(c, ctx, dt, opt) {
+      var w = c.width;
+      var h = c.height;
+      var speed = opt.speed || 1.0;
+      var opacity = opt.opacity || 0.6;
+      var color = opt.color || '#70d6ff';
+      var goldColor = '#ffb703';
+
+      ctx.clearRect(0, 0, w, h);
+
+      for (var i = 0; i < this.clouds.length; i++) {
+        var cl = this.clouds[i];
+        cl.x += cl.vx * speed;
+        cl.y += cl.vy * speed;
+        cl.phase += 0.01 * speed;
+        if (cl.x < -cl.radius) cl.x = w + cl.radius;
+        if (cl.x > w + cl.radius) cl.x = -cl.radius;
+        if (cl.y < -cl.radius) cl.y = h + cl.radius;
+        if (cl.y > h + cl.radius) cl.y = -cl.radius;
+
+        var r = cl.radius + Math.sin(cl.phase) * 20;
+        var grad = ctx.createRadialGradient(cl.x, cl.y, 0, cl.x, cl.y, r);
+        var baseCol = cl.isGold ? goldColor : color;
+        grad.addColorStop(0, toRgba(baseCol, cl.opacity * opacity));
+        grad.addColorStop(1, toRgba(baseCol, 0));
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cl.x, cl.y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (var j = 0; j < this.particles.length; j++) {
+        var p = this.particles[j];
+        p.x += p.vx * speed;
+        p.y += p.vy * speed;
+        if (p.y < 0) { p.y = h; p.x = Math.random() * w; }
+        if (p.x < 0) p.x = w;
+        if (p.x > w) p.x = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = toRgba(goldColor, p.alpha * opacity);
+        ctx.fill();
+      }
+    }
+  };
+
+  // -- 23. HELIOS PLANETARY ORBITS ------------------------------------
+  presets['helios'] = {
+    name: 'Helios Planetary Orbits',
+    init: function(c, ctx, opt) {
+      this.time = 0;
+      this.planets = [
+        { dist: 45, radius: 2.5, speed: 1.8, color: '#a8a8a8' },
+        { dist: 75, radius: 4, speed: 1.3, color: '#e0a96d' },
+        { dist: 110, radius: 4.5, speed: 1.0, color: '#4ba3e3' },
+        { dist: 150, radius: 3, speed: 0.8, color: '#e27b58' },
+        { dist: 210, radius: 8, speed: 0.45, color: '#d4a373' },
+        { dist: 270, radius: 6.5, speed: 0.35, color: '#eddcd2' },
+        { dist: 330, radius: 5, speed: 0.25, color: '#72efdd' },
+        { dist: 390, radius: 4.8, speed: 0.18, color: '#48bfe3' }
+      ];
+    },
+    render: function(c, ctx, dt, opt) {
+      var w = c.width;
+      var h = c.height;
+      var cx = w / 2;
+      var cy = h / 2;
+      var speed = opt.speed || 1.0;
+      var opacity = opt.opacity || 0.6;
+      var sunColor = opt.color || '#ffbe0b';
+
+      ctx.clearRect(0, 0, w, h);
+      this.time += 0.01 * speed;
+
+      var sunGrad = ctx.createRadialGradient(cx, cy, 5, cx, cy, 50);
+      sunGrad.addColorStop(0, toRgba(sunColor, 0.9 * opacity));
+      sunGrad.addColorStop(0.3, toRgba(sunColor, 0.4 * opacity));
+      sunGrad.addColorStop(1, toRgba(sunColor, 0));
+      ctx.fillStyle = sunGrad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 50, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 9, 0, Math.PI * 2);
+      ctx.fill();
+
+      for (var i = 0; i < this.planets.length; i++) {
+        var pl = this.planets[i];
+        ctx.beginPath();
+        ctx.arc(cx, cy, pl.dist, 0, Math.PI * 2);
+        ctx.strokeStyle = toRgba(sunColor, 0.12 * opacity);
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        var angle = this.time * pl.speed + i;
+        var px = cx + Math.cos(angle) * pl.dist;
+        var py = cy + Math.sin(angle) * pl.dist;
+
+        ctx.beginPath();
+        ctx.arc(px, py, pl.radius, 0, Math.PI * 2);
+        ctx.fillStyle = toRgba(pl.color, 0.85 * opacity);
+        ctx.fill();
+      }
+    }
+  };
+
+  // -- 24. WELCOME SYNAPSE NODES --------------------------------------
+  presets['welcome-u'] = {
+    name: 'Welcome Synapse Nodes',
+    init: function(c, ctx, opt) {
+      this.nodes = [];
+      var w = c.width;
+      var h = c.height;
+      for (var i = 0; i < 60; i++) {
+        this.nodes.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          radius: 1.5 + Math.random() * 2,
+          opacity: 0.2 + Math.random() * 0.5
+        });
+      }
+    },
+    render: function(c, ctx, dt, opt) {
+      var w = c.width;
+      var h = c.height;
+      var speed = opt.speed || 1.0;
+      var opacity = opt.opacity || 0.6;
+      var color = opt.color || '#62c9ff';
+
+      ctx.clearRect(0, 0, w, h);
+
+      for (var i = 0; i < this.nodes.length; i++) {
+        var n = this.nodes[i];
+        n.x += n.vx * speed;
+        n.y += n.vy * speed;
+        if (n.x < 0) n.x = w;
+        if (n.x > w) n.x = 0;
+        if (n.y < 0) n.y = h;
+        if (n.y > h) n.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+        ctx.fillStyle = toRgba(color, n.opacity * opacity);
+        ctx.fill();
+
+        for (var j = i + 1; j < this.nodes.length; j++) {
+          var n2 = this.nodes[j];
+          var dx = n.x - n2.x;
+          var dy = n.y - n2.y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            var lineAlpha = (1 - dist / 120) * 0.25 * opacity;
+            ctx.beginPath();
+            ctx.moveTo(n.x, n.y);
+            ctx.lineTo(n2.x, n2.y);
+            ctx.strokeStyle = toRgba(color, lineAlpha);
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+    }
+  };
+
+  // -- 25. CAFETERIA AMBER VAPOR --------------------------------------
+  presets['cafeteria'] = {
+    name: 'Cafeteria Amber Vapor',
+    init: function(c, ctx, opt) {
+      this.wisps = [];
+      var w = c.width;
+      var h = c.height;
+      for (var i = 0; i < 18; i++) {
+        this.wisps.push({
+          x: Math.random() * w,
+          y: h + Math.random() * 100,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: -Math.random() * 0.6 - 0.3,
+          radius: 80 + Math.random() * 140,
+          alpha: 0.04 + Math.random() * 0.08,
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+    },
+    render: function(c, ctx, dt, opt) {
+      var w = c.width;
+      var h = c.height;
+      var speed = opt.speed || 1.0;
+      var opacity = opt.opacity || 0.6;
+      var color = opt.color || '#ffb300';
+
+      ctx.clearRect(0, 0, w, h);
+
+      for (var i = 0; i < this.wisps.length; i++) {
+        var wp = this.wisps[i];
+        wp.y += wp.vy * speed;
+        wp.x += wp.vx * speed + Math.sin(wp.phase) * 0.3;
+        wp.phase += 0.015 * speed;
+
+        if (wp.y < -wp.radius) {
+          wp.y = h + wp.radius;
+          wp.x = Math.random() * w;
+        }
+
+        var grad = ctx.createRadialGradient(wp.x, wp.y, 0, wp.x, wp.y, wp.radius);
+        grad.addColorStop(0, toRgba(color, wp.alpha * opacity));
+        grad.addColorStop(1, toRgba(color, 0));
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(wp.x, wp.y, wp.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  };
+
+  // -- 26. NEXOS NEURAL MESH ------------------------------------------
+  presets['nexos'] = {
+    name: 'Nexos Neural Mesh',
+    init: function(c, ctx, opt) {
+      this.time = 0;
+      this.nodes = [];
+      var w = c.width;
+      var h = c.height;
+      for (var i = 0; i < 70; i++) {
+        this.nodes.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.45,
+          vy: (Math.random() - 0.5) * 0.45,
+          size: 1.2 + Math.random() * 2,
+          energy: Math.random() * Math.PI * 2
+        });
+      }
+    },
+    render: function(c, ctx, dt, opt) {
+      var w = c.width;
+      var h = c.height;
+      var speed = opt.speed || 1.0;
+      var opacity = opt.opacity || 0.6;
+      var color = opt.color || '#3a86ff';
+
+      ctx.clearRect(0, 0, w, h);
+      this.time += 0.02 * speed;
+
+      for (var i = 0; i < this.nodes.length; i++) {
+        var n = this.nodes[i];
+        n.x += n.vx * speed;
+        n.y += n.vy * speed;
+        n.energy += 0.03 * speed;
+        if (n.x < 0) n.x = w;
+        if (n.x > w) n.x = 0;
+        if (n.y < 0) n.y = h;
+        if (n.y > h) n.y = 0;
+
+        var pulse = (Math.sin(n.energy) + 1) * 0.5;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.size * (0.8 + pulse * 0.4), 0, Math.PI * 2);
+        ctx.fillStyle = toRgba(color, (0.3 + pulse * 0.5) * opacity);
+        ctx.fill();
+
+        for (var j = i + 1; j < this.nodes.length; j++) {
+          var n2 = this.nodes[j];
+          var dx = n.x - n2.x;
+          var dy = n.y - n2.y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.moveTo(n.x, n.y);
+            ctx.lineTo(n2.x, n2.y);
+            ctx.strokeStyle = toRgba(color, (1 - dist / 100) * 0.3 * opacity);
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+    }
+  };
+
+  // -- 27. NOOSPHERE CONSCIOUSNESS FIELD ------------------------------
+  presets['noosphere'] = {
+    name: 'Noosphere Consciousness Field',
+    init: function(c, ctx, opt) {
+      this.pulses = [];
+      this.nodes = [];
+      var w = c.width;
+      var h = c.height;
+      for (var i = 0; i < 40; i++) {
+        this.nodes.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          size: 2 + Math.random() * 2.5,
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+      for (var j = 0; j < 15; j++) {
+        var from = Math.floor(Math.random() * this.nodes.length);
+        var to = (from + 1 + Math.floor(Math.random() * 5)) % this.nodes.length;
+        this.pulses.push({
+          from: from,
+          to: to,
+          progress: Math.random(),
+          speed: 0.006 + Math.random() * 0.008
+        });
+      }
+    },
+    render: function(c, ctx, dt, opt) {
+      var w = c.width;
+      var h = c.height;
+      var speed = opt.speed || 1.0;
+      var opacity = opt.opacity || 0.6;
+      var color = opt.color || '#ff006e';
+
+      ctx.clearRect(0, 0, w, h);
+
+      for (var i = 0; i < this.nodes.length; i++) {
+        var n = this.nodes[i];
+        n.phase += 0.02 * speed;
+        var r = n.size + Math.sin(n.phase) * 1;
+
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = toRgba(color, 0.6 * opacity);
+        ctx.fill();
+
+        for (var j = i + 1; j < this.nodes.length; j++) {
+          var n2 = this.nodes[j];
+          var dist = Math.hypot(n.x - n2.x, n.y - n2.y);
+          if (dist < 140) {
+            ctx.beginPath();
+            ctx.moveTo(n.x, n.y);
+            ctx.lineTo(n2.x, n2.y);
+            ctx.strokeStyle = toRgba(color, (1 - dist / 140) * 0.2 * opacity);
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+
+      for (var p = 0; p < this.pulses.length; p++) {
+        var pulse = this.pulses[p];
+        pulse.progress += pulse.speed * speed;
+        if (pulse.progress >= 1) {
+          pulse.progress = 0;
+          pulse.from = Math.floor(Math.random() * this.nodes.length);
+          pulse.to = (pulse.from + 1 + Math.floor(Math.random() * 5)) % this.nodes.length;
+        }
+
+        var nA = this.nodes[pulse.from];
+        var nB = this.nodes[pulse.to];
+        var px = nA.x + (nB.x - nA.x) * pulse.progress;
+        var py = nA.y + (nB.y - nA.y) * pulse.progress;
+
+        ctx.beginPath();
+        ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = toRgba('#ffffff', 0.9 * opacity);
+        ctx.fill();
+      }
+    }
+  };
+
+  // -- MANAGER CONTROLLER ---------------------------------------------
 
   function MagicHatCanvasManager(canvas, presetName, options) {
     this.canvas = canvas;

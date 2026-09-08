@@ -173,18 +173,24 @@ function mh_register_background_section( $wp_customize ) {
 		'active_callback' => 'mh_is_bg_mode_image',
 	) ) );
 
-	// Canvas Preset (21 Presets - Only shown when mode is canvas)
-	$wp_customize->add_setting( 'mh_bg_canvas_preset', array(
-		'default'           => 'electric-wave',
-		'sanitize_callback' => 'sanitize_text_field',
-		'transport'         => 'postMessage',
-	) );
-	$wp_customize->add_control( 'mh_bg_canvas_preset', array(
-		'type'            => 'select',
-		'section'         => 'magic_hat_background',
-		'label'           => __( 'Animated Canvas Preset', 'xophz-magic-hat' ),
-		'active_callback' => 'mh_is_bg_mode_canvas',
-		'choices'         => array(
+/**
+ * Dynamic Canvas Preset Choices
+ *
+ * Ingests exported canvases-manifest.json compiled from the monorepo canvas engine.
+ */
+if ( ! function_exists( 'mh_get_canvas_preset_choices' ) ) {
+	function mh_get_canvas_preset_choices() {
+		$manifest_path = get_template_directory() . '/assets/js/canvases/canvases-manifest.json';
+		if ( file_exists( $manifest_path ) ) {
+			$content = file_get_contents( $manifest_path );
+			$decoded = json_decode( $content, true );
+			if ( is_array( $decoded ) && ! empty( $decoded ) ) {
+				return $decoded;
+			}
+		}
+
+		// Fallback presets if manifest is not compiled yet
+		return array(
 			'electric-wave'     => __( '⚡ Electric Waves', 'xophz-magic-hat' ),
 			'aurora-smoke'      => __( '🌌 Aurora Smoke', 'xophz-magic-hat' ),
 			'celestial-cosmos'  => __( '✨ Celestial Cosmos', 'xophz-magic-hat' ),
@@ -206,7 +212,28 @@ function mh_register_background_section( $wp_customize ) {
 			'logos'             => __( '💎 Logos Constellation', 'xophz-magic-hat' ),
 			'nucleos'           => __( '🔬 Nucleos Atomic Orbits', 'xophz-magic-hat' ),
 			'jupiter-gravity'   => __( '🪐 Jupiter Gravitational Lensing', 'xophz-magic-hat' ),
-		),
+			'nimbus'            => __( '☁️ Nimbus Atmospheric Vapor', 'xophz-magic-hat' ),
+			'helios'            => __( '☀️ Helios Planetary Orbits', 'xophz-magic-hat' ),
+			'welcome-u'         => __( '🕸️ Welcome Synapse Nodes', 'xophz-magic-hat' ),
+			'cafeteria'         => __( '☕ Cafeteria Amber Vapor', 'xophz-magic-hat' ),
+			'nexos'             => __( '⚡ Nexos Neural Mesh', 'xophz-magic-hat' ),
+			'noosphere'         => __( '🧠 Noosphere Consciousness Field', 'xophz-magic-hat' ),
+		);
+	}
+}
+
+	// Canvas Preset (Synced from monorepo single source of truth - Only shown when mode is canvas)
+	$wp_customize->add_setting( 'mh_bg_canvas_preset', array(
+		'default'           => 'electric-wave',
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_bg_canvas_preset', array(
+		'type'            => 'select',
+		'section'         => 'magic_hat_background',
+		'label'           => __( 'Animated Canvas Preset', 'xophz-magic-hat' ),
+		'active_callback' => 'mh_is_bg_mode_canvas',
+		'choices'         => mh_get_canvas_preset_choices(),
 	) );
 
 	// Canvas Tint Color (Only shown when mode is canvas)
