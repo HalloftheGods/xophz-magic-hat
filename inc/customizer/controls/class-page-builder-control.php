@@ -21,6 +21,18 @@ if ( class_exists( 'WP_Customize_Control' ) && ! class_exists( 'Magic_Hat_Page_B
 			$show_on_front = get_option( 'show_on_front', 'posts' );
 			$is_magic_hat  = ( $show_on_front === 'page' );
 			?>
+			<div class="mh-customizer-nav-item" id="mh-nav-to-homepage-settings" tabindex="0" role="button" aria-label="<?php esc_attr_e( 'Open Homepage Settings', 'xophz-magic-hat' ); ?>">
+				<span class="mh-nav-item-title">
+					<span class="mh-nav-icon">🏠</span> <?php _e( 'Homepage Settings', 'xophz-magic-hat' ); ?>
+				</span>
+				<span class="dashicons dashicons-arrow-right-alt2"></span>
+			</div>
+
+			<div id="mh-active-page-badge" class="mh-active-page-badge">
+				<span class="mh-active-page-badge-label"><?php _e( 'Editing Page:', 'xophz-magic-hat' ); ?></span>
+				<span id="mh-active-page-title" class="mh-active-page-badge-title"><?php echo $is_magic_hat ? esc_html__( 'Home', 'xophz-magic-hat' ) : esc_html__( 'Front Page', 'xophz-magic-hat' ); ?></span>
+			</div>
+
 			<div class="mh-template-switch-wrap">
 				<div class="mh-template-switch-title"><?php _e( 'Front Page Display', 'xophz-magic-hat' ); ?></div>
 				<p class="mh-template-switch-desc"><?php _e( 'Switch between the modular Magic Hat canvas and standard blog posts.', 'xophz-magic-hat' ); ?></p>

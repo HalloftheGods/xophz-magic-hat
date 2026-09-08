@@ -39,6 +39,13 @@
 			description: __( 'Dynamic multi-column footer with navigation menus and copyright.', 'xophz-magic-hat' ),
 			icon: 'table-footer',
 			category: 'theme'
+		},
+		{
+			name: 'xophz-magic-hat/quantum-atom',
+			title: __( 'Quantum Atom', 'xophz-magic-hat' ),
+			description: __( 'Dynamic Vue 3 Quantum Atom component with live schema properties.', 'xophz-magic-hat' ),
+			icon: 'superhero-alt',
+			category: 'widgets'
 		}
 	];
 

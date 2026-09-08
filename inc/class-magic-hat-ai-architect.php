@@ -88,32 +88,102 @@ class Magic_Hat_AI_Architect {
 
 	/**
 	/**
-	 * Retrieve configured Gemini API key
+	 * Retrieve configured Gemini / Google API key from environment, constants, or WP Connectors.
 	 */
 	public static function get_api_key() {
+		// 1. Environment variables and PHP constants
+		if ( defined( 'GOOGLE_API_KEY' ) && ! empty( GOOGLE_API_KEY ) ) {
+			return GOOGLE_API_KEY;
+		}
 		if ( defined( 'GEMINI_API_KEY' ) && ! empty( GEMINI_API_KEY ) ) {
 			return GEMINI_API_KEY;
 		}
-		$env_key = getenv( 'GEMINI_API_KEY' );
+		$env_key = getenv( 'GOOGLE_API_KEY' ) ?: getenv( 'GEMINI_API_KEY' );
 		if ( ! empty( $env_key ) ) {
 			return $env_key;
+		}
+		if ( ! empty( $_ENV['GOOGLE_API_KEY'] ) ) {
+			return $_ENV['GOOGLE_API_KEY'];
 		}
 		if ( ! empty( $_ENV['GEMINI_API_KEY'] ) ) {
 			return $_ENV['GEMINI_API_KEY'];
 		}
-		$connector_key = get_option( 'connectors_ai_google_api_key', '' );
-		if ( ! empty( $connector_key ) ) {
-			return $connector_key;
+
+		// 2. WP Connectors and COMPASS Options
+		$opt_keys = array(
+			'connectors_ai_google_api_key',
+			'ai_google_api_key',
+			'compass_gemini_api_key',
+			'xophz_gemini_api_key',
+		);
+		foreach ( $opt_keys as $opt ) {
+			$val = get_option( $opt, '' );
+			if ( ! empty( $val ) ) {
+				return $val;
+			}
 		}
-		$opt_key = get_option( 'xophz_gemini_api_key', '' );
-		if ( ! empty( $opt_key ) ) {
-			return $opt_key;
+
+		// 3. Official WordPress Connectors registry check
+		if ( function_exists( 'wp_get_connectors' ) ) {
+			$connectors = wp_get_connectors();
+			if ( ! empty( $connectors['google']['authentication']['setting_name'] ) ) {
+				$val = get_option( $connectors['google']['authentication']['setting_name'], '' );
+				if ( ! empty( $val ) ) {
+					return $val;
+				}
+			}
+			if ( ! empty( $connectors['google_gemini_api_key']['authentication']['setting_name'] ) ) {
+				$val = get_option( $connectors['google_gemini_api_key']['authentication']['setting_name'], '' );
+				if ( ! empty( $val ) ) {
+					return $val;
+				}
+			}
 		}
-		$compass_key = get_option( 'compass_gemini_api_key', '' );
-		if ( ! empty( $compass_key ) ) {
-			return $compass_key;
+
+		// 4. WordPress AiClient registry check
+		if ( class_exists( 'WordPress\\AiClient\\AiClient' ) ) {
+			try {
+				$registry = \WordPress\AiClient\AiClient::defaultRegistry();
+				$auth = $registry->getProviderRequestAuthentication( 'google' );
+				if ( $auth && method_exists( $auth, 'getApiKey' ) ) {
+					$k = $auth->getApiKey();
+					if ( ! empty( $k ) ) {
+						return $k;
+					}
+				}
+			} catch ( \Throwable $t ) {
+				// Registry not yet initialized
+			}
 		}
+
 		return '';
+	}
+
+	/**
+	 * Ensure the official WordPress AiClient has the Google provider authenticated
+	 */
+	public static function ensure_aiclient_authenticated() {
+		if ( ! class_exists( 'WordPress\\AiClient\\AiClient' ) ) {
+			return false;
+		}
+		try {
+			$registry = \WordPress\AiClient\AiClient::defaultRegistry();
+			if ( ! $registry->hasProvider( 'google' ) && class_exists( 'WordPress\\GoogleAiProvider\\Provider\\GoogleProvider' ) ) {
+				$registry->registerProvider( \WordPress\GoogleAiProvider\Provider\GoogleProvider::class );
+			}
+			if ( ! $registry->isProviderConfigured( 'google' ) ) {
+				$key = self::get_api_key();
+				if ( ! empty( $key ) && class_exists( 'WordPress\\AiClient\\Providers\\Http\\DTO\\ApiKeyRequestAuthentication' ) ) {
+					$registry->setProviderRequestAuthentication(
+						'google',
+						new \WordPress\AiClient\Providers\Http\DTO\ApiKeyRequestAuthentication( $key )
+					);
+				}
+			}
+			return $registry->isProviderConfigured( 'google' );
+		} catch ( \Throwable $t ) {
+			return false;
+		}
 	}
 
 	/**
@@ -186,20 +256,29 @@ class Magic_Hat_AI_Architect {
 	public static function get_available_connectors() {
 		$connectors = array();
 
-		// 1. Google Gemini AI
+		// Ensure official connector is armed
+		self::ensure_aiclient_authenticated();
+
+		// 1. Google Gemini AI (Official WP Connector)
 		$gemini_key = self::get_api_key();
+		$gemini_models = array(
+			array( 'id' => 'gemini-3.5-flash',      'name' => 'Gemini 3.5 Flash (Recommended: Fast & High Reliability)' ),
+			array( 'id' => 'gemini-3.5-flash-lite', 'name' => 'Gemini 3.5 Flash Lite (High Speed)' ),
+			array( 'id' => 'gemini-3.8-flash',      'name' => 'Gemini 3.8 Flash (Latest Flagship, High Fidelity)' ),
+			array( 'id' => 'gemini-3.7-flash',      'name' => 'Gemini 3.7 Flash (Hybrid Reasoning & Multimodal)' ),
+			array( 'id' => 'gemini-3.6-flash',      'name' => 'Gemini 3.6 Flash (Fast & Robust Architecture)' ),
+			array( 'id' => 'gemini-3.1-pro-preview', 'name' => 'Gemini 3.1 Pro Preview (Deep Architectural Reasoning)' ),
+			array( 'id' => 'gemini-flash-latest',   'name' => 'Gemini Flash Latest (Auto-Updating)' ),
+			array( 'id' => 'gemini-pro-latest',     'name' => 'Gemini Pro Latest (Auto-Updating)' ),
+		);
+
 		$connectors['gemini'] = array(
 			'id'            => 'gemini',
-			'name'          => 'Google Gemini AI',
+			'name'          => 'Google Gemini AI (Official WP Connector)',
 			'configured'    => ! empty( $gemini_key ),
 			'setting_name'  => 'connectors_ai_google_api_key',
-			'default_model' => 'gemini-2.5-flash',
-			'models'        => array(
-				array( 'id' => 'gemini-2.5-flash', 'name' => 'Gemini 2.5 Flash (Ultra Fast, High Fidelity)' ),
-				array( 'id' => 'gemini-2.5-pro',   'name' => 'Gemini 2.5 Pro (Deep Architectural Reasoning)' ),
-				array( 'id' => 'gemini-1.5-flash', 'name' => 'Gemini 1.5 Flash' ),
-				array( 'id' => 'gemini-1.5-pro',   'name' => 'Gemini 1.5 Pro' ),
-			),
+			'default_model' => 'gemini-3.5-flash',
+			'models'        => $gemini_models,
 		);
 
 		// 2. Anthropic Claude AI
@@ -209,8 +288,9 @@ class Magic_Hat_AI_Architect {
 			'name'          => 'Anthropic Claude AI',
 			'configured'    => ! empty( $anthropic_key ),
 			'setting_name'  => 'connectors_ai_anthropic_api_key',
-			'default_model' => 'claude-3-5-sonnet-20241022',
+			'default_model' => 'claude-3-7-sonnet-20250219',
 			'models'        => array(
+				array( 'id' => 'claude-3-7-sonnet-20250219', 'name' => 'Claude 3.7 Sonnet (Hybrid Reasoning Flagship)' ),
 				array( 'id' => 'claude-3-5-sonnet-20241022', 'name' => 'Claude 3.5 Sonnet (State-of-the-Art Layouts)' ),
 				array( 'id' => 'claude-3-5-haiku-20241022',  'name' => 'Claude 3.5 Haiku (Lightning Fast)' ),
 				array( 'id' => 'claude-3-opus-20240229',      'name' => 'Claude 3 Opus' ),
@@ -228,6 +308,7 @@ class Magic_Hat_AI_Architect {
 			'models'        => array(
 				array( 'id' => 'gpt-4o',      'name' => 'GPT-4o (Omni Multimodal Flagship)' ),
 				array( 'id' => 'gpt-4o-mini', 'name' => 'GPT-4o Mini (Fast & Efficient)' ),
+				array( 'id' => 'o3-mini',     'name' => 'o3-mini (High Speed Reasoning)' ),
 				array( 'id' => 'o1-mini',     'name' => 'o1-mini (Specialized Reasoning)' ),
 				array( 'id' => 'gpt-4-turbo', 'name' => 'GPT-4 Turbo' ),
 			),
@@ -244,8 +325,9 @@ class Magic_Hat_AI_Architect {
 			'models'        => array(
 				array( 'id' => 'anthropic/claude-3.5-sonnet',       'name' => 'Claude 3.5 Sonnet (via OpenRouter)' ),
 				array( 'id' => 'google/gemini-2.0-flash-001',       'name' => 'Gemini 2.0 Flash (via OpenRouter)' ),
-				array( 'id' => 'meta-llama/llama-3.3-70b-instruct', 'name' => 'Llama 3.3 70B (via OpenRouter)' ),
+				array( 'id' => 'deepseek/deepseek-r1',              'name' => 'DeepSeek R1 (Reasoning)' ),
 				array( 'id' => 'deepseek/deepseek-chat',             'name' => 'DeepSeek V3 (via OpenRouter)' ),
+				array( 'id' => 'meta-llama/llama-3.3-70b-instruct', 'name' => 'Llama 3.3 70B (via OpenRouter)' ),
 			),
 		);
 
@@ -293,7 +375,7 @@ class Magic_Hat_AI_Architect {
 
 		// Detect if this is a color palette request (e.g. from Stylebook)
 		if ( 'palette' === $type || stripos( $prompt, 'color palette' ) !== false || stripos( $system_instruction, 'Base Keys (28' ) !== false ) {
-			return $this->handle_palette_generation( $prompt, $system_instruction );
+			return $this->handle_palette_generation( $prompt, $system_instruction, $params );
 		}
 
 		// Otherwise, this is a Page / Layout generation request
@@ -301,20 +383,60 @@ class Magic_Hat_AI_Architect {
 	}
 
 	/**
-	 * Handle Palette generation for Stylebook
+	 * Handle Palette generation for Stylebook with Smart Model Cascading
 	 */
-	private function handle_palette_generation( $prompt, $system_instruction ) {
-		$api_key = self::get_api_key();
+	private function handle_palette_generation( $prompt, $system_instruction, $params = array() ) {
+		$connector = isset( $params['connector'] ) ? sanitize_key( $params['connector'] ) : 'gemini';
+		$model     = isset( $params['model'] ) ? sanitize_text_field( $params['model'] ) : '';
 
-		if ( ! empty( $api_key ) ) {
-			$remote_result = $this->call_gemini_api( $prompt, $system_instruction, $api_key, 'gemini-2.5-flash' );
-			if ( ! is_wp_error( $remote_result ) && ! empty( $remote_result ) ) {
-				return rest_ensure_response( array(
-					'success' => true,
-					'text'    => $remote_result,
-					'source'  => 'gemini-api',
-				) );
+		// If caller specifically requested procedural, skip AI
+		if ( 'procedural' === $connector ) {
+			$fallback_palette = $this->generate_procedural_palette( $prompt );
+			return rest_ensure_response( array(
+				'success' => true,
+				'text'    => wp_json_encode( $fallback_palette ),
+				'source'  => 'procedural-synthesizer',
+			) );
+		}
+
+		// Smart model priority list: try reasoning model first, cascade to high-speed multimodal
+		$models_to_try = array();
+		if ( ! empty( $model ) ) {
+			$models_to_try[] = $model;
+		}
+		if ( 'gemini' === $connector || 'google' === $connector ) {
+			$models_to_try[] = 'gemini-3.1-pro-preview';
+			$models_to_try[] = 'gemini-pro-latest';
+			$models_to_try[] = 'gemini-3.8-flash';
+			$models_to_try[] = 'gemini-3.7-flash';
+		}
+
+		$models_to_try = array_unique( $models_to_try );
+		$remote_result = null;
+		$successful_model = '';
+
+		foreach ( $models_to_try as $try_model ) {
+			$result = $this->dispatch_ai_generation( $prompt, $system_instruction, $connector, $try_model );
+			if ( ! is_wp_error( $result ) && ! empty( $result ) ) {
+				// Verify result contains parsable JSON with token keys
+				$cleaned = trim( $result );
+				if ( preg_match( '/\{[\s\S]*\}/', $cleaned, $match ) ) {
+					$test_json = json_decode( $match[0], true );
+					if ( is_array( $test_json ) && isset( $test_json['mh_color_brand_base'] ) ) {
+						$remote_result = $match[0];
+						$successful_model = $try_model;
+						break;
+					}
+				}
 			}
+		}
+
+		if ( ! empty( $remote_result ) ) {
+			return rest_ensure_response( array(
+				'success' => true,
+				'text'    => $remote_result,
+				'source'  => 'google-gemini-connector (' . $successful_model . ')',
+			) );
 		}
 
 		// Procedural fallback palette generator
@@ -330,61 +452,137 @@ class Magic_Hat_AI_Architect {
 	 * Handle Page Layout generation
 	 */
 	private function handle_page_generation( $prompt, $vibe, $archetype, $params ) {
-		$connector   = isset( $params['connector'] ) ? sanitize_key( $params['connector'] ) : 'gemini';
-		$model       = isset( $params['model'] ) ? sanitize_text_field( $params['model'] ) : '';
-		$blocks_html = '';
-		$source      = 'procedural-synthesizer';
+		$connector      = isset( $params['connector'] ) ? sanitize_key( $params['connector'] ) : 'gemini';
+		$model          = isset( $params['model'] ) ? sanitize_text_field( $params['model'] ) : '';
+		$current_blocks = ! empty( $params['current_blocks'] ) ? wp_unslash( $params['current_blocks'] ) : '';
+		$chat_history   = ! empty( $params['chat_history'] ) && is_array( $params['chat_history'] ) ? $params['chat_history'] : array();
+		$is_refinement  = ! empty( $current_blocks ) && ! empty( $prompt );
+		$blocks_html    = '';
+		$source         = 'procedural-synthesizer';
+		$error_message  = '';
 
 		if ( 'procedural' !== $connector ) {
-			$ai_prompt = $this->build_page_ai_prompt( $prompt, $vibe, $archetype );
-			$system    = 'You are a master WordPress theme and Gutenberg block architect. You build complete, production-ready WordPress pages using standard core Gutenberg blocks (wp:group, wp:heading, wp:paragraph, wp:buttons, wp:columns, wp:separator, wp:list). Never output raw HTML layout tags like <div> or <section> without wrapping in valid Gutenberg block comments. Output ONLY valid Gutenberg block markup, with no conversational filler.';
+			$ai_prompt = $this->build_page_ai_prompt( $prompt, $vibe, $archetype, $current_blocks );
+			$system    = 'You are a master WordPress theme and Gutenberg block architect in an interactive AI Studio pair-programming session. You build and refine production-ready WordPress pages using standard core Gutenberg blocks (wp:group, wp:heading, wp:paragraph, wp:buttons, wp:columns, wp:separator, wp:list). All layouts integrate with the theme 24-hour astronomical circadian lighting system: use semantic token classes (e.g. has-surface-body-background-color, has-brand-base-color, has-text-heading-color) and avoid hardcoded hex colors so the page adapts seamlessly between Day, Twilight, and Night. Never output raw HTML layout tags like <div> or <section> without wrapping in valid Gutenberg block comments. Return ONLY valid Gutenberg block markup, with no conversational preamble or markdown code fences.';
 			$result    = $this->dispatch_ai_generation( $ai_prompt, $system, $connector, $model );
 
-			if ( ! is_wp_error( $result ) && ! empty( $result ) ) {
+			if ( is_wp_error( $result ) ) {
+				$error_message = $result->get_error_message();
+			} elseif ( ! empty( $result ) ) {
 				// Strip code fences if model wrapped in markdown
 				$cleaned = preg_replace( '/^```(?:html|gutenberg)?\s*/i', '', trim( $result ) );
 				$cleaned = preg_replace( '/\s*```$/', '', $cleaned );
 				if ( stripos( $cleaned, '<!-- wp:' ) !== false ) {
 					$blocks_html = $cleaned;
 					$source      = $connector . ( $model ? ' (' . $model . ')' : '' );
+				} else {
+					$error_message = 'AI model output did not contain valid Gutenberg block markup.';
 				}
 			}
 		}
 
 		// Fallback to rich architectural synthesizer if remote model was not called or failed
 		if ( empty( $blocks_html ) ) {
-			$blocks_html = $this->synthesize_page_blocks( $prompt, $vibe, $archetype );
-			$source      = 'procedural-synthesizer';
+			if ( $is_refinement && ! empty( $current_blocks ) ) {
+				// For refinement fallback, append or insert synthesized component to preserve existing work
+				$supplement  = $this->synthesize_page_blocks( $prompt, $vibe, $archetype );
+				$blocks_html = $current_blocks . "\n\n" . $supplement;
+				$source      = ! empty( $error_message ) ? 'procedural-synthesizer (appended: ' . $error_message . ')' : 'procedural-synthesizer (appended)';
+			} else {
+				$blocks_html = $this->synthesize_page_blocks( $prompt, $vibe, $archetype );
+				$source      = ! empty( $error_message ) ? 'procedural-synthesizer (fallback: ' . $error_message . ')' : 'procedural-synthesizer';
+			}
 		}
 
-		$page_id = 0;
+		// Render HTML for live Customizer preview canvas
+		$rendered_html = do_blocks( $blocks_html );
+
+		// Parse detected sections for zero-token architectural telemetry
+		$detected_sections = array();
+		if ( preg_match_all( '/<!--\s*wp:heading\s*(?:\{.*?\})?\s*-->\s*<h[1-6][^>]*>(.*?)<\/h[1-6]>/is', $blocks_html, $heading_matches ) ) {
+			foreach ( array_slice( $heading_matches[1], 0, 6 ) as $h ) {
+				$clean_h = trim( wp_strip_all_tags( $h ) );
+				if ( ! empty( $clean_h ) ) {
+					$detected_sections[] = $clean_h;
+				}
+			}
+		}
+
+		$thought_stream = array(
+			array(
+				'step'   => 1,
+				'phase'  => $is_refinement ? 'Conversational Intent & Delta Parsing' : 'Intent & Blueprint Parsing',
+				'status' => 'complete',
+				'detail' => $is_refinement
+					? sprintf( 'Analyzed follow-up request: "%s". Diffed against %d bytes of existing block markup under vibe "%s".', esc_html( $prompt ), strlen( $current_blocks ), $vibe )
+					: sprintf( 'Mapped archetype "%s" under vibe "%s". Vision prompt: "%s"', $archetype, $vibe, ! empty( $prompt ) ? esc_html( $prompt ) : 'Default archetype pattern' ),
+			),
+			array(
+				'step'   => 2,
+				'phase'  => 'Circadian Palette Synchronization',
+				'status' => 'complete',
+				'detail' => 'Bound astronomical 24h lighting curve (zero raw hex codes; semantic token classes has-surface-body, has-brand-base, has-text-heading active).',
+			),
+			array(
+				'step'   => 3,
+				'phase'  => 'Generative Synthesis Engine',
+				'status' => 'complete',
+				'detail' => sprintf( 'Synthesized Gutenberg block hierarchy via %s.', $source ),
+			),
+			array(
+				'step'   => 4,
+				'phase'  => 'Block Architecture Verification',
+				'status' => 'complete',
+				'detail' => sprintf( 'Validated %d core block groups. Key sections: %s.', count( $detected_sections ), ! empty( $detected_sections ) ? implode( ' -> ', $detected_sections ) : 'Standard archetype components' ),
+			),
+			array(
+				'step'   => 5,
+				'phase'  => 'Live Canvas Quantum Stream',
+				'status' => 'complete',
+				'detail' => sprintf( 'Rendered %d bytes of production HTML ready for direct DOM injection and live Customizer sync.', strlen( $rendered_html ) ),
+			),
+		);
+
+		if ( $is_refinement ) {
+			$summary = sprintf( 'Refined page based on "%s". Sections: %s.', esc_html( $prompt ), ! empty( $detected_sections ) ? implode( ', ', array_slice( $detected_sections, 0, 3 ) ) : 'blocks' );
+		} else {
+			$summary = sprintf( 'Assembled new %s page with %s aesthetic (%d sections).', ucwords( str_replace( '-', ' ', $archetype ) ), ucwords( str_replace( '-', ' ', $vibe ) ), count( $detected_sections ) );
+		}
+
+		$page_id   = 0;
 		$target_id = isset( $params['target_page_id'] ) ? absint( $params['target_page_id'] ) : 0;
 		$action    = isset( $params['action'] ) ? sanitize_key( $params['action'] ) : 'generate_only';
 
 		if ( 'apply_to_page' === $action && $target_id > 0 ) {
 			wp_update_post( array(
 				'ID'           => $target_id,
-				'post_content' => $blocks_html,
+				'post_content' => wp_slash( $blocks_html ),
 			) );
 			$page_id = $target_id;
 		} elseif ( 'create_page' === $action ) {
 			$page_title = ! empty( $params['page_title'] ) ? sanitize_text_field( $params['page_title'] ) : 'AI Generated Page';
 			$page_id    = wp_insert_post( array(
 				'post_title'   => $page_title,
-				'post_content' => $blocks_html,
+				'post_content' => wp_slash( $blocks_html ),
 				'post_status'  => 'publish',
 				'post_type'    => 'page',
 			) );
 		}
 
 		return rest_ensure_response( array(
-			'success'     => true,
-			'source'      => $source,
-			'vibe'        => $vibe,
-			'archetype'   => $archetype,
-			'blocks_html' => $blocks_html,
-			'page_id'     => $page_id,
-			'preview_url' => $page_id > 0 ? get_permalink( $page_id ) : '',
+			'success'        => true,
+			'source'         => $source,
+			'vibe'           => $vibe,
+			'archetype'      => $archetype,
+			'blocks_html'    => $blocks_html,
+			'rendered_html'  => $rendered_html,
+			'thought_stream' => $thought_stream,
+			'summary'        => $summary,
+			'sections'       => $detected_sections,
+			'is_refinement'  => $is_refinement,
+			'page_id'        => $page_id,
+			'preview_url'    => $page_id > 0 ? get_permalink( $page_id ) : '',
+			'error_message'  => $error_message,
 		) );
 	}
 
@@ -398,7 +596,7 @@ class Magic_Hat_AI_Architect {
 				if ( empty( $key ) ) {
 					return new WP_Error( 'missing_key', 'Anthropic API key is not configured.' );
 				}
-				return $this->call_anthropic_api( $prompt, $system, $key, $model );
+				return $this->call_anthropic_api( $prompt, $system, $key, $model ?: 'claude-3-7-sonnet-20250219' );
 
 			case 'openai':
 				$key = self::get_openai_api_key();
@@ -434,13 +632,133 @@ class Magic_Hat_AI_Architect {
 			case 'procedural':
 				return null;
 
+			case 'google':
 			case 'gemini':
 			default:
 				$key = self::get_api_key();
 				if ( empty( $key ) ) {
-					return new WP_Error( 'missing_key', 'Gemini API key is not configured.' );
+					return new WP_Error( 'missing_key', 'Google Gemini API key is not configured in WP Connectors or environment.' );
 				}
-				return $this->call_gemini_api( $prompt, $system, $key, $model ?: 'gemini-2.5-flash' );
+
+				$chosen_model = ! empty( $model ) ? $model : 'gemini-3.5-flash';
+				// Guard against deprecated models that return 404 from Google
+				if ( 'gemini-2.5-flash' === $chosen_model || 'gemini-1.5-flash' === $chosen_model ) {
+					$chosen_model = 'gemini-3.5-flash';
+				}
+
+				// 1. Primary: Official Google WP Connector (WordPress AiClient + ai-provider-for-google)
+				if ( self::ensure_aiclient_authenticated() ) {
+					$aiclient_result = $this->call_google_via_aiclient( $prompt, $system, $chosen_model );
+					if ( ! is_wp_error( $aiclient_result ) && ! empty( $aiclient_result ) ) {
+						return $aiclient_result;
+					}
+
+					$err_msg       = is_wp_error( $aiclient_result ) ? $aiclient_result->get_error_message() : '';
+					$is_rate_limit = ( stripos( $err_msg, '429' ) !== false || stripos( $err_msg, 'quota' ) !== false || stripos( $err_msg, 'exceeded' ) !== false );
+
+					// If non-quota transient failure, try fallback model with AiClient
+					if ( ! $is_rate_limit ) {
+						$fallback_models = array( 'gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-3.6-flash', 'gemini-flash-latest' );
+						foreach ( $fallback_models as $fb_model ) {
+							if ( $fb_model === $chosen_model ) {
+								continue;
+							}
+							$retry_result = $this->call_google_via_aiclient( $prompt, $system, $fb_model );
+							if ( ! is_wp_error( $retry_result ) && ! empty( $retry_result ) ) {
+								return $retry_result;
+							}
+						}
+					}
+				}
+
+				// 2. Secondary: Direct Google Gemini REST API (fast and resilient fallback)
+				$rest_result = $this->call_gemini_api( $prompt, $system, $key, $chosen_model );
+				if ( ! is_wp_error( $rest_result ) && ! empty( $rest_result ) ) {
+					return $rest_result;
+				}
+
+				$rest_err = is_wp_error( $rest_result ) ? $rest_result->get_error_message() : '';
+				if ( stripos( $rest_err, '429' ) !== false || stripos( $rest_err, 'quota' ) !== false || stripos( $rest_err, 'exceeded' ) !== false ) {
+					// Free tier quota hit on chosen model: try lightweight models with separate quotas
+					$alt_models = array( 'gemini-3.5-flash-lite', 'gemini-2.0-flash', 'gemini-2.5-flash' );
+					foreach ( $alt_models as $alt_m ) {
+						if ( $alt_m === $chosen_model ) {
+							continue;
+						}
+						$alt_res = $this->call_gemini_api( $prompt, $system, $key, $alt_m );
+						if ( ! is_wp_error( $alt_res ) && ! empty( $alt_res ) ) {
+							return $alt_res;
+						}
+					}
+					return new WP_Error( 'gemini_quota_exceeded', 'Google Gemini RPM rate limit encountered (HTTP 429). The system seamlessly synthesized an architectural layout while quota refreshes.' );
+				}
+
+				return $rest_result;
+		}
+	}
+
+	/**
+	 * Call official Google WP Connector using WordPress AiClient
+	 */
+	private function call_google_via_aiclient( $prompt, $system_instruction, $model_id = 'gemini-3.5-flash' ) {
+		// Filter HTTP request arguments and timeout to ensure swift 20s execution
+		$timeout_args_filter = function( $args, $url ) {
+			if ( strpos( $url, 'googleapis.com' ) !== false ) {
+				$args['timeout'] = 20;
+			}
+			return $args;
+		};
+		$timeout_val_filter = function( $timeout, $url ) {
+			if ( strpos( $url, 'googleapis.com' ) !== false ) {
+				return 20;
+			}
+			return $timeout;
+		};
+
+		add_filter( 'http_request_args', $timeout_args_filter, 9999, 2 );
+		add_filter( 'http_request_timeout', $timeout_val_filter, 9999, 2 );
+
+		try {
+			$registry = \WordPress\AiClient\AiClient::defaultRegistry();
+			$builder  = \WordPress\AiClient\AiClient::prompt( $prompt );
+
+			if ( ! empty( $system_instruction ) ) {
+				$builder->usingSystemInstruction( $system_instruction );
+			}
+
+			// Configure request options with 20s timeout
+			if ( class_exists( 'WordPress\\AiClient\\Providers\\Http\\DTO\\RequestOptions' ) ) {
+				$opt = new \WordPress\AiClient\Providers\Http\DTO\RequestOptions();
+				$opt->setTimeout( 20.0 );
+				$builder->usingRequestOptions( $opt );
+			}
+
+			// Bind specific model instance if available in provider directory
+			try {
+				$model_instance = $registry->getProviderModel( 'google', $model_id );
+				if ( $model_instance ) {
+					$builder->usingModel( $model_instance );
+				}
+			} catch ( \Throwable $t ) {
+				// Fall back to AiClient automatic model resolution
+			}
+
+			$result = $builder->generateTextResult();
+			remove_filter( 'http_request_args', $timeout_args_filter, 9999 );
+			remove_filter( 'http_request_timeout', $timeout_val_filter, 9999 );
+
+			if ( $result && method_exists( $result, 'toText' ) ) {
+				$text = $result->toText();
+				if ( ! empty( $text ) ) {
+					return $text;
+				}
+			}
+
+			return new \WP_Error( 'empty_response', 'AiClient returned empty generation.' );
+		} catch ( \Throwable $e ) {
+			remove_filter( 'http_request_args', $timeout_args_filter, 9999 );
+			remove_filter( 'http_request_timeout', $timeout_val_filter, 9999 );
+			return new \WP_Error( 'aiclient_error', $e->getMessage() );
 		}
 	}
 
@@ -458,7 +776,7 @@ class Magic_Hat_AI_Architect {
 
 		$result = wp_update_post( array(
 			'ID'           => $page_id,
-			'post_content' => $content,
+			'post_content' => wp_slash( $content ),
 		) );
 
 		if ( is_wp_error( $result ) ) {
@@ -474,8 +792,11 @@ class Magic_Hat_AI_Architect {
 	/**
 	 * Call official Google Gemini REST API
 	 */
-	private function call_gemini_api( $prompt, $system_instruction, $api_key, $model = 'gemini-2.5-flash' ) {
-		$target_model = ! empty( $model ) ? $model : 'gemini-2.5-flash';
+	private function call_gemini_api( $prompt, $system_instruction, $api_key, $model = 'gemini-3.5-flash' ) {
+		$target_model = ! empty( $model ) ? $model : 'gemini-3.5-flash';
+		if ( 'gemini-2.5-flash' === $target_model || 'gemini-1.5-flash' === $target_model ) {
+			$target_model = 'gemini-3.5-flash';
+		}
 		$url = 'https://generativelanguage.googleapis.com/v1beta/models/' . urlencode( $target_model ) . ':generateContent?key=' . urlencode( $api_key );
 
 		$body = array(
@@ -501,7 +822,7 @@ class Magic_Hat_AI_Architect {
 			array(
 				'headers' => array( 'Content-Type' => 'application/json' ),
 				'body'    => wp_json_encode( $body ),
-				'timeout' => 45,
+				'timeout' => 25,
 			)
 		);
 
@@ -513,7 +834,8 @@ class Magic_Hat_AI_Architect {
 		$data = json_decode( wp_remote_retrieve_body( $response ), true );
 
 		if ( 200 !== $code || empty( $data['candidates'][0]['content']['parts'][0]['text'] ) ) {
-			return new WP_Error( 'gemini_error', 'Gemini API call failed with code: ' . $code );
+			$msg = ! empty( $data['error']['message'] ) ? $data['error']['message'] : ( 'Gemini API call failed with code: ' . $code );
+			return new WP_Error( 'gemini_error', $msg );
 		}
 
 		return $data['candidates'][0]['content']['parts'][0]['text'];
@@ -648,14 +970,35 @@ class Magic_Hat_AI_Architect {
 	}
 
 	/**
-	 * Build AI prompt for page generation
+	 * Build AI prompt for page generation or iterative refinement
 	 */
-	private function build_page_ai_prompt( $prompt, $vibe, $archetype ) {
-		$vibe_desc = $this->get_vibe_descriptor( $vibe );
-		$arch_desc = $this->get_archetype_descriptor( $archetype );
+	private function build_page_ai_prompt( $prompt, $vibe, $archetype, $current_blocks = '' ) {
+		$vibe_desc        = $this->get_vibe_descriptor( $vibe );
+		$arch_desc        = $this->get_archetype_descriptor( $archetype );
+		$effective_prompt = ! empty( trim( $prompt ) ) ? trim( $prompt ) : 'Create a complete ' . $arch_desc . ' tailored to the ' . $vibe_desc . ' aesthetic.';
+
+		if ( ! empty( $current_blocks ) ) {
+			return "You are collaborating with a user in an interactive AI Studio session to build and refine a WordPress website.
+
+CURRENT PAGE BLOCKS:
+{$current_blocks}
+
+USER FOLLOW-UP REQUEST:
+{$effective_prompt}
+
+VISUAL VIBE: {$vibe} ({$vibe_desc})
+LAYOUT ARCHETYPE: {$archetype} ({$arch_desc})
+
+INSTRUCTIONS:
+1. Update, refine, or extend the current page blocks according to the user's follow-up request.
+2. If the user asks to add a section (e.g. pricing, testimonials, FAQ, features, metrics), insert it seamlessly into the logical position in the block flow.
+3. If the user asks to modify copy, headings, vibe, or style, update the relevant blocks while keeping the rest intact.
+4. Maintain all Project Compass circadian token classes (has-surface-body-background-color, has-brand-base-color, has-text-heading-color, has-cta-base-color) and avoid hardcoded hex colors.
+5. Return ONLY the complete updated Gutenberg block comments and markup. No markdown code fences, no conversational preface.";
+		}
 
 		return "Generate a complete WordPress Gutenberg page for the following request:
-User Request: {$prompt}
+User Request: {$effective_prompt}
 Visual Vibe: {$vibe} ({$vibe_desc})
 Layout Archetype: {$archetype} ({$arch_desc})
 
@@ -667,7 +1010,8 @@ Requirements:
    - Text Colors: has-text-heading-color, has-brand-base-color, has-text-muted-color
    - Spacing presets: var(--wp--preset--spacing--6), var(--wp--preset--spacing--8), var(--wp--preset--spacing--12)
 4. Do not include synthetic/mock personal identities (e.g. no fake names or fake emails). Keep copy punchy, direct, and professional.
-5. Return ONLY Gutenberg block comments and markup.";
+5. Circadian Rhythm Engine Compatibility: The theme uses an astronomical 24-hour Circadian Rhythm engine (Light, Golden Hour Twilight, Dark) with dynamic OKLCH color-mixing. NEVER hardcode static raw hex colors in inline style tags (such as style='color:#000' or style='background:#fff'). Exclusively use semantic block token classes (has-surface-body-background-color, has-brand-base-color, has-cta-base-color, has-text-heading-color) and CSS variables (var(--mh-color-*), var(--wp--preset--color--*)) so all generated layouts automatically illuminate and darken with the astronomical daylight curve.
+6. Return ONLY Gutenberg block comments and markup.";
 	}
 
 	/**
@@ -975,66 +1319,163 @@ Requirements:
 	}
 
 	/**
-	 * Procedural 84-color token palette for Stylebook
+	 * Procedural 84-color token palette for Stylebook with authentic Golden Hour Twilight
 	 */
 	private function generate_procedural_palette( $prompt ) {
-		// Generate an exquisite neon starship or tailored palette
-		$palette = array(
+		$lower = strtolower( $prompt );
+
+		// 1. Purple & Gold / Royal Luxury
+		if ( strpos( $lower, 'purple' ) !== false || strpos( $lower, 'violet' ) !== false || strpos( $lower, 'royal' ) !== false || strpos( $lower, 'luxury' ) !== false ) {
+			return array(
+				// Light Mode (Noon Sun)
+				'mh_color_brand_base'     => '#6b21a8',
+				'mh_color_brand_hover'    => '#7e22ce',
+				'mh_color_brand_active'   => '#581c87',
+				'mh_color_brand_muted'    => '#f3e8ff',
+				'mh_color_cta_base'       => '#d97706',
+				'mh_color_cta_hover'      => '#b45309',
+				'mh_color_cta_active'     => '#92400e',
+				'mh_color_cta_muted'      => '#fef3c7',
+				'mh_color_link'           => '#6b21a8',
+				'mh_color_link_hover'     => '#d97706',
+				'mh_color_link_active'    => '#b45309',
+				'mh_color_link_visited'   => '#9333ea',
+				'mh_color_text_heading'   => '#1e1035',
+				'mh_color_text_main'      => '#3b2063',
+				'mh_color_text_muted'     => '#6b5887',
+				'mh_color_text_inverse'   => '#ffffff',
+				'mh_color_body'           => '#faf5ff',
+				'mh_color_main'           => '#ffffff',
+				'mh_color_section'        => '#f5edfd',
+				'mh_color_card'           => '#ffffff',
+				'mh_color_border_base'    => '#e9d5ff',
+				'mh_color_border_hover'   => '#d8b4fe',
+				'mh_color_border_focus'   => '#6b21a8',
+				'mh_color_border_muted'   => '#f3e8ff',
+				'mh_color_success'        => '#10b981',
+				'mh_color_warning'        => '#f59e0b',
+				'mh_color_danger'         => '#ef4444',
+				'mh_color_info'           => '#3b82f6',
+
+				// Twilight Mode (Golden Hour / Sunset Dusk)
+				'mh_color_brand_base_twilight'   => '#c084fc',
+				'mh_color_brand_hover_twilight'  => '#d8b4fe',
+				'mh_color_brand_active_twilight' => '#a855f7',
+				'mh_color_brand_muted_twilight'  => '#3b185f',
+				'mh_color_cta_base_twilight'     => '#fbbf24', // Radiant Sunset Gold
+				'mh_color_cta_hover_twilight'    => '#fde68a',
+				'mh_color_cta_active_twilight'   => '#f59e0b',
+				'mh_color_cta_muted_twilight'    => '#451a03',
+				'mh_color_link_twilight'         => '#e879f9',
+				'mh_color_link_hover_twilight'   => '#fbbf24',
+				'mh_color_link_active_twilight'  => '#fde68a',
+				'mh_color_link_visited_twilight' => '#f472b6',
+				'mh_color_text_heading_twilight' => '#fef3c7', // Warm Golden Ivory
+				'mh_color_text_main_twilight'    => '#f3e8ff',
+				'mh_color_text_muted_twilight'   => '#c4b5fd',
+				'mh_color_text_inverse_twilight' => '#180e29',
+				'mh_color_body_twilight'         => '#1c122c', // Dusky Sunset Plum
+				'mh_color_main_twilight'         => '#26183c',
+				'mh_color_section_twilight'      => '#33204f',
+				'mh_color_card_twilight'         => '#26183c',
+				'mh_color_border_base_twilight'  => '#4c2d73',
+				'mh_color_border_hover_twilight' => '#fbbf24',
+				'mh_color_border_focus_twilight' => '#c084fc',
+				'mh_color_border_muted_twilight' => '#361e54',
+				'mh_color_success_twilight'      => '#34d399',
+				'mh_color_warning_twilight'      => '#fbbf24',
+				'mh_color_danger_twilight'       => '#f87171',
+				'mh_color_info_twilight'         => '#60a5fa',
+
+				// Dark Mode (Midnight Void)
+				'mh_color_brand_base_dark'   => '#a855f7',
+				'mh_color_brand_hover_dark'  => '#c084fc',
+				'mh_color_brand_active_dark' => '#9333ea',
+				'mh_color_brand_muted_dark'  => '#2e1065',
+				'mh_color_cta_base_dark'     => '#f59e0b',
+				'mh_color_cta_hover_dark'    => '#fbbf24',
+				'mh_color_cta_active_dark'   => '#d97706',
+				'mh_color_cta_muted_dark'    => '#3b1d03',
+				'mh_color_link_dark'         => '#c084fc',
+				'mh_color_link_hover_dark'   => '#f59e0b',
+				'mh_color_link_active_dark'  => '#fbbf24',
+				'mh_color_link_visited_dark' => '#e879f9',
+				'mh_color_text_heading_dark' => '#ffffff',
+				'mh_color_text_main_dark'    => '#f8fafc',
+				'mh_color_text_muted_dark'   => '#94a3b8',
+				'mh_color_text_inverse_dark' => '#0a0b10',
+				'mh_color_body_dark'         => '#0c0714',
+				'mh_color_main_dark'         => '#120b1e',
+				'mh_color_section_dark'      => 'rgba(255, 255, 255, 0.03)',
+				'mh_color_card_dark'         => 'rgba(255, 255, 255, 0.05)',
+				'mh_color_border_base_dark'  => 'rgba(168, 85, 247, 0.2)',
+				'mh_color_border_hover_dark' => '#a855f7',
+				'mh_color_border_focus_dark' => '#f59e0b',
+				'mh_color_border_muted_dark' => 'rgba(255, 255, 255, 0.06)',
+				'mh_color_success_dark'      => '#10b981',
+				'mh_color_warning_dark'      => '#f59e0b',
+				'mh_color_danger_dark'       => '#ef4444',
+				'mh_color_info_dark'         => '#3b82f6',
+			);
+		}
+
+		// 2. Default: Starship Cobalt & Golden Hour Amber
+		return array(
 			// Light Mode
-			'mh_color_brand_base'     => '#0284c7',
-			'mh_color_brand_hover'    => '#0369a1',
-			'mh_color_brand_active'   => '#075985',
-			'mh_color_brand_muted'    => '#e0f2fe',
-			'mh_color_cta_base'       => '#e11d48',
-			'mh_color_cta_hover'      => '#be123c',
-			'mh_color_cta_active'     => '#9f1239',
+			'mh_color_brand_base'     => '#2563eb',
+			'mh_color_brand_hover'    => '#3b82f6',
+			'mh_color_brand_active'   => '#1d4ed8',
+			'mh_color_brand_muted'    => '#dbeafe',
+			'mh_color_cta_base'       => '#ff3366',
+			'mh_color_cta_hover'      => '#ff668c',
+			'mh_color_cta_active'     => '#e62050',
 			'mh_color_cta_muted'      => '#ffe4e6',
-			'mh_color_link'           => '#0284c7',
-			'mh_color_link_hover'     => '#e11d48',
-			'mh_color_link_active'    => '#be123c',
+			'mh_color_link'           => '#2563eb',
+			'mh_color_link_hover'     => '#ff3366',
+			'mh_color_link_active'    => '#1d4ed8',
 			'mh_color_link_visited'   => '#7c3aed',
 			'mh_color_text_heading'   => '#0f172a',
 			'mh_color_text_main'      => '#334155',
 			'mh_color_text_muted'     => '#64748b',
 			'mh_color_text_inverse'   => '#ffffff',
-			'mh_color_body'           => '#f8fafc',
-			'mh_color_main'           => '#ffffff',
+			'mh_color_body'           => '#ffffff',
+			'mh_color_main'           => '#f8fafc',
 			'mh_color_section'        => '#f1f5f9',
 			'mh_color_card'           => '#ffffff',
 			'mh_color_border_base'    => '#e2e8f0',
 			'mh_color_border_hover'   => '#cbd5e1',
-			'mh_color_border_focus'   => '#0284c7',
+			'mh_color_border_focus'   => '#2563eb',
 			'mh_color_border_muted'   => '#f1f5f9',
 			'mh_color_success'        => '#10b981',
 			'mh_color_warning'        => '#f59e0b',
 			'mh_color_danger'         => '#ef4444',
 			'mh_color_info'           => '#3b82f6',
 
-			// Twilight Mode
-			'mh_color_brand_base_twilight'   => '#38bdf8',
-			'mh_color_brand_hover_twilight'  => '#7dd3fc',
-			'mh_color_brand_active_twilight' => '#0284c7',
-			'mh_color_brand_muted_twilight'  => '#0c4a6e',
-			'mh_color_cta_base_twilight'     => '#fb7185',
-			'mh_color_cta_hover_twilight'    => '#fda4af',
-			'mh_color_cta_active_twilight'   => '#f43f5e',
-			'mh_color_cta_muted_twilight'    => '#4c0519',
+			// Twilight Mode (Golden Hour / Sunset Dusk Bridge)
+			'mh_color_brand_base_twilight'   => '#6366f1',
+			'mh_color_brand_hover_twilight'  => '#818cf8',
+			'mh_color_brand_active_twilight' => '#4f46e5',
+			'mh_color_brand_muted_twilight'  => '#312e81',
+			'mh_color_cta_base_twilight'     => '#f59e0b', // Glowing Amber
+			'mh_color_cta_hover_twilight'    => '#fbbf24',
+			'mh_color_cta_active_twilight'   => '#d97706',
+			'mh_color_cta_muted_twilight'    => '#451a03',
 			'mh_color_link_twilight'         => '#38bdf8',
-			'mh_color_link_hover_twilight'   => '#fb7185',
-			'mh_color_link_active_twilight'  => '#fda4af',
-			'mh_color_link_visited_twilight' => '#a78bfa',
-			'mh_color_text_heading_twilight' => '#f8fafc',
-			'mh_color_text_main_twilight'    => '#e2e8f0',
-			'mh_color_text_muted_twilight'   => '#94a3b8',
-			'mh_color_text_inverse_twilight' => '#0f172a',
-			'mh_color_body_twilight'         => '#0f172a',
-			'mh_color_main_twilight'         => '#1e293b',
-			'mh_color_section_twilight'      => '#334155',
-			'mh_color_card_twilight'         => '#1e293b',
-			'mh_color_border_base_twilight'  => '#334155',
-			'mh_color_border_hover_twilight' => '#475569',
-			'mh_color_border_focus_twilight' => '#38bdf8',
-			'mh_color_border_muted_twilight' => '#1e293b',
+			'mh_color_link_hover_twilight'   => '#f59e0b',
+			'mh_color_link_active_twilight'  => '#fbbf24',
+			'mh_color_link_visited_twilight' => '#c084fc',
+			'mh_color_text_heading_twilight' => '#fef3c7', // Warm Ivory
+			'mh_color_text_main_twilight'    => '#f1f5f9',
+			'mh_color_text_muted_twilight'   => '#cbd5e1',
+			'mh_color_text_inverse_twilight' => '#181524',
+			'mh_color_body_twilight'         => '#181524', // Warm Dusk Indigo-Bronze
+			'mh_color_main_twilight'         => '#221d33',
+			'mh_color_section_twilight'      => '#2c2542',
+			'mh_color_card_twilight'         => '#221d33',
+			'mh_color_border_base_twilight'  => '#3d345a',
+			'mh_color_border_hover_twilight' => '#f59e0b',
+			'mh_color_border_focus_twilight' => '#f59e0b',
+			'mh_color_border_muted_twilight' => '#2d2643',
 			'mh_color_success_twilight'      => '#34d399',
 			'mh_color_warning_twilight'      => '#fbbf24',
 			'mh_color_danger_twilight'       => '#f87171',

@@ -18,6 +18,14 @@ function xophz_magic_hat_setup() {
     // Support post thumbnails
     add_theme_support( 'post-thumbnails' );
 
+    // Support custom logo upload
+    add_theme_support( 'custom-logo', array(
+        'height'      => 80,
+        'width'       => 280,
+        'flex-height' => true,
+        'flex-width'  => true,
+    ) );
+
     // Support align wide for Gutenberg blocks
     add_theme_support( 'align-wide' );
 
@@ -52,6 +60,32 @@ function xophz_magic_hat_setup() {
     ) );
 }
 add_action( 'after_setup_theme', 'xophz_magic_hat_setup' );
+
+/**
+ * Register widget areas for Magic Hat
+ */
+function xophz_magic_hat_widgets_init() {
+	register_sidebar( array(
+		'name'          => __( 'Left Sidebar', 'xophz-magic-hat' ),
+		'id'            => 'mh-sidebar-left',
+		'description'   => __( 'Primary left sidebar displayed on pages when Left Sidebar or 3-Column layout is active.', 'xophz-magic-hat' ),
+		'before_widget' => '<section id="%1$s" class="widget mh-widget %2$s">',
+		'after_widget'  => '</section>',
+		'before_title'  => '<h4 class="mh-widget-title">',
+		'after_title'   => '</h4>',
+	) );
+
+	register_sidebar( array(
+		'name'          => __( 'Right Sidebar', 'xophz-magic-hat' ),
+		'id'            => 'mh-sidebar-right',
+		'description'   => __( 'Secondary right sidebar displayed on pages when Right Sidebar or 3-Column layout is active.', 'xophz-magic-hat' ),
+		'before_widget' => '<section id="%1$s" class="widget mh-widget %2$s">',
+		'after_widget'  => '</section>',
+		'before_title'  => '<h4 class="mh-widget-title">',
+		'after_title'   => '</h4>',
+	) );
+}
+add_action( 'widgets_init', 'xophz_magic_hat_widgets_init' );
 
 function xophz_magic_hat_create_default_menus() {
     if ( get_option( 'mh_default_menus_created' ) && get_option( 'mh_contact_menu_created' ) ) {
@@ -152,11 +186,12 @@ function mh_get_or_create_page( $title ) {
 
 add_action('init', 'xophz_magic_hat_create_default_menus');
 
-// Load Customizer Settings, AI Architect Engine & Header/Footer Engine
+// Load Customizer Settings, AI Architect Engine, Header/Footer Engine & Page Layouts
 require_once get_template_directory() . '/inc/customizer.php';
 require_once get_template_directory() . '/inc/class-magic-hat-ai-architect.php';
 require_once get_template_directory() . '/inc/header-footer.php';
 require_once get_template_directory() . '/inc/hero.php';
+require_once get_template_directory() . '/inc/page-layout.php';
 
 // Enqueue Theme Styles & Scripts
 function xophz_magic_hat_enqueue_styles() {
@@ -169,6 +204,9 @@ function xophz_magic_hat_enqueue_styles() {
     
     // Enqueue Header & Footer styles
     wp_enqueue_style( 'magic-hat-header-footer', get_template_directory_uri() . '/assets/css/header-footer.css', array('magic-hat-variables'), wp_get_theme()->get('Version') );
+
+    // Enqueue Page Layout & Sidebar styles
+    wp_enqueue_style( 'magic-hat-page-layout', get_template_directory_uri() . '/assets/css/page-layout.css', array('magic-hat-variables'), wp_get_theme()->get('Version') );
 
     // Enqueue modular section stylesheets
     $section_categories = array(
@@ -196,7 +234,7 @@ function xophz_magic_hat_enqueue_styles() {
     wp_enqueue_style(
         'magic-hat-style',
         get_stylesheet_uri(),
-        array_merge( array( 'magic-hat-variables', 'magic-hat-header-footer' ), $section_handles ),
+        array_merge( array( 'magic-hat-variables', 'magic-hat-header-footer', 'magic-hat-page-layout' ), $section_handles ),
         wp_get_theme()->get( 'Version' )
     );
 
@@ -213,7 +251,7 @@ function xophz_magic_hat_customize_preview_init() {
         'magic-hat-customize-preview-ai',
         get_template_directory_uri() . '/assets/js/customizer-preview-ai.js',
         array( 'customize-preview', 'jquery' ),
-        wp_get_theme()->get( 'Version' ),
+        file_exists( get_template_directory() . '/assets/js/customizer-preview-ai.js' ) ? filemtime( get_template_directory() . '/assets/js/customizer-preview-ai.js' ) : wp_get_theme()->get( 'Version' ),
         true
     );
 

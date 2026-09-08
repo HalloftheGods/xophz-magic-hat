@@ -360,19 +360,39 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 								phasePercent = ((ratio - 0.5) * 200).toFixed(2) + '%';
 								document.documentElement.classList.remove('phase-night');
 								document.documentElement.classList.add('phase-day');
+								if (document.body) {
+									document.body.classList.remove('phase-night');
+									document.body.classList.add('phase-day');
+								}
 							} else {
 								phasePercent = (ratio * 200).toFixed(2) + '%';
 								document.documentElement.classList.remove('phase-day');
 								document.documentElement.classList.add('phase-night');
+								if (document.body) {
+									document.body.classList.remove('phase-day');
+									document.body.classList.add('phase-night');
+								}
 							}
 							
 							document.documentElement.style.setProperty('--mh-phase-primary', phasePercent);
 							document.documentElement.style.setProperty('--mh-daylight', (ratio * 100).toFixed(2) + '%');
 							timeLabel.textContent = formatTime(minutes);
 
-							var isDay = ratio > 0.6;
-							var isTwilight = ratio > 0.3 && ratio <= 0.6;
+							var isDay = ratio >= 0.65;
+							var isDark = ratio <= 0.35;
+							var isTwilight = !isDay && !isDark;
 							icon.textContent = isDay ? '☀️' : (isTwilight ? '🌅' : '🌙');
+
+							// Dynamically synchronize active mode tabs and editing context with the circadian position
+							var detectedMode = isDay ? 'light' : (isTwilight ? 'twilight' : 'dark');
+							window.currentEditMode = detectedMode;
+							document.querySelectorAll('.mode-tab').forEach(function(tab) {
+								if (tab.getAttribute('data-mode') === detectedMode) {
+									tab.classList.add('active');
+								} else {
+									tab.classList.remove('active');
+								}
+							});
 						}
 
 						slider.addEventListener('input', updateFromSlider);
@@ -970,7 +990,7 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					}
 					var expandedPanel = window.parent.wp.customize.state('expandedPanel');
 					if (expandedPanel && expandedPanel.get()) {
-						if (expandedPanel.get().id === 'magic_hat_colors_panel' || expandedPanel.get().id === 'magic_hat_site_styles' || expandedPanel.get().id === 'magic_hat_general_settings') {
+						if (expandedPanel.get().id === 'magic_hat_colors_panel' || expandedPanel.get().id === 'magic_hat_site_styles' || expandedPanel.get().id === 'magic_hat_brand_settings' || expandedPanel.get().id === 'magic_hat_general_settings') {
 							// Kept for compatibility with active panel states
 						}
 					}
@@ -1110,6 +1130,28 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 		}
 
 		function applyPaletteToCustomizer(colors) {
+			// 1. Immediately update CSS custom properties on active document
+			for (const [key, val] of Object.entries(colors)) {
+				let cssProp = null;
+				if (key.endsWith('_twilight')) {
+					cssProp = '--mh-color-' + key.replace('mh_color_', '').replace('_twilight', '').replace(/_/g, '-') + '-twi';
+				} else if (key.endsWith('_dark')) {
+					cssProp = '--mh-color-' + key.replace('mh_color_', '').replace('_dark', '').replace(/_/g, '-') + '-dark';
+				} else {
+					cssProp = '--mh-color-' + key.replace('mh_color_', '').replace(/_/g, '-') + '-light';
+				}
+				if (cssProp) {
+					document.documentElement.style.setProperty(cssProp, val);
+				}
+			}
+
+			// 2. Trigger circadian slider recalculation to immediately refresh all swatches and tokens
+			const slider = document.getElementById('daylight-slider');
+			if (slider) {
+				slider.dispatchEvent(new Event('input'));
+			}
+
+			// 3. Synchronize settings with parent Customizer controls
 			if ( window.parent && window.parent.wp && window.parent.wp.customize ) {
 				for (const [key, val] of Object.entries(colors)) {
 					if (window.parent.wp.customize(key)) {
@@ -1176,9 +1218,9 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			// Snap the circadian slider to visually match the mode
 			const slider = document.getElementById('daylight-slider');
 			if(slider) {
-				if(mode === 'light') slider.value = 720;      // 12:00 PM
-				else if(mode === 'twilight') slider.value = 1080; // 6:00 PM
-				else if(mode === 'dark') slider.value = 0;      // Midnight
+				if(mode === 'light') slider.value = 720;      // 12:00 PM (Noon)
+				else if(mode === 'twilight') slider.value = 1080; // 6:00 PM (Sunset Golden Hour)
+				else if(mode === 'dark') slider.value = 0;      // Midnight (Astral Void)
 				// Trigger the input event to update the CSS engine
 				slider.dispatchEvent(new Event('input'));
 			}
@@ -1204,7 +1246,11 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 			'mh_color_border_base', 'mh_color_border_hover', 'mh_color_border_focus', 'mh_color_border_muted',
 			'mh_color_success', 'mh_color_warning', 'mh_color_danger', 'mh_color_info'
 		];
-		const FULL_COLOR_KEYS = [...COLOR_KEYS, ...COLOR_KEYS.map(k => k + '_dark')];
+		const FULL_COLOR_KEYS = [
+			...COLOR_KEYS,
+			...COLOR_KEYS.map(k => k + '_twilight'),
+			...COLOR_KEYS.map(k => k + '_dark')
+		];
 
 		function generatePaletteName(colors) {
 			let str = JSON.stringify(colors);
@@ -1356,15 +1402,33 @@ if ( ! isset( $_GET['magic_hat_stylebook'] ) || $_GET['magic_hat_stylebook'] !==
 					},
 					body: JSON.stringify({
 						type: 'palette',
-						prompt: "Generate a color palette for this brand/vibe: " + promptText,
-						system_instruction: `You are the most artistic, colorfully talented, and visionary UI/UX designer in the world. You possess a transcendent understanding of color theory, emotional resonance, and spatial contrast. You know color relationships better than anyone alive. 
-						When the user describes a vibe or brand, you must envision a breathtaking, cohesive, and perfectly balanced color system. Keep in mind that we use a "breathing theme" (Circadian Rhythm) that animates and beautifully transitions through the day: from noon (Light Mode), to sunset/twilight (Twilight Mode), to midnight (Dark Mode).
-						Return ONLY a valid JSON object mapping exactly these 84 keys to stunning hex color codes. Do not include any other text or markdown outside the JSON.
-						Base Keys (28, Noon/Light Mode): mh_color_brand_base, mh_color_brand_hover, mh_color_brand_active, mh_color_brand_muted, mh_color_cta_base, mh_color_cta_hover, mh_color_cta_active, mh_color_cta_muted, mh_color_link, mh_color_link_hover, mh_color_link_active, mh_color_link_visited, mh_color_text_heading, mh_color_text_main, mh_color_text_muted, mh_color_text_inverse, mh_color_body, mh_color_main, mh_color_section, mh_color_card, mh_color_border_base, mh_color_border_hover, mh_color_border_focus, mh_color_border_muted, mh_color_success, mh_color_warning, mh_color_danger, mh_color_info.
-						Twilight Keys (28, Sunset/Dawn): Duplicate the exact keys above but append "_twilight" to each key name (e.g. mh_color_brand_base_twilight). Provide a beautiful, highly saturated "Golden Hour" or "Neon Dusk" intermediary palette!
-						Dark Keys (28, Midnight/Dark Mode): Duplicate the exact keys above but append "_dark" to each key name (e.g. mh_color_brand_base_dark). Provide a beautifully harmonized dark mode counterpart.
-						CRITICAL CONTRAST RULE: You MUST ensure your background colors (body, main, section, card) contrast perfectly with your text and primary colors across ALL THREE PHASES. For example, never put light text on a light background. Light Mode uses light backgrounds/dark text. Dark Mode uses dark backgrounds/light text. For Twilight Mode, YOU MUST DECIDE if the background is dark or light, and assign the text colors accordingly to guarantee maximum contrast!
-						CRITICAL INTERPOLATION RULE: Because the theme smoothly transitions across these 3 phases using OKLCH color-mixing, ensure that the hues evolve beautifully and logically. Let your genius shine.`
+						model: 'gemini-3.1-pro-preview',
+						prompt: "Generate an exquisite 84-token color palette for this brand/vibe: " + promptText,
+						system_instruction: `You are the world's foremost color scientist and master UI/UX design token architect.
+Your mission is to generate an 84-token color palette for a 24-hour breathing circadian rhythm engine across three distinct phases:
+
+1. LIGHT MODE (High Noon, Solar Zenith):
+   - Crisp daylight, high-clarity surfaces (Lightness 95-100%, e.g. clean white or faint luminous tint), sharp dark text (L 12-25%), vibrant daytime brand and CTA.
+
+2. TWILIGHT MODE (Golden Hour, Sunset & Dawn): THE CHROMATIC BRIDGE & HERO:
+   - OPTICAL PURPOSE: Solves the "muted/muddy middle" problem when transitioning between light and dark.
+   - SURFACES: MUST be atmospheric warm dusk (Lightness 18-28%, e.g. rich warm amber-slate #1c1824, dusky sunset plum #221828, warm indigo-bronze #1a1626, or deep terracotta twilight #261816). NEVER near-black midnight or cold dark gray!
+   - BRAND & CTA ("GOLDEN HOUR FLAUNT"): MUST flaunt radiant, saturated sunset warmth (sunset gold #fbbf24, warm amber #f59e0b, glowing coral #fb7185, apricot, or warm bronze).
+   - TEXT: Warm ivory / golden cream (#fef3c7, #fffbeb, #f8fafc) ensuring high contrast against warm dusk surfaces.
+   - HARMONY: As the theme transitions via OKLCH color-mix, colors pass through this rich golden-hour warmth instead of muddy desaturation.
+
+3. DARK MODE (Midnight, Astral Void):
+   - Deep space obsidian/cosmic black surfaces (Lightness 4-8%, e.g. #0a0b10, #0c0714), high-chroma electric neon jewel brand accents, and crisp starlight white text (#ffffff, #f8fafc).
+
+COMPLEMENTARY COLOR THEORY:
+- Brand and CTA must form a striking, complementary or split-complementary harmony (e.g. Royal Purple with Glowing Sunset Gold; Navy with Vibrant Amber; Forest Green with Warm Terracotta/Peach; Cyberpunk Cyan with Electric Neon Sunset/Magenta).
+- Never duplicate hex codes across phases. Twilight MUST be visually and chromatically distinct from Dark.
+
+OUTPUT FORMAT:
+Return ONLY a valid JSON object mapping exactly these 84 keys to hex color codes (#rrggbb). Zero conversational text.
+Base Keys (28, Light): mh_color_brand_base, mh_color_brand_hover, mh_color_brand_active, mh_color_brand_muted, mh_color_cta_base, mh_color_cta_hover, mh_color_cta_active, mh_color_cta_muted, mh_color_link, mh_color_link_hover, mh_color_link_active, mh_color_link_visited, mh_color_text_heading, mh_color_text_main, mh_color_text_muted, mh_color_text_inverse, mh_color_body, mh_color_main, mh_color_section, mh_color_card, mh_color_border_base, mh_color_border_hover, mh_color_border_focus, mh_color_border_muted, mh_color_success, mh_color_warning, mh_color_danger, mh_color_info.
+Twilight Keys (28, Golden Hour): Same keys with suffix "_twilight" (e.g. mh_color_brand_base_twilight, mh_color_cta_base_twilight, mh_color_body_twilight, mh_color_text_heading_twilight).
+Dark Keys (28, Midnight): Same keys with suffix "_dark" (e.g. mh_color_brand_base_dark, mh_color_cta_base_dark, mh_color_body_dark, mh_color_text_heading_dark).`
 					})
 				});
 				

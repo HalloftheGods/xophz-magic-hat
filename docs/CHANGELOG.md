@@ -5,6 +5,159 @@ All notable changes to the Xophz Magic Hat theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [26.9.11] - 2026-09-07
+
+### Added
+- 20 Bespoke Header Archetypes (`inc/header-footer.php`, `inc/customizer/sections/section-header.php`, `assets/css/header-footer.css`, `assets/js/customizer-preview-header-footer.js`, `assets/js/customizer-layout-modal.js`): Expanded header layouts to 20 unique archetypes. New additions include:
+  - Console App Header (`app_header`): Developer console bar with workspace environment pill, live notification beacon, and user menu action.
+  - Mega Menu Directory (`mega_menu_bar`): Enterprise directory navigation with section indicators, sales telephone link, and action CTA.
+  - Center Feature Badge (`badge_highlight`): Centered glowing launch announcement badge pill flanked by primary navigation and conversion CTA.
+  - Direct Contact Telephone (`contact_tel`): Emergency utility bar with telephone hotlink, live status beacon, and booking button.
+  - Store and Live Cart (`ecommerce_cart`): E-commerce navigation bar with currency and region selector, live shopping bag counter badge, and checkout button.
+  - Documentation Subnav (`docs_subnav`): Two-tier technical header with version selector pill, docs breadcrumb trail, and GitHub star counter badge.
+  - Vertical Sidebar Dock (`vertical_sidebar`): Left-aligned vertical dock rail for web applications with vertical icons, links, and avatar action.
+  - Aurora Glass Ribbon (`glass_blur_gradient`): High-end translucent glassmorphic bar with ambient aurora gradient glow and frosted backdrop filter.
+  - Social Creator Bar (`social_prominent`): Creator header prioritizing social channel buttons, subscriber follower count badge, and newsletter action.
+  - Swiss Monospace Grid (`minimal_underline`): Architectural Swiss graphic design layout with clean uppercase monospace labels and crisp line dividers.
+- 20 Bespoke Footer Archetypes (`inc/header-footer.php`, `inc/customizer/sections/section-footer.php`, `assets/css/header-footer.css`, `assets/js/customizer-preview-header-footer.js`, `assets/js/customizer-layout-modal.js`): Expanded footer layouts to 20 unique archetypes (400 total header and footer combinations). New additions include:
+  - Mobile App Showcase (`app_download`): Footer with native App Store and Google Play download badges alongside interactive QR code scan card.
+  - Trust and Compliance Badges (`award_trust`): Enterprise security credentials with SOC-2 Type II, ISO 27001, HIPAA, and 256-Bit SSL trust cards.
+  - Interactive CLI Terminal (`developer_terminal`): Developer console footer with interactive copyable terminal command line and live latency ping monitor.
+  - Store Care and Payment Rails (`ecommerce_store`): E-commerce footer with payment method badges (Visa, Mastercard, Amex, Apple Pay) and customer care highlights.
+  - Multi-Location HQ Cards (`contact_cards`): Global office directory cards for San Francisco, London, Tokyo, and Cyberspace with local time clocks.
+  - Manifesto Quote Display (`editorial_quote`): High-impact display manifesto quotation card with author attribution above minimalist legal navigation.
+  - Live System Status Beacon (`status_incident`): Real-time platform operational health panel with 99.998% uptime badge and direct link to status dashboard.
+  - Accordion FAQ Panel (`interactive_faq`): Integrated collapsible FAQ question drawer panel for rapid objection handling before user navigates away.
+  - Podcast and Audio Player (`podcast_media`): Rich media footer spotlighting latest podcast episode with play controls, audio wave bars, and streaming links.
+  - Swiss Monospace Colophon (`minimal_colophon`): Swiss editorial colophon with typographic specifications, coordinates, timestamp, and legal navigation columns.
+- Customizer Layout Library 40-Template Catalog (`assets/js/customizer-layout-modal.js`): Added 20 new handcrafted vector SVG wireframes for all new archetypes, updated catalog count badges to 40 total templates (20 headers, 20 footers), and aligned preview canvas mockups.
+- Standard WordPress Page Layout and Sidebar Architecture (`inc/page-layout.php`, `functions.php`, `page.php`, `front-page.php`, `index.php`, `inc/customizer/sections/section-page-builder.php`, `assets/css/page-layout.css`):
+  - Aligned theme architecture with WordPress industry standards (Astra, GeneratePress, Kadence), completely decoupling the masthead (`header.php`) and colophon (`footer.php`) from page layout and sidebars.
+  - Registered standard dynamic widget areas `mh-sidebar-left` (Left Sidebar) and `mh-sidebar-right` (Right Sidebar) in `functions.php`.
+  - Created `inc/page-layout.php` providing layout query helpers (`mh_get_page_layout`, `mh_has_left_sidebar`, `mh_has_right_sidebar`, `mh_render_sidebar`, `mh_get_content_container_classes`).
+  - Added Page Layout selector (`no_sidebar`, `left_sidebar`, `right_sidebar`, `three_column`) and desktop sidebar width slider to Customizer `🪄 Page Settings`.
+  - Implemented scoped grid styling in `assets/css/page-layout.css` for `.mh-content-container` with zero styling hacks on `body`.
+  - Added responsive mobile stacking (< 1024px) ensuring page content displays first before sidebar widgets.
+  - Formatted layout 16 as App Dock Bar with high-contrast capsule navigation, live status beacon, and action dock.
+  - Clean widget empty states with zero mock synthetic data, displaying direct admin links when editable.
+
+### Fixed
+- In-Canvas Button Text and Link Editing (`assets/js/customizer-preview-header-footer.js`): Fixed an issue where clicking an in-canvas button opened the URL popover and immediately stole focus away from the button, blocking users from focusing or editing the button's text. Expanded `.mh-canvas-url-popover` into a dual-field button editor supporting both "Button Text" and "Target URL", eliminated aggressive focus-stealing on button click, preserved inline text caret focus on the canvas button, and enabled real-time bidirectional synchronization between in-canvas typing and overlay inputs.
+- Customizer Preview Hover and Edit Style Isolation (`assets/css/header-footer.css`, `assets/js/customizer-preview-header-footer.js`): Removed bleeding `[data-mh-focus]` outline rules and `.mh-canvas-url-popover` classes from global production stylesheet `header-footer.css`. Relocated URL popover styles to `handleCss` in `customizer-preview-header-footer.js`, ensuring edit outlines and inspector popovers strictly render within the Customizer preview iframe (`customize_preview_init`) and never on live front-end pages.
+- Hero and Template Inline Cursor Cleanup (`inc/hero.php`, `index.php`): Removed inline `cursor: text` and `cursor: pointer` attributes from hero headlines, subtitles, badges, and images across editorial, app, split, and video layouts. Removed static dashed outline from the main dropzone container in `index.php`.
+
+## [26.9.10] - 2026-09-07
+
+### Added
+- 10 Bespoke Header Archetypes (`inc/header-footer.php`, `inc/customizer/sections/section-header.php`, `assets/css/header-footer.css`, `assets/js/customizer-preview-header-footer.js`, `assets/js/customizer-layout-modal.js`): Expanded header layouts to 10 unique archetypes. Added Announcement Ticker (`announcement_ticker`) featuring a top notification strip with active pill badge and direct link above the navbar, and Dual Converter (`dual_cta`) pairing a ghost login link with a high-converting primary CTA button.
+- 10 Bespoke Footer Archetypes (`inc/header-footer.php`, `inc/customizer/sections/section-footer.php`, `assets/css/header-footer.css`, `assets/js/customizer-preview-header-footer.js`, `assets/js/customizer-layout-modal.js`): Expanded footer layouts to 10 unique archetypes (100 total header and footer combinations). Added 5-Column Enterprise Sitemap (`sitemap_dense`) with high-density directory columns and an active system status beacon, and Interactive Social Hub (`social_hub`) with bespoke community cards for GitHub, X, YouTube, and LinkedIn alongside an integrated newsletter form.
+- In-Canvas Floating URL Popover and Direct Component Editing (`assets/js/customizer-preview-header-footer.js`, `assets/css/header-footer.css`, `inc/header-footer.php`): Implemented floating target URL inspector `.mh-canvas-url-popover` for in-canvas buttons and links (`[data-mh-btn-url]`). Users can edit button URLs directly on the canvas without sidebar navigation. Enabled `contenteditable` inline editing on Big Statement and Newsletter footer elements with live `wp.customize` postMessage synchronization.
+- Layout Catalog 20-Template SVG Wireframes (`assets/js/customizer-layout-modal.js`): Added custom vector SVG wireframes for all 4 new archetypes, updated catalog count badges to 20 total templates (10 headers, 10 footers), and aligned preview canvas mockups.
+
+### Fixed
+- Hamburger Menu Alignment and Collision (`assets/css/header-footer.css`): Resolved CSS layout bug where hamburger toggle bars collided into the "Menu" text. Set explicit zero horizontal offsets, flexible shrink guards, and inline flex alignment on `.mh-hamburger-focus`, `.mh-hamburger-box`, and `.mh-hamburger-inner`.
+
+## [26.9.9] - 2026-09-07
+
+### Added
+- Expanded Layout Archetypes (`inc/header-footer.php`, `inc/customizer/sections/section-header.php`, `inc/customizer/sections/section-footer.php`, `assets/css/header-footer.css`): Expanded theme from 4 to 8 header layouts and from 4 to 8 footer layouts (16 total modern internet archetypes). New headers include Floating Glass Island (`floating_pill`), Stacked Utility (`stacked_utility`), Inline Search and Commands (`inline_search`), and Off-Canvas Minimal (`offcanvas_focus`). New footers include Bento Grid (`bento`), Big Statement CTA (`big_statement`), Newsletter Lead-In (`newsletter_first`), and Floating Dock (`floating_dock`).
+- Brand Display Mode and Logo Height Sliders (`functions.php`, `inc/header-footer.php`, `inc/customizer/sections/section-header.php`, `inc/customizer/sections/section-footer.php`): Added `add_theme_support('custom-logo')` and configurable brand display controls (`mh_header_brand_display` and `mh_footer_brand_display` with options: `both`, `logo_only`, `title_only`, `none`). Sites can now display pure image logos without redundant site title text for cleaner, modern navigation bars. Added granular logo height range sliders (`mh_header_logo_height`, `mh_footer_logo_height`, 20px-120px) controlling CSS custom properties `--mh-logo-h`.
+- Customizer Layout Library Modal (`inc/customizer/controls/class-layout-picker-control.php`, `assets/js/customizer-layout-modal.js`, `inc/customizer/controls-ui.php`): Replaced layout dropdown selects with an interactive visual picker card showing the active layout and a "Browse Layouts" modal trigger button. The full-screen layout catalog features category filtering (All, Headers, Footers), real-time search filtering, SVG wireframe mockups for all 16 layouts, responsive viewport previews (desktop, tablet, mobile), and 1-click apply sync to `wp.customize`.
+- Native Search with Autocomplete and Keyboard Shortcuts (`inc/header-footer.php`, `assets/js/header-footer.js`, `assets/js/customizer-preview-header-footer.js`): Implemented a zero-dependency search bar for the Inline Search header with standard WordPress `/?s=` search fallback, `⌘K` / `Ctrl+K` keyboard shortcut autofocus, and client-side menu item autocomplete indexing active navigation links.
+- In-Canvas Layout Browsing (`assets/js/customizer-preview-header-footer.js`): Added a direct "Browse" button alongside the layout cycler inside the Customizer preview canvas, allowing instant modal activation from either the preview iframe or the sidebar controls.
+
+## [26.9.8] - 2026-09-07
+
+### Fixed
+- Customizer Preview Inline Field Cursor Jumping (`assets/js/customizer-preview-header-footer.js`, `inc/hero.php`): Removed disruptive 750ms keyup debounce timer that previously committed settings mid-typing and caused selective refresh DOM destruction and caret jump to index 0. Replaced granular server-side selective refresh partials on text settings with direct `wp.customize` postMessage bindings, guaranteeing uninterrupted native typing in-canvas and instant 0ms latency updates from the sidebar.
+- Style.css Header Conflict Markers (`style.css`): Removed unresolved git conflict markers and bumped theme version to 26.9.8.
+
+## [26.5.41] - 2026-09-06
+
+### Added
+- Google AI Studio Conversational Interface (`inc/customizer/controls/class-ai-architect-control.php`, `assets/js/customizer-ai-architect.js`): Re-architected the Customizer panel into an interactive AI Studio conversational workspace. Users chat with the Architect in an active message thread, review zero-token thought process telemetry in expandable drawers, and iteratively build, modify, and refine Gutenberg layouts in real time.
+- Multi-Turn Contextual Refinement (`inc/class-magic-hat-ai-architect.php`): Updated `handle_page_generation()` and `build_page_ai_prompt()` to accept existing Gutenberg blocks (`current_blocks`) and conversation context. When follow-up prompts are dispatched (such as adding pricing sections or refining headlines), Gemini performs surgical block additions and adjustments while preserving existing layout sections and circadian tokens.
+- Customizer Wide Studio Mode (`inc/customizer/controls-ui.php`, `assets/js/customizer-ai-architect.js`): Added an "Expand" toggle button that smoothly widens the Customizer controls pane from 300px to 480px, providing a spacious AI Studio reading and prompt drafting workspace alongside the live preview canvas.
+- Floating Live Studio HUD in Preview Canvas (`assets/js/customizer-preview-ai.js`): Injected an interactive glassmorphic HUD badge (`🪄 AI Studio: Live Synced`) inside the preview iframe that reflects live synchronization state and allows 1-click focus back to the AI Studio section.
+
+### Changed
+- HTTP 429 Quota Resiliency & Faster Timeouts (`inc/class-magic-hat-ai-architect.php`): Optimized connector execution timeouts from 45s to 20s. Added immediate detection for HTTP 429 rate limits to prevent prolonged UI delays, gracefully cascading to alternative models (`gemini-3.5-flash-lite`, `gemini-2.0-flash`) or returning clear quota guidance.
+- Prioritized Post Content Injection Targets (`assets/js/customizer-preview-ai.js`): Refined container selectors to target `main.mh-front-page-main .entry-content` and `.entry-content` first, ensuring clean block insertion within the Full Site Editing front page template.
+
+## [26.5.40] - 2026-09-06
+
+### Added
+- Auto-Publish Direct to Website (`inc/customizer/controls/class-ai-architect-control.php`, `assets/js/customizer-ai-architect.js`): Added an active "Publish directly to live website" option that defaults the target destination page to the active Front Page (`page_on_front`) and sends `action: apply_to_page`. Concurrently writes synthesized Gutenberg block trees directly to the WordPress post content in the database while live-updating the preview canvas so changes appear immediately on `http://localhost:8000/`.
+- Dynamic Script Enqueue Cache Busting (`inc/customizer/controls-ui.php`, `functions.php`): Enforced `filemtime()` version query parameters on `customizer-ai-architect.js` and `customizer-preview-ai.js` alongside theme version bump to `26.9.6-804`, preventing stale browser cache execution across Customizer reloads.
+- Direct Iframe DOM Injection Fallback (`assets/js/customizer-ai-architect.js`): Added immediate same-origin DOM replacement on `#mw-front-content` and `.mh-front-page-main` to ensure instant visual updates inside the preview canvas alongside postMessage channels.
+
+## [26.5.39] - 2026-09-06
+
+### Added
+- Zero-Token Real-Time AI Thought Stream (`assets/js/customizer-ai-architect.js`, `inc/class-magic-hat-ai-architect.php`): Implemented interactive architectural telemetry and live stepped pipeline visualization in the Customizer status box. Displays intent coordinates, circadian token binding, generative block synthesis, and quantum canvas injection without incurring extra prompt or reasoning tokens. Each conjured layout in the session stores its Thought Stream for historical review.
+- Server-Side Block Rendering for Live Canvas (`inc/class-magic-hat-ai-architect.php`): Passed generated Gutenberg blocks through `do_blocks()` to return `rendered_html` alongside raw `blocks_html`, ensuring Gutenberg dynamic blocks, groups, and layout classes render cleanly in the browser iframe.
+
+### Fixed
+- Customizer Live Preview Block Injection (`assets/js/customizer-preview-ai.js`): Fixed event listener desynchronization where `wp.customize.bind('mh-ai-page-rendered')` failed to receive postMessage events from the controls window. Bound to `wp.customize.preview.bind('mh-ai-page-rendered')`, added direct window method `window.mhInjectAiBlocks()`, added `wp.customize('mh_ai_generated_blocks')` setting sync, and explicitly targeted front page container `#mw-front-content` for smooth DOM replacement and scroll handling.
+- Gutenberg Block Slashing in Save Endpoint (`inc/class-magic-hat-ai-architect.php`): Wrapped `post_content` in `wp_slash()` within `handle_save_page()` to prevent unslashing and JSON corruption of Gutenberg block attribute comments during database updates.
+
+### Changed
+- Section Icons and Fallback Prompt Intelligence (`inc/customizer/sections/section-ai-page-architect.php`, `inc/customizer/sections/reorder-hierarchy.php`, `inc/class-magic-hat-ai-architect.php`): Updated AI Page Architect section title to `🪄 AI Page Architect` with Magic Wand branding, and added intelligent fallback archetype prompt synthesis when the prompt vision input is left blank so the AI always generates a coherent page structure.
+
+## [26.5.38] - 2026-09-06
+
+### Added
+- Circadian-Aware Page Generation Prompts (`inc/class-magic-hat-ai-architect.php`): Updated `build_page_ai_prompt()` and the generator system instruction with explicit rules requiring all AI-generated Gutenberg layouts to use semantic design tokens (`has-surface-body-background-color`, `has-brand-base-color`, `has-text-heading-color`, `var(--mh-color-*)`) instead of static hex colors, ensuring all generated blocks seamlessly adapt to the 24-hour astronomical circadian lighting curve.
+
+## [26.5.37] - 2026-09-06
+
+### Changed
+- Overlapable Four Boxes Gutenberg Column Support (`assets/css/sections/hero-overlap.css`): Added `.mh-section-overlap-four-boxes .wp-block-columns` selector to apply card background, border, border radius, box shadow, and flexbox grouping to native Gutenberg column blocks alongside legacy `.about-four-boxes-innerrow` markup.
+
+## [26.5.36] - 2026-09-06
+
+### Added
+- Golden Hour Twilight Color Architecture (`inc/stylebook-template.php`, `inc/class-magic-hat-ai-architect.php`): Upgraded the AI system prompt and token generator to establish Twilight mode as an intentional, high-chroma Golden Hour chromatic bridge (warm atmospheric dusk surfaces with Lightness 18-28%, radiant sunset amber/gold/coral Brand and CTA accents, and warm ivory text). This resolves the "muted / muddy middle" problem during continuous OKLCH circadian interpolation between Light and Dark.
+- Smart Model Cascading for Color Conjuring (`inc/class-magic-hat-ai-architect.php`): Implemented resilient model cascading in `handle_palette_generation`, attempting preferred smart reasoning models (`gemini-3.1-pro-preview`, `gemini-pro-latest`) before gracefully cascading to `gemini-3.8-flash` and `gemini-3.7-flash` when encountering rate limits or quota boundaries.
+- Instant Stylebook CSS Hydration (`inc/stylebook-template.php`): In `applyPaletteToCustomizer()`, immediately injects updated CSS custom properties directly onto `:root` and triggers the daylight slider recalculation for instantaneous visual feedback without waiting on Customizer iframe reloads.
+
+### Changed
+- Canonical Default Twilight Tokens (`inc/customizer/helpers.php`): Refreshed default canonical tokens in `mh_get_color_definitions()` to provide a true Golden Hour Twilight palette with warm dusk indigo-bronze surfaces (`#181524`, `#221d33`), radiant sunset amber CTA (`#f59e0b`, `#fbbf24`), and warm golden ivory text (`#fef3c7`).
+- Procedural Fallback Synthesis (`inc/class-magic-hat-ai-architect.php`): Upgraded `generate_procedural_palette()` to parse prompt keywords (purple, royal, luxury, green, emerald, starship) and generate authentic Golden Hour Twilight palettes with distinctive atmospheric dusk surfaces and warm complementary accents.
+
+### Fixed
+- Missing Twilight Export Tokens (`inc/stylebook-template.php`): Fixed `FULL_COLOR_KEYS` definition by including all 28 `_twilight` keys alongside Light and Dark keys, restoring complete 84-token palette export and import functionality.
+- Circadian Slider & Mode Tab Desync (`inc/stylebook-template.php`): Updated `updateFromSlider()` to dynamically calculate the active daylight phase and synchronize the `Light`, `Twilight`, and `Dark` mode tabs as well as `window.currentEditMode` as the slider is scrubbed across the 24-hour astronomical clock. Swatch clicks now open the correct phase-specific Customizer control corresponding to what is currently visible on screen.
+
+## [26.5.35] - 2026-09-06
+
+### Added
+- Official Google WP Connector (`WordPress\AiClient\AiClient`): Integrated the official WordPress 7.0 native AI client and `ai-provider-for-google` plugin provider in `Magic_Hat_AI_Architect`.
+- Multi-Model Selection: Added support for modern Gemini models (`gemini-3.8-flash` default, `gemini-3.7-flash`, `gemini-3.6-flash`, `gemini-3.5-flash`, `gemini-3.5-flash-lite`, `gemini-3.1-pro-preview`, `gemini-flash-latest`, `gemini-pro-latest`) plus Anthropic Claude (3.7 Sonnet, 3.5 Sonnet, 3.5 Haiku) and OpenAI (GPT-4o, GPT-4o Mini, o3-mini) with dedicated selector dropdowns in Customizer AI Architect and Magic Wand editor.
+- Automated Reliability Cascade: Added automatic single-attempt fallback retry from `gemini-3.8-flash` to `gemini-3.6-flash` and secondary fallback to direct Google Generative Language REST API when transient 503 capacity limits or network errors occur.
+
+### Changed
+- Comprehensive API Key Discovery: Expanded `get_api_key()` to automatically resolve keys across `GOOGLE_API_KEY`, `GEMINI_API_KEY`, environment variables, WordPress options (`connectors_ai_google_api_key`, `ai_google_api_key`, `compass_gemini_api_key`, `xophz_gemini_api_key`), `wp_get_connectors()`, and active `AiClient` default registry.
+- AI Generation Timeout Filter: Implemented automatic `http_request_args` 45-second timeout override for Google API calls within `WP_AI_Client_HTTP_Client` to prevent cURL 28 timeouts during rich Gutenberg block synthesis.
+- Customizer AI Architect UI: Modernized Customizer panel with connector selector, model selector, clear status indicators, and transparent warning/error feedback badges when procedural fallback occurs.
+- Page Settings Section Icon (`inc/customizer/sections/section-page-builder.php` & `reorder-hierarchy.php`): Updated section icon from 🏗️ to 🪄 (Magic Wand) for cohesive theme branding.
+- Page Settings Direct Section Layout (`inc/customizer/sections/section-page-builder.php`, `inc/customizer/sections/reorder-hierarchy.php`, `inc/customizer/controls/class-page-builder-control.php`): Configured Page Settings (`mh_page_builder`) as a direct root section at priority 60 to eliminate multi-level clicks. Added a native WordPress Customizer sub-navigation row (`#mh-nav-to-homepage-settings`) at the top of the section that seamlessly focuses core Homepage Settings (`static_front_page`) with automatic back navigation chaining, presenting normal page controls and active page indicator directly underneath.
+- Customizer Section & Menu Emoji Sizing (`inc/customizer/controls-ui.php`): Added automatic text node parsing and MutationObserver in Customizer controls to isolate leading emojis across accordion section titles, panel headers, and navigation items into `.mh-section-emoji`, scaling them to 1.45em with subtle depth drop shadow and interactive hover scale.
+
+### Fixed
+- Procedural Fallback Default Bug: Fixed silent 404 failure caused by deprecated `gemini-2.5-flash` model endpoint that triggered unwanted fallbacks to procedural mock synthesis.
+
+## [26.5.34] - 2026-09-06
+
+### Added
+- Dynamic Quantum Atom Gutenberg Block (`xophz-magic-hat/quantum-atom`): Registered dynamic Gutenberg block in `assets/js/editor-blocks.js` with server-side render fallback (`wp.serverSideRender`) and `save: () => null`, keeping `post_content` as the single source of truth without duplicating Vue component templates in PHP.
+- PHP Dynamic Block Registration (`inc/header-footer.php`): Registered `xophz-magic-hat/quantum-atom` server-side with custom `render_callback` producing hydration markup `<x-atom-mount data-atom="..." data-props="...">` for seamless frontend client hydration by `XophzAtoms`.
+
+### Changed
+- Brand Settings Panel (`inc/customizer/sections/panel-brand-settings.php`, `inc/customizer/sections/reorder-hierarchy.php`): Transformed the top-level "General Settings" Customizer panel into "Brand Settings" (`magic_hat_brand_settings`, titled "👁️ Brand Settings") consolidating Site Identity, Site Colors, Background & Canvas, Typography, Spacing, Buttons, and Custom CSS with full backward compatibility for legacy panel callers.
+- Chakra-Aligned Customizer Hierarchy (`inc/customizer/sections/reorder-hierarchy.php`, `inc/hero.php`): Reordered the Customizer into a coherent descending Crown-to-Root spatial hierarchy: Header Settings (10 - Crown), Brand Settings (20 - Third Eye with 👁️), Menu Settings (30 - Throat), Hero Settings (40 - Heart with 💚), AI Page Architect (50 - Solar Plexus), Page Settings (60 - Form/Anatomy), Shop Settings (70 - Sacral), and Footer Settings (80 - Root).
+- Page Settings Panel Architecture (`inc/customizer/sections/section-page-builder.php`, `inc/customizer/sections/reorder-hierarchy.php`): Converted "🏗️ Page Settings" into a parent panel (`magic_hat_page_settings`) containing native clickable sections for "🏠 Homepage Settings" (`static_front_page`, priority 10) and "🏗️ Page Sections" (`mh_page_builder`, priority 20), cleanly relocating front page routing out of Brand Settings without arbitrary inline UI hacks.
+
 ## [26.5.34] - 2026-09-07
 
 ### Added

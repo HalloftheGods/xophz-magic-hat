@@ -28,10 +28,24 @@
 		'#mw-header:hover { outline: 1px dashed #2563eb; outline-offset: -1px; }' +
 		'#mh-front-page-hero:hover { outline: 1px dashed #2563eb; outline-offset: -1px; }' +
 		'#mw-footer:hover { outline: 1px dashed #2563eb; outline-offset: -1px; }' +
-		'[data-mh-focus] { position: relative; transition: outline 0.15s, box-shadow 0.15s; }' +
-		'[data-mh-focus]:hover { outline: 2px dashed #2563eb !important; outline-offset: 4px; cursor: pointer; }' +
-		'[data-mh-focus]:focus { outline: 2px solid #2563eb !important; outline-offset: 4px; background: rgba(37,99,235,0.05); }' +
-		'[data-mh-image]:hover { outline: 2px dashed #2563eb !important; outline-offset: 4px; cursor: pointer; filter: brightness(0.95); }';
+		'[data-mh-focus], [data-mh-btn-url], [data-mh-link] { position: relative; transition: outline 0.15s, box-shadow 0.15s; }' +
+		'[data-mh-focus]:hover, [data-mh-btn-url]:hover, [data-mh-link]:hover { outline: 2px dashed #2563eb !important; outline-offset: 4px; cursor: pointer; }' +
+		'[data-mh-focus]:focus, [data-mh-btn-url]:focus, [data-mh-link]:focus { outline: 2px solid #62c9ff !important; outline-offset: 4px; background: rgba(98,201,255,0.08); }' +
+		'[data-mh-image]:hover { outline: 2px dashed #2563eb !important; outline-offset: 4px; cursor: pointer; filter: brightness(0.95); }' +
+		'.mh-canvas-url-popover { position: absolute; z-index: 999999; background: #0f172a; color: #f8fafc; border: 1px solid #334155; border-radius: 8px; padding: 12px 14px; box-shadow: 0 12px 32px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 8px; min-width: 280px; font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; box-sizing: border-box; }' +
+		'.mh-canvas-url-popover .mh-popover-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; }' +
+		'.mh-canvas-url-popover .mh-popover-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #62c9ff; }' +
+		'.mh-canvas-url-popover .mh-popover-close { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 16px; line-height: 1; padding: 0; transition: color 0.15s; }' +
+		'.mh-canvas-url-popover .mh-popover-close:hover { color: #ffffff; }' +
+		'.mh-canvas-url-popover .mh-popover-field { display: flex; flex-direction: column; gap: 4px; }' +
+		'.mh-canvas-url-popover label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #94a3b8; }' +
+		'.mh-canvas-url-popover input[type="text"] { width: 100%; box-sizing: border-box; background: #1e293b; border: 1px solid #475569; border-radius: 4px; padding: 6px 8px; color: #ffffff; font-size: 12px; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }' +
+		'.mh-canvas-url-popover input[type="text"]:focus { border-color: #62c9ff; box-shadow: 0 0 0 1px #62c9ff; }' +
+		'.mh-canvas-url-popover .mh-popover-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }' +
+		'.mh-canvas-url-popover .mh-btn-popover-sidebar { background: transparent; color: #94a3b8; border: none; font-size: 11px; cursor: pointer; padding: 0; text-decoration: underline; transition: color 0.15s; }' +
+		'.mh-canvas-url-popover .mh-btn-popover-sidebar:hover { color: #62c9ff; }' +
+		'.mh-canvas-url-popover .mh-btn-url-save { background: #2563eb; color: #ffffff; border: none; border-radius: 4px; padding: 5px 12px; font-size: 11px; font-weight: 600; cursor: pointer; transition: background 0.15s; }' +
+		'.mh-canvas-url-popover .mh-btn-url-save:hover { background: #1d4ed8; }';
 
 	$('head').append('<style>' + handleCss + '</style>');
 
@@ -41,8 +55,11 @@
 				'<button type="button" class="mh-preview-btn" data-action="header-options">' +
 					'<span class="dashicons dashicons-admin-customizer"></span> Header Settings' +
 				'</button>' +
+				'<button type="button" class="mh-preview-btn" data-action="header-browse">' +
+					'<span class="dashicons dashicons-screenoptions"></span> Browse Layouts' +
+				'</button>' +
 				'<button type="button" class="mh-preview-btn" data-action="header-layout">' +
-					'<span class="dashicons dashicons-layout"></span> Cycle Layout' +
+					'<span class="dashicons dashicons-layout"></span> Cycle' +
 				'</button>' +
 				'<button type="button" class="mh-preview-btn" data-action="header-menus">' +
 					'<span class="dashicons dashicons-menu"></span> Menus' +
@@ -73,8 +90,11 @@
 				'<button type="button" class="mh-preview-btn" data-action="footer-options">' +
 					'<span class="dashicons dashicons-admin-customizer"></span> Footer Settings' +
 				'</button>' +
+				'<button type="button" class="mh-preview-btn" data-action="footer-browse">' +
+					'<span class="dashicons dashicons-screenoptions"></span> Browse Layouts' +
+				'</button>' +
 				'<button type="button" class="mh-preview-btn" data-action="footer-layout">' +
-					'<span class="dashicons dashicons-layout"></span> Cycle Layout' +
+					'<span class="dashicons dashicons-layout"></span> Cycle' +
 				'</button>' +
 				'<button type="button" class="mh-preview-btn" data-action="footer-menus">' +
 					'<span class="dashicons dashicons-menu"></span> Menus' +
@@ -164,8 +184,17 @@
 			if (parentApi.section && parentApi.section('magic_hat_header')) {
 				parentApi.section('magic_hat_header').focus();
 			}
+		} else if (action === 'header-browse') {
+			if (parent.window && typeof parent.window.mhOpenLayoutModal === 'function') {
+				parent.window.mhOpenLayoutModal('header');
+			}
 		} else if (action === 'header-layout') {
-			var headerLayouts = ['standard', 'centered', 'split', 'minimal'];
+			var headerLayouts = [
+				'standard', 'centered', 'split', 'minimal', 'floating_pill',
+				'stacked_utility', 'inline_search', 'offcanvas_focus', 'announcement_ticker', 'dual_cta',
+				'app_header', 'mega_menu_bar', 'badge_highlight', 'contact_tel', 'ecommerce_cart',
+				'docs_subnav', 'vertical_sidebar', 'glass_blur_gradient', 'social_prominent', 'minimal_underline'
+			];
 			var currentHeaderLayout = parentApi('mh_header_layout') ? parentApi('mh_header_layout').get() : 'standard';
 			var nextHeaderIdx = (headerLayouts.indexOf(currentHeaderLayout) + 1) % headerLayouts.length;
 			if (parentApi('mh_header_layout')) {
@@ -192,8 +221,17 @@
 			if (parentApi.section && parentApi.section('magic_hat_footer')) {
 				parentApi.section('magic_hat_footer').focus();
 			}
+		} else if (action === 'footer-browse') {
+			if (parent.window && typeof parent.window.mhOpenLayoutModal === 'function') {
+				parent.window.mhOpenLayoutModal('footer');
+			}
 		} else if (action === 'footer-layout') {
-			var footerLayouts = ['columns_4', 'columns_3', 'minimal_centered', 'split'];
+			var footerLayouts = [
+				'columns_4', 'columns_3', 'minimal_centered', 'split', 'bento',
+				'big_statement', 'newsletter_first', 'floating_dock', 'sitemap_dense', 'social_hub',
+				'app_download', 'award_trust', 'developer_terminal', 'ecommerce_store', 'contact_cards',
+				'editorial_quote', 'status_incident', 'interactive_faq', 'podcast_media', 'minimal_colophon'
+			];
 			var currentFooterLayout = parentApi('mh_footer_layout') ? parentApi('mh_footer_layout').get() : 'columns_4';
 			var nextFooterIdx = (footerLayouts.indexOf(currentFooterLayout) + 1) % footerLayouts.length;
 			if (parentApi('mh_footer_layout')) {
@@ -219,11 +257,33 @@
 		});
 	}
 
+	function getButtonText($btn) {
+		var $label = $btn.find('.mh-statement-btn-label');
+		if ($label.length) return $label.text().trim();
+		var text = $btn.text().trim();
+		return text.replace(/[\u2192\u2190\u2191\u2193]/g, '').trim();
+	}
+
+	function setButtonText($btn, newText) {
+		var $label = $btn.find('.mh-statement-btn-label');
+		if ($label.length) {
+			$label.text(newText);
+		} else {
+			$btn.text(newText);
+		}
+	}
+
 	// Click on in-canvas elements:
 	// Direct text click retains focus in-place for instant on-site editing without jumping to sidepanel.
 	// Shift-click routes to parent Customizer sidebar control when explicitly requested.
 	$(document).on('click', '[data-mh-focus]', function(e) {
 		var $el = $(this);
+
+		// If this element also has a button URL/link, let the button popover handler manage it cleanly
+		if ( $el.is('[data-mh-btn-url], [data-mh-link]') ) {
+			return;
+		}
+
 		var isTextEditable = ! $el.is('img') && ! $el.is('input');
 
 		if ( isTextEditable ) {
@@ -231,6 +291,10 @@
 				var settingId = $el.attr('data-mh-focus');
 				if ( settingId && parentApi.control && parentApi.control(settingId) ) {
 					parentApi.control(settingId).focus();
+				} else if ( settingId && settingId.indexOf('mh_header') === 0 && parentApi.section && parentApi.section('magic_hat_header') ) {
+					parentApi.section('magic_hat_header').focus();
+				} else if ( settingId && settingId.indexOf('mh_footer') === 0 && parentApi.section && parentApi.section('magic_hat_footer') ) {
+					parentApi.section('magic_hat_footer').focus();
 				} else if ( parentApi.section && parentApi.section('mh_front_page_hero') ) {
 					parentApi.section('mh_front_page_hero').focus();
 				}
@@ -250,108 +314,40 @@
 		var imgSetting = $el.attr('data-mh-focus');
 		if ( imgSetting && parentApi.control && parentApi.control(imgSetting) ) {
 			parentApi.control(imgSetting).focus();
+		} else if ( imgSetting && imgSetting.indexOf('mh_header') === 0 && parentApi.section && parentApi.section('magic_hat_header') ) {
+			parentApi.section('magic_hat_header').focus();
+		} else if ( imgSetting && imgSetting.indexOf('mh_footer') === 0 && parentApi.section && parentApi.section('magic_hat_footer') ) {
+			parentApi.section('magic_hat_footer').focus();
 		} else if ( parentApi.section && parentApi.section('mh_front_page_hero') ) {
 			parentApi.section('mh_front_page_hero').focus();
 		}
 	});
 
-	// Sync inline typing back to Customizer setting with keyup debounce delay
-	var inlineDebounceTimer = null;
-	var activeFocusSettingId = null;
-	var activeFocusCaret = null;
-
-	function getCaretCharacterOffsetWithin(element) {
-		var caretOffset = 0;
-		var doc = element.ownerDocument || element.document;
-		var win = doc.defaultView || doc.parentWindow;
-		var sel;
-		if ( typeof win.getSelection !== 'undefined' ) {
-			sel = win.getSelection();
-			if ( sel.rangeCount > 0 ) {
-				var range = sel.getRangeAt(0);
-				var preCaretRange = range.cloneRange();
-				preCaretRange.selectNodeContents(element);
-				preCaretRange.setEnd(range.endContainer, range.endOffset);
-				caretOffset = preCaretRange.toString().length;
-			}
-		}
-		return caretOffset;
-	}
-
-	function setCaretPosition(el, offset) {
-		var range = document.createRange();
-		var sel = window.getSelection();
-		var nodeStack = [el], node, found = false, current = 0;
-		range.setStart(el, 0);
-		range.collapse(true);
-
-		while ( ! found && ( node = nodeStack.pop() ) ) {
-			if ( node.nodeType === 3 ) {
-				var next = current + node.length;
-				if ( offset >= current && offset <= next ) {
-					range.setStart(node, offset - current);
-					range.collapse(true);
-					found = true;
-				}
-				current = next;
-			} else {
-				var i = node.childNodes.length;
-				while ( i-- ) {
-					nodeStack.push(node.childNodes[i]);
-				}
-			}
-		}
-		if ( found && sel ) {
-			sel.removeAllRanges();
-			sel.addRange(range);
-		}
-	}
-
+	// Sync inline typing back to Customizer setting on blur / save (zero mid-typing jumping)
 	function commitInlineChange($el) {
 		if ( ! $el || ! $el.length || $el.is('img') || $el.is('input') ) return;
 		var settingId = $el.attr('data-mh-focus');
-		var newText = $el.text().trim();
+		var newText = getButtonText($el);
 		if ( settingId && parentApi(settingId) && parentApi(settingId).get() !== newText ) {
-			if ( $el.is(':focus') ) {
-				activeFocusSettingId = settingId;
-				activeFocusCaret = getCaretCharacterOffsetWithin($el[0]);
-			} else {
-				activeFocusSettingId = null;
-				activeFocusCaret = null;
-			}
 			parentApi(settingId).set(newText);
 		}
 	}
 
-	$(document).on('keyup input', '[data-mh-focus]', function(e) {
-		var $el = $(this);
-		if ( $el.is('img') || $el.is('input') ) return;
-
-		// Ignore modifier and navigation keys on keyup
-		if ( e.type === 'keyup' && ['Shift', 'Control', 'Alt', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].indexOf(e.key) !== -1 ) {
-			return;
-		}
-
-		if ( inlineDebounceTimer ) {
-			clearTimeout(inlineDebounceTimer);
-		}
-
-		inlineDebounceTimer = setTimeout(function() {
-			commitInlineChange($el);
-			inlineDebounceTimer = null;
-		}, 750);
-	});
-
 	$(document).on('blur', '[data-mh-focus]', function() {
 		var $el = $(this);
 		if ( $el.is('img') || $el.is('input') ) return;
-
-		if ( inlineDebounceTimer ) {
-			clearTimeout(inlineDebounceTimer);
-			inlineDebounceTimer = null;
-		}
 		commitInlineChange($el);
 	});
+
+	// Commit any active focused inline element before Customizer saves/publishes
+	if ( parentApi && parentApi.previewer ) {
+		parentApi.previewer.bind('save', function() {
+			var $active = $(':focus[data-mh-focus]');
+			if ( $active.length ) {
+				commitInlineChange($active);
+			}
+		});
+	}
 
 	// Hero Image replacement via WP Media Library
 	var heroMediaFrame;
@@ -385,6 +381,210 @@
 		heroMediaFrame.open();
 	});
 
+	// ── In-Canvas Button & URL Popover ─────
+	var $activeUrlPopover = null;
+	var $activeBtn = null;
+
+	function closeUrlPopover() {
+		if ($activeBtn) {
+			$activeBtn.off('input.mhBtnPopover');
+			$activeBtn = null;
+		}
+		if ($activeUrlPopover) {
+			$activeUrlPopover.remove();
+			$activeUrlPopover = null;
+		}
+	}
+
+	function showUrlPopover($btn) {
+		closeUrlPopover();
+
+		var urlSettingId = $btn.attr('data-mh-btn-url') || $btn.attr('data-mh-link') || '';
+		var textSettingId = $btn.attr('data-mh-focus') || '';
+		var isTextEditable = Boolean(textSettingId && ! $btn.is('img') && ! $btn.is('input'));
+
+		var currentUrl = (urlSettingId && parentApi(urlSettingId) ? parentApi(urlSettingId).get() : '') || $btn.attr('href') || '';
+		var currentText = (textSettingId && parentApi(textSettingId) ? parentApi(textSettingId).get() : '') || getButtonText($btn) || '';
+
+		var textHtml = '';
+		if (isTextEditable) {
+			textHtml =
+				'<div class="mh-popover-field">' +
+					'<label>Button Text</label>' +
+					'<input type="text" class="mh-canvas-btn-text-input" value="' + (currentText.replace(/"/g, '&quot;')) + '" placeholder="Button text" spellcheck="false" />' +
+				'</div>';
+		}
+
+		var urlHtml = '';
+		if (urlSettingId || $btn.is('a')) {
+			urlHtml =
+				'<div class="mh-popover-field">' +
+					'<label>Target URL</label>' +
+					'<input type="text" class="mh-canvas-url-input" value="' + (currentUrl.replace(/"/g, '&quot;')) + '" placeholder="https://... or #contact" spellcheck="false" />' +
+				'</div>';
+		}
+
+		var titleText = isTextEditable ? 'Edit Button' : 'Target URL';
+
+		var $pop = $(
+			'<div class="mh-canvas-url-popover">' +
+				'<div class="mh-popover-header">' +
+					'<span class="mh-popover-title">' + titleText + '</span>' +
+					'<button type="button" class="mh-popover-close" title="Close">&times;</button>' +
+				'</div>' +
+				textHtml +
+				urlHtml +
+				'<div class="mh-popover-footer">' +
+					'<button type="button" class="mh-btn-popover-sidebar" title="Open Customizer sidebar control">Sidebar &rarr;</button>' +
+					'<button type="button" class="mh-btn-url-save">Save</button>' +
+				'</div>' +
+			'</div>'
+		);
+
+		$('body').append($pop);
+		$activeUrlPopover = $pop;
+		$activeBtn = $btn;
+
+		var offset = $btn.offset();
+		var btnHeight = $btn.outerHeight();
+		var popHeight = $pop.outerHeight() || 150;
+		var top = offset.top + btnHeight + 8;
+		var left = offset.left;
+
+		if (top + popHeight > $(window).scrollTop() + $(window).height()) {
+			top = Math.max(10, offset.top - popHeight - 8);
+		}
+		if (left + 290 > $(window).width()) {
+			left = Math.max(10, $(window).width() - 300);
+		}
+
+		$pop.css({ top: top, left: left });
+
+		var $textInput = $pop.find('.mh-canvas-btn-text-input');
+		var $urlInput = $pop.find('.mh-canvas-url-input');
+
+		// Two-way synchronization:
+		// 1. As user types directly on canvas button, update popover text input
+		if (isTextEditable) {
+			$btn.off('input.mhBtnPopover').on('input.mhBtnPopover', function() {
+				if ($activeUrlPopover) {
+					$activeUrlPopover.find('.mh-canvas-btn-text-input').val(getButtonText($btn));
+				}
+			});
+
+			// 2. As user types in popover text input, update button on canvas and setting
+			$textInput.on('input', function() {
+				var val = $(this).val();
+				setButtonText($btn, val);
+				if (textSettingId && parentApi(textSettingId)) {
+					parentApi(textSettingId).set(val);
+				}
+			});
+		}
+
+		// 3. As user types in popover url input, update href
+		$urlInput.on('input', function() {
+			var val = $(this).val().trim();
+			$btn.attr('href', val);
+		});
+
+		function saveAndClose() {
+			if ($textInput.length) {
+				var newText = $textInput.val().trim();
+				setButtonText($btn, newText);
+				if (textSettingId && parentApi(textSettingId)) {
+					parentApi(textSettingId).set(newText);
+				}
+			}
+			if ($urlInput.length) {
+				var newUrl = $urlInput.val().trim();
+				$btn.attr('href', newUrl);
+				if (urlSettingId && parentApi(urlSettingId)) {
+					parentApi(urlSettingId).set(newUrl);
+				}
+			}
+			closeUrlPopover();
+		}
+
+		$pop.find('.mh-btn-url-save').on('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			saveAndClose();
+		});
+
+		$pop.find('.mh-popover-close').on('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			closeUrlPopover();
+		});
+
+		$pop.find('.mh-btn-popover-sidebar').on('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			if (textSettingId && parentApi.control && parentApi.control(textSettingId)) {
+				parentApi.control(textSettingId).focus();
+			} else if (urlSettingId && parentApi.control && parentApi.control(urlSettingId)) {
+				parentApi.control(urlSettingId).focus();
+			} else if (parentApi.section && parentApi.section('magic_hat_header')) {
+				parentApi.section('magic_hat_header').focus();
+			}
+			closeUrlPopover();
+		});
+
+		$pop.find('input').on('keydown', function(e) {
+			if (e.key === 'Enter') {
+				e.preventDefault();
+				saveAndClose();
+			} else if (e.key === 'Escape') {
+				e.preventDefault();
+				closeUrlPopover();
+			}
+		});
+	}
+
+	$(document).on('click', '[data-mh-btn-url], [data-mh-link]', function(e) {
+		var $btn = $(this);
+
+		if (e.shiftKey) {
+			closeUrlPopover();
+			var textSettingId = $btn.attr('data-mh-focus');
+			var urlSettingId = $btn.attr('data-mh-btn-url') || $btn.attr('data-mh-link');
+			if (textSettingId && parentApi.control && parentApi.control(textSettingId)) {
+				parentApi.control(textSettingId).focus();
+			} else if (urlSettingId && parentApi.control && parentApi.control(urlSettingId)) {
+				parentApi.control(urlSettingId).focus();
+			} else if (parentApi.section && parentApi.section('magic_hat_header')) {
+				parentApi.section('magic_hat_header').focus();
+			}
+			return;
+		}
+
+		e.preventDefault();
+		e.stopPropagation();
+
+		var isTextEditable = ! $btn.is('img') && ! $btn.is('input');
+
+		if (isTextEditable) {
+			if ($btn.attr('contenteditable') !== 'true') {
+				$btn.attr('contenteditable', 'true').attr('spellcheck', 'false');
+			}
+			$btn.focus();
+		}
+
+		// If popover is already active for this exact button, retain focus on button without re-creating
+		if ($activeUrlPopover && $activeBtn && $activeBtn[0] === $btn[0]) {
+			return;
+		}
+
+		showUrlPopover($btn);
+	});
+
+	$(document).on('click', function(e) {
+		if ($activeUrlPopover && !$(e.target).closest('.mh-canvas-url-popover, [data-mh-btn-url], [data-mh-link]').length) {
+			closeUrlPopover();
+		}
+	});
+
 	// In-canvas clicking on Header components
 	$(document).on('click', '#mw-header .mh-logo-link, #mw-header .mh-site-title, #mw-header .mh-logo-img', function(e) {
 		e.preventDefault();
@@ -396,6 +596,9 @@
 	});
 
 	$(document).on('click', '#mw-header .mh-header-cta', function(e) {
+		if ( $(this).is('[data-mh-btn-url]') || $(this).is('[data-mh-focus]') ) {
+			return;
+		}
 		e.preventDefault();
 		if ( parentApi.control && parentApi.control('mh_header_cta_text') ) {
 			parentApi.control('mh_header_cta_text').focus();
@@ -413,6 +616,9 @@
 
 	// In-canvas clicking on Footer components
 	$(document).on('click', '#mw-footer', function(e) {
+		if ( $(e.target).closest('[data-mh-focus], [data-mh-btn-url], [data-mh-link], .mh-canvas-url-popover').length ) {
+			return;
+		}
 		if ( $(e.target).closest('a').length && parentApi.section && parentApi.section('magic_hat_footer') ) {
 			parentApi.section('magic_hat_footer').focus();
 		}
@@ -422,10 +628,69 @@
 		positionHandles();
 	});
 
+	// Inline Search & Menu Quick-Jump Autocomplete
+	function initInlineSearch() {
+		var $searchContainer = $('.mh-header-search-container');
+		if (!$searchContainer.length) return;
+
+		var rawData = $searchContainer.attr('data-menu-items') || '[]';
+		var menuItems = [];
+		try {
+			menuItems = JSON.parse(rawData);
+		} catch (e) {
+			menuItems = [];
+		}
+
+		var $input = $searchContainer.find('.mh-header-search-input');
+		var $dropdown = $searchContainer.find('.mh-search-autocomplete-dropdown');
+
+		// Keyboard shortcut (Cmd+K / Ctrl+K)
+		$(window).off('keydown.mhSearch').on('keydown.mhSearch', function(e) {
+			if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+				e.preventDefault();
+				$input.focus().select();
+			}
+		});
+
+		$input.off('input.mhSearch').on('input.mhSearch', function() {
+			var q = $(this).val().toLowerCase().trim();
+			if (!q) {
+				$dropdown.hide().empty();
+				return;
+			}
+
+			var matches = menuItems.filter(function(item) {
+				return item.title && item.title.toLowerCase().indexOf(q) !== -1;
+			});
+
+			if (!matches.length) {
+				$dropdown.html('<div style="padding: 8px 14px; font-size: 12px; color: #94a3b8;">No direct menu match. Press Enter to run full site search.</div>').show();
+				return;
+			}
+
+			var itemsHtml = '';
+			matches.slice(0, 6).forEach(function(m) {
+				itemsHtml += '<a href="' + m.url + '" class="mh-search-autocomplete-item">' +
+					'<span class="dashicons dashicons-admin-links" style="font-size: 14px; width: 14px; height: 14px; color: #62c9ff;"></span>' +
+					'<span>' + m.title + '</span>' +
+				'</a>';
+			});
+
+			$dropdown.html(itemsHtml).show();
+		});
+
+		$(document).off('click.mhSearch').on('click.mhSearch', function(e) {
+			if (!$(e.target).closest('.mh-header-search-container').length) {
+				$dropdown.hide();
+			}
+		});
+	}
+
 	$(document).ready(function() {
 		setTimeout(function() {
 			positionHandles();
 			initHeroEditables();
+			initInlineSearch();
 		}, 500);
 	});
 
@@ -436,17 +701,7 @@
 				setTimeout(function() {
 					positionHandles();
 					initHeroEditables();
-					if ( activeFocusSettingId ) {
-						var $target = $('[data-mh-focus="' + activeFocusSettingId + '"]');
-						if ( $target.length && $target.is(':visible') ) {
-							$target.attr('contenteditable', 'true').attr('spellcheck', 'false').focus();
-							if ( activeFocusCaret !== null ) {
-								setCaretPosition($target[0], activeFocusCaret);
-							}
-						}
-						activeFocusSettingId = null;
-						activeFocusCaret = null;
-					}
+					initInlineSearch();
 				}, 100);
 			}
 		});
@@ -571,6 +826,290 @@
 		wp.customize( 'mh_border_width', function( value ) {
 			value.bind( function( to ) {
 				document.documentElement.style.setProperty( '--mh-border-width', to + 'px' );
+			} );
+		} );
+
+		// Live Preview: Hero Text & Content settings (instant 0ms updates from sidebar)
+		var heroLiveTextSettings = [
+			{ id: 'mh_hero_badge', selector: '.mh-hero-badge' },
+			{ id: 'mh_hero_headline', selector: '.mh-hero-headline' },
+			{ id: 'mh_hero_subtitle', selector: '.mh-hero-subtitle' },
+			{ id: 'mh_hero_cta_primary_text', selector: '.mh-hero-cta1' },
+			{ id: 'mh_hero_cta_secondary_text', selector: '.mh-hero-cta2' }
+		];
+
+		$.each( heroLiveTextSettings, function( _, item ) {
+			wp.customize( item.id, function( value ) {
+				value.bind( function( newVal ) {
+					var $target = $( item.selector );
+					if ( $target.length && ! $target.is( ':focus' ) ) {
+						$target.text( newVal );
+					}
+				} );
+			} );
+		} );
+
+		wp.customize( 'mh_hero_cta_primary_url', function( value ) {
+			value.bind( function( newUrl ) {
+				$( '.mh-hero-cta1' ).attr( 'href', newUrl );
+			} );
+		} );
+
+		wp.customize( 'mh_hero_cta_secondary_url', function( value ) {
+			value.bind( function( newUrl ) {
+				$( '.mh-hero-cta2' ).attr( 'href', newUrl );
+			} );
+		} );
+
+		wp.customize( 'mh_hero_image', function( value ) {
+			value.bind( function( newImg ) {
+				if ( newImg ) {
+					$( '.mh-hero-image-el' ).attr( 'src', newImg );
+				}
+			} );
+		} );
+
+		// Live Preview: Header text settings
+		wp.customize( 'blogname', function( value ) {
+			value.bind( function( to ) {
+				var $title = $( '#mw-header .mh-site-title' );
+				if ( $title.length && ! $title.is( ':focus' ) ) {
+					$title.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_header_cta_text', function( value ) {
+			value.bind( function( to ) {
+				var $btn = $( '#mw-header .mh-header-cta' );
+				if ( $btn.length && ! $btn.is( ':focus' ) ) {
+					$btn.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_header_cta_url', function( value ) {
+			value.bind( function( to ) {
+				$( '#mw-header .mh-header-cta' ).attr( 'href', to );
+			} );
+		} );
+
+		wp.customize( 'mh_header_ticker_badge', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-ticker-badge' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_header_ticker_text', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-ticker-text' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_header_ticker_url', function( value ) {
+			value.bind( function( to ) {
+				$( '.mh-ticker-link' ).attr( 'href', to );
+			} );
+		} );
+
+		wp.customize( 'mh_header_secondary_cta_text', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-header-ghost-btn' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_header_secondary_cta_url', function( value ) {
+			value.bind( function( to ) {
+				$( '.mh-header-ghost-btn' ).attr( 'href', to );
+			} );
+		} );
+
+		// Live Preview: Footer custom components
+		wp.customize( 'mh_footer_statement_badge', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-statement-badge' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_footer_statement_title', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-statement-title' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_footer_statement_cta_text', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-statement-btn-label' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_footer_statement_cta_url', function( value ) {
+			value.bind( function( to ) {
+				$( '.mh-statement-btn' ).attr( 'href', to );
+			} );
+		} );
+
+		wp.customize( 'mh_footer_newsletter_title', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-newsletter-banner-title' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_footer_newsletter_desc', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-newsletter-banner-desc' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_footer_newsletter_btn_text', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-newsletter-submit' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		// Live Preview: Headers 11-20 and Footers 11-20 custom components
+		wp.customize( 'mh_header_app_env', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-app-env-pill' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_header_highlight_badge', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-highlight-badge-pill' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_header_highlight_url', function( value ) {
+			value.bind( function( to ) {
+				$( '.mh-highlight-badge-pill' ).attr( 'href', to );
+			} );
+		} );
+
+		wp.customize( 'mh_header_tel_number', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-tel-link' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+				$el.attr( 'href', 'tel:' + to.replace(/\s+/g, '') );
+			} );
+		} );
+
+		wp.customize( 'mh_header_docs_version', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-docs-version-pill' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_header_swiss_meta', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-swiss-meta' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_footer_cli_command', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-terminal-code' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_footer_manifesto_quote', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-editorial-quote-text' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_footer_manifesto_author', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-editorial-quote-author' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_footer_status_text', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-status-beacon-text' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		wp.customize( 'mh_footer_status_url', function( value ) {
+			value.bind( function( to ) {
+				$( '.mh-status-incident-link' ).attr( 'href', to );
+			} );
+		} );
+
+		wp.customize( 'mh_footer_podcast_title', function( value ) {
+			value.bind( function( to ) {
+				var $el = $( '.mh-podcast-title' );
+				if ( $el.length && ! $el.is( ':focus' ) ) {
+					$el.text( to );
+				}
+			} );
+		} );
+
+		// Live Preview: Standard Page Layout & Sidebar Width Controls
+		wp.customize( 'mh_page_layout', function( value ) {
+			value.bind( function( to ) {
+				$( '.mh-content-container' )
+					.removeClass( 'mh-layout-no_sidebar mh-layout-left_sidebar mh-layout-right_sidebar mh-layout-three_column' )
+					.addClass( 'mh-layout-' + to );
+			} );
+		} );
+
+		wp.customize( 'mh_sidebar_width', function( value ) {
+			value.bind( function( to ) {
+				document.documentElement.style.setProperty( '--mh-sidebar-width', to + 'px' );
 			} );
 		} );
 	}

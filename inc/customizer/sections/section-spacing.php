@@ -21,7 +21,7 @@ function mh_register_spacing_section( $wp_customize ) {
 	$wp_customize->add_section( 'magic_hat_spacing', array(
 		'title'    => __( '📏 Spacing & Layout', 'xophz-magic-hat' ),
 		'priority' => 60,
-		'panel'    => 'magic_hat_general_settings',
+		'panel'    => 'magic_hat_brand_settings',
 	) );
 	
 	$wp_customize->add_setting( 'mh_space_base', array(

@@ -12,14 +12,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Reorder core sections and panels to align with the design hierarchy.
  *
- * Root sequence:
- * 1. Header (10)
- * 2. Menu Settings (15)
- * 3. General Settings (20)
- * 4. Shop Settings (30)
- * 5. Hero (40)
- * 6. Page Settings / Page AI (50 / 55)
- * 7. Footer (70)
+ * Root sequence (Chakra-aligned descending flow):
+ * 1. Header Settings (10) - Crown (The Magic Hat)
+ * 2. Brand Settings (20)  - Third Eye (Brand Vision)
+ * 3. Menu Settings (30)   - Throat (The Voice)
+ * 4. Hero Settings (40)   - Heart (The Heart)
+ * 5. AI Page Architect (50) - Solar Plexus (Generative Dynamo)
+ * 6. Page Settings (60)   - Physical Form (Page Anatomy)
+ * 7. Shop Settings (70)   - Sacral (The Bazaar / Exchange, optional)
+ * 8. Footer Settings (80) - Root (Bedrock)
  *
  * @param WP_Customize_Manager $wp_customize
  */
@@ -29,49 +30,56 @@ function mh_reorder_customizer_hierarchy( $wp_customize ) {
 		$wp_customize->get_section( 'magic_hat_header' )->priority = 10;
 	}
 
-	if ( $wp_customize->get_panel( 'nav_menus' ) ) {
-		$wp_customize->get_panel( 'nav_menus' )->title    = __( '🧭 Menu Settings', 'xophz-magic-hat' );
-		$wp_customize->get_panel( 'nav_menus' )->priority = 15;
-	}
-	if ( $wp_customize->get_section( 'nav_menus' ) ) {
-		$wp_customize->get_section( 'nav_menus' )->title    = __( '🧭 Menu Settings', 'xophz-magic-hat' );
-		$wp_customize->get_section( 'nav_menus' )->priority = 15;
-	}
-
-	if ( $wp_customize->get_panel( 'magic_hat_general_settings' ) ) {
+	if ( $wp_customize->get_panel( 'magic_hat_brand_settings' ) ) {
+		$wp_customize->get_panel( 'magic_hat_brand_settings' )->title    = __( '👁️ Brand Settings', 'xophz-magic-hat' );
+		$wp_customize->get_panel( 'magic_hat_brand_settings' )->priority = 20;
+	} elseif ( $wp_customize->get_panel( 'magic_hat_general_settings' ) ) {
+		$wp_customize->get_panel( 'magic_hat_general_settings' )->title    = __( '👁️ Brand Settings', 'xophz-magic-hat' );
 		$wp_customize->get_panel( 'magic_hat_general_settings' )->priority = 20;
 	} elseif ( $wp_customize->get_panel( 'magic_hat_site_styles' ) ) {
 		$wp_customize->get_panel( 'magic_hat_site_styles' )->priority = 20;
 	}
 
-	if ( $wp_customize->get_panel( 'woocommerce' ) ) {
-		$wp_customize->get_panel( 'woocommerce' )->title    = __( '🛍️ Shop Settings', 'xophz-magic-hat' );
-		$wp_customize->get_panel( 'woocommerce' )->priority = 30;
+	if ( $wp_customize->get_panel( 'nav_menus' ) ) {
+		$wp_customize->get_panel( 'nav_menus' )->title    = __( '🧭 Menu Settings', 'xophz-magic-hat' );
+		$wp_customize->get_panel( 'nav_menus' )->priority = 30;
 	}
-	if ( $wp_customize->get_section( 'woocommerce' ) ) {
-		$wp_customize->get_section( 'woocommerce' )->title    = __( '🛍️ Shop Settings', 'xophz-magic-hat' );
-		$wp_customize->get_section( 'woocommerce' )->priority = 30;
+	if ( $wp_customize->get_section( 'nav_menus' ) ) {
+		$wp_customize->get_section( 'nav_menus' )->title    = __( '🧭 Menu Settings', 'xophz-magic-hat' );
+		$wp_customize->get_section( 'nav_menus' )->priority = 30;
 	}
 
 	if ( $wp_customize->get_section( 'mh_front_page_hero' ) ) {
+		$wp_customize->get_section( 'mh_front_page_hero' )->title    = __( '💚 Hero Settings', 'xophz-magic-hat' );
 		$wp_customize->get_section( 'mh_front_page_hero' )->priority = 40;
 	}
 
-	if ( $wp_customize->get_section( 'mh_page_builder' ) ) {
-		$wp_customize->get_section( 'mh_page_builder' )->title    = __( '🏗️ Page Settings', 'xophz-magic-hat' );
-		$wp_customize->get_section( 'mh_page_builder' )->priority = 50;
+	if ( $wp_customize->get_section( 'mh_ai_page_architect' ) ) {
+		$wp_customize->get_section( 'mh_ai_page_architect' )->title    = __( '🪄 AI Page Architect', 'xophz-magic-hat' );
+		$wp_customize->get_section( 'mh_ai_page_architect' )->priority = 50;
 	}
 
-	if ( $wp_customize->get_section( 'mh_ai_page_architect' ) ) {
-		$wp_customize->get_section( 'mh_ai_page_architect' )->priority = 55;
+	if ( $wp_customize->get_section( 'mh_page_builder' ) ) {
+		$wp_customize->get_section( 'mh_page_builder' )->title    = __( '🪄 Page Settings', 'xophz-magic-hat' );
+		$wp_customize->get_section( 'mh_page_builder' )->panel    = '';
+		$wp_customize->get_section( 'mh_page_builder' )->priority = 60;
+	}
+
+	if ( $wp_customize->get_panel( 'woocommerce' ) ) {
+		$wp_customize->get_panel( 'woocommerce' )->title    = __( '🛍️ Shop Settings', 'xophz-magic-hat' );
+		$wp_customize->get_panel( 'woocommerce' )->priority = 70;
+	}
+	if ( $wp_customize->get_section( 'woocommerce' ) ) {
+		$wp_customize->get_section( 'woocommerce' )->title    = __( '🛍️ Shop Settings', 'xophz-magic-hat' );
+		$wp_customize->get_section( 'woocommerce' )->priority = 70;
 	}
 
 	if ( $wp_customize->get_section( 'magic_hat_footer' ) ) {
-		$wp_customize->get_section( 'magic_hat_footer' )->priority = 70;
+		$wp_customize->get_section( 'magic_hat_footer' )->priority = 80;
 	}
 
-	// ── 2. General Settings Panel Child Sections ──────────────────
-	$target_panel = $wp_customize->get_panel( 'magic_hat_general_settings' ) ? 'magic_hat_general_settings' : 'magic_hat_site_styles';
+	// ── 2. Brand Settings Panel Child Sections ────────────────────
+	$target_panel = $wp_customize->get_panel( 'magic_hat_brand_settings' ) ? 'magic_hat_brand_settings' : ( $wp_customize->get_panel( 'magic_hat_general_settings' ) ? 'magic_hat_general_settings' : 'magic_hat_site_styles' );
 
 	if ( $wp_customize->get_section( 'title_tagline' ) ) {
 		$wp_customize->get_section( 'title_tagline' )->title    = __( '🆔 Site Identity', 'xophz-magic-hat' );
@@ -81,8 +89,8 @@ function mh_reorder_customizer_hierarchy( $wp_customize ) {
 
 	if ( $wp_customize->get_section( 'static_front_page' ) ) {
 		$wp_customize->get_section( 'static_front_page' )->title    = __( '🏠 Homepage Settings', 'xophz-magic-hat' );
-		$wp_customize->get_section( 'static_front_page' )->panel    = $target_panel;
-		$wp_customize->get_section( 'static_front_page' )->priority = 20;
+		$wp_customize->get_section( 'static_front_page' )->panel    = '';
+		$wp_customize->get_section( 'static_front_page' )->priority = 65;
 	}
 
 	if ( $wp_customize->get_section( 'magic_hat_colors' ) ) {

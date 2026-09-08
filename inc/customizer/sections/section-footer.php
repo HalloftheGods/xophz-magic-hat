@@ -24,24 +24,79 @@ function mh_register_footer_section( $wp_customize ) {
 		'priority'    => 100,
 	) );
 
+	$footer_layouts = array(
+		'columns_4'          => __( '4-Column Mega Footer (Brand + 4 Menu Cols)', 'xophz-magic-hat' ),
+		'columns_3'          => __( '3-Column Balanced Footer (Brand + 2 Menu Cols)', 'xophz-magic-hat' ),
+		'minimal_centered'   => __( 'Centered Minimal (Logo, Inline Nav, Copyright)', 'xophz-magic-hat' ),
+		'split'              => __( 'Split Modern (Brand Left, Menus/Social Right)', 'xophz-magic-hat' ),
+		'bento'              => __( 'Bento Grid Footer (Asymmetrical Cards + Status)', 'xophz-magic-hat' ),
+		'big_statement'      => __( 'Big Statement CTA (Giant Headline + Action Bar)', 'xophz-magic-hat' ),
+		'newsletter_first'   => __( 'Newsletter Lead-In (Full Banner + 3 Menu Cols)', 'xophz-magic-hat' ),
+		'floating_dock'      => __( 'Floating Dock (Compact Single-Row Horizontal Dock)', 'xophz-magic-hat' ),
+		'sitemap_dense'      => __( 'Site Directory / Sitemap (5 Structured Cols + Status)', 'xophz-magic-hat' ),
+		'social_hub'         => __( 'Creator & Community Social Hub (Interactive Cards)', 'xophz-magic-hat' ),
+		'app_download'       => __( 'App Download Strip (App Store + Google Play + QR)', 'xophz-magic-hat' ),
+		'award_trust'        => __( 'Trust & Compliance (SOC-2 + ISO + Encryption Seals)', 'xophz-magic-hat' ),
+		'developer_terminal' => __( 'Developer Terminal (Copyable CLI Snippet + Latency)', 'xophz-magic-hat' ),
+		'ecommerce_store'    => __( 'Commerce Store (Category Directory + Payment Badges)', 'xophz-magic-hat' ),
+		'contact_cards'      => __( 'Global Hubs (Multi-Office Cards + Local Times)', 'xophz-magic-hat' ),
+		'editorial_quote'    => __( 'Philosophy & Manifesto (Large Editorial Quote + Cite)', 'xophz-magic-hat' ),
+		'status_incident'    => __( 'Operations & Uptime (Live Beacon Card + Status SLA)', 'xophz-magic-hat' ),
+		'interactive_faq'    => __( 'Accordion FAQ Quick-Help (Pre-Footer Question Drawer)', 'xophz-magic-hat' ),
+		'podcast_media'      => __( 'Media Stream Player (Podcast Teaser + Channel Badges)', 'xophz-magic-hat' ),
+		'minimal_colophon'   => __( 'Swiss Colophon (Monospace Specifications + Grid)', 'xophz-magic-hat' ),
+	);
+
 	// Footer Layout
 	$wp_customize->add_setting( 'mh_footer_layout', array(
 		'default'           => 'columns_4',
 		'sanitize_callback' => 'sanitize_key',
 		'transport'         => 'postMessage',
 	) );
-	$wp_customize->add_control( 'mh_footer_layout', array(
-		'label'       => __( 'Footer Layout', 'xophz-magic-hat' ),
-		'description' => __( 'Select column layout or clean minimal presentation.', 'xophz-magic-hat' ),
+	$wp_customize->add_control( new Magic_Hat_Layout_Picker_Control( $wp_customize, 'mh_footer_layout', array(
+		'label'       => __( 'Footer Layout Style', 'xophz-magic-hat' ),
+		'description' => __( 'Choose from 20 curated layout templates.', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'layout_type' => 'footer',
+		'layouts'     => $footer_layouts,
+	) ) );
+
+	// Footer Brand Display
+	$wp_customize->add_setting( 'mh_footer_brand_display', array(
+		'default'           => 'both',
+		'sanitize_callback' => 'sanitize_key',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_brand_display', array(
+		'label'       => __( 'Footer Brand Display', 'xophz-magic-hat' ),
+		'description' => __( 'Choose whether to display your logo graphic, text site title, or both.', 'xophz-magic-hat' ),
 		'section'     => 'magic_hat_footer',
 		'type'        => 'select',
 		'choices'     => array(
-			'columns_4'        => __( '4-Column Mega Footer (Brand + 4 Menu Cols)', 'xophz-magic-hat' ),
-			'columns_3'        => __( '3-Column Footer (Brand + 2 Menu Cols)', 'xophz-magic-hat' ),
-			'minimal_centered' => __( 'Centered Minimal (Logo, Inline Nav, Copyright)', 'xophz-magic-hat' ),
-			'split'            => __( 'Split Modern (Brand Left, Menus/Social Right)', 'xophz-magic-hat' ),
+			'both'       => __( 'Logo and Site Title', 'xophz-magic-hat' ),
+			'logo_only'  => __( 'Logo Only (No Site Title)', 'xophz-magic-hat' ),
+			'title_only' => __( 'Site Title Only (No Logo)', 'xophz-magic-hat' ),
+			'none'       => __( 'Hide Brand Identity', 'xophz-magic-hat' ),
 		),
 	) );
+
+	// Footer Logo Max Height
+	$wp_customize->add_setting( 'mh_footer_logo_height', array(
+		'default'           => 40,
+		'sanitize_callback' => 'absint',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( new Magic_Hat_Range_Slider_Control( $wp_customize, 'mh_footer_logo_height', array(
+		'label'       => __( 'Footer Logo Height', 'xophz-magic-hat' ),
+		'description' => __( 'Adjust footer logo scale cleanly.', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'input_attrs' => array(
+			'min'  => 24,
+			'max'  => 100,
+			'step' => 1,
+			'unit' => 'px',
+		),
+	) ) );
 
 	// Footer Background Style
 	$wp_customize->add_setting( 'mh_footer_bg', array(
@@ -110,6 +165,162 @@ function mh_register_footer_section( $wp_customize ) {
 		) );
 	}
 
+	// Big Statement CTA: Badge Text
+	$wp_customize->add_setting( 'mh_footer_statement_badge', array(
+		'default'           => __( 'Next Steps', 'xophz-magic-hat' ),
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_statement_badge', array(
+		'label'       => __( 'Statement Badge Text', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'text',
+	) );
+
+	// Big Statement CTA: Headline
+	$wp_customize->add_setting( 'mh_footer_statement_title', array(
+		'default'           => __( "Let's build something remarkable together.", 'xophz-magic-hat' ),
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_statement_title', array(
+		'label'       => __( 'Statement Headline', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'text',
+	) );
+
+	// Big Statement CTA: Button Text
+	$wp_customize->add_setting( 'mh_footer_statement_cta_text', array(
+		'default'           => __( 'Get Started', 'xophz-magic-hat' ),
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_statement_cta_text', array(
+		'label'       => __( 'Statement Action Button Text', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'text',
+	) );
+
+	// Big Statement CTA: Button URL
+	$wp_customize->add_setting( 'mh_footer_statement_cta_url', array(
+		'default'           => '#contact',
+		'sanitize_callback' => 'esc_url_raw',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_statement_cta_url', array(
+		'label'       => __( 'Statement Action Button URL', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'text',
+	) );
+
+	// Newsletter Lead-In: Title
+	$wp_customize->add_setting( 'mh_footer_newsletter_title', array(
+		'default'           => __( 'Subscribe to our updates', 'xophz-magic-hat' ),
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_newsletter_title', array(
+		'label'       => __( 'Newsletter Banner Title', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'text',
+	) );
+
+	// Newsletter Lead-In: Description
+	$wp_customize->add_setting( 'mh_footer_newsletter_desc', array(
+		'default'           => __( 'Get the latest releases, design inspiration, and news directly to your inbox.', 'xophz-magic-hat' ),
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_newsletter_desc', array(
+		'label'       => __( 'Newsletter Banner Description', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'text',
+	) );
+
+	// Newsletter Lead-In: Button Text
+	$wp_customize->add_setting( 'mh_footer_newsletter_btn_text', array(
+		'default'           => __( 'Join', 'xophz-magic-hat' ),
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_newsletter_btn_text', array(
+		'label'       => __( 'Newsletter Submit Button Text', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'text',
+	) );
+
+	// Developer Terminal: CLI Command
+	$wp_customize->add_setting( 'mh_footer_cli_command', array(
+		'default'           => 'npm install @xophz/magic-hat',
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_cli_command', array(
+		'label'       => __( 'Developer CLI Command Snippet', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'text',
+	) );
+
+	// Manifesto: Quote
+	$wp_customize->add_setting( 'mh_footer_manifesto_quote', array(
+		'default'           => __( '"The best way to predict the future is to architect it with precision, beauty, and unwavering intent."', 'xophz-magic-hat' ),
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_manifesto_quote', array(
+		'label'       => __( 'Manifesto Editorial Quote', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'textarea',
+	) );
+
+	// Manifesto: Author Attribution
+	$wp_customize->add_setting( 'mh_footer_manifesto_author', array(
+		'default'           => __( 'Xophz Philosophy: Project Compass', 'xophz-magic-hat' ),
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_manifesto_author', array(
+		'label'       => __( 'Manifesto Author Attribution', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'text',
+	) );
+
+	// Operations: Status Message
+	$wp_customize->add_setting( 'mh_footer_status_text', array(
+		'default'           => __( 'All Systems Fully Operational', 'xophz-magic-hat' ),
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_status_text', array(
+		'label'       => __( 'System Status Banner Text', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'text',
+	) );
+
+	// Operations: Status URL
+	$wp_customize->add_setting( 'mh_footer_status_url', array(
+		'default'           => '#status',
+		'sanitize_callback' => 'esc_url_raw',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_status_url', array(
+		'label'       => __( 'System Status Target URL', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'text',
+	) );
+
+	// Podcast Teaser: Episode Title
+	$wp_customize->add_setting( 'mh_footer_podcast_title', array(
+		'default'           => __( 'Ep. 42 - The Magic Hat Quantum Leap & Circadian Engines', 'xophz-magic-hat' ),
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_podcast_title', array(
+		'label'       => __( 'Podcast Episode Teaser Title', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'text',
+	) );
+
 	$wp_customize->get_setting( 'blogname' )->transport        = 'postMessage';
 	$wp_customize->get_setting( 'blogdescription' )->transport = 'postMessage';
 
@@ -122,13 +333,27 @@ function mh_register_footer_section( $wp_customize ) {
 			'selector'            => '#mw-header',
 			'settings'            => array(
 				'mh_header_layout',
+				'mh_header_brand_display',
+				'mh_header_logo_height',
 				'mh_header_menu',
 				'mh_header_sticky',
 				'mh_header_width',
 				'mh_header_show_cta',
 				'mh_header_cta_text',
 				'mh_header_cta_url',
+				'mh_header_ticker_badge',
+				'mh_header_ticker_text',
+				'mh_header_ticker_url',
+				'mh_header_secondary_cta_text',
+				'mh_header_secondary_cta_url',
+				'mh_header_app_env',
+				'mh_header_highlight_badge',
+				'mh_header_highlight_url',
+				'mh_header_tel_number',
+				'mh_header_docs_version',
+				'mh_header_swiss_meta',
 				'blogname',
+				'custom_logo',
 			),
 			'container_inclusive' => true,
 			'render_callback'     => 'mh_render_header_markup',
@@ -139,9 +364,24 @@ function mh_register_footer_section( $wp_customize ) {
 			'selector'            => '#mw-footer',
 			'settings'            => array(
 				'mh_footer_layout',
+				'mh_footer_brand_display',
+				'mh_footer_logo_height',
 				'mh_footer_bg',
 				'mh_footer_show_menus',
 				'mh_footer_copyright_text',
+				'mh_footer_statement_badge',
+				'mh_footer_statement_title',
+				'mh_footer_statement_cta_text',
+				'mh_footer_statement_cta_url',
+				'mh_footer_newsletter_title',
+				'mh_footer_newsletter_desc',
+				'mh_footer_newsletter_btn_text',
+				'mh_footer_cli_command',
+				'mh_footer_manifesto_quote',
+				'mh_footer_manifesto_author',
+				'mh_footer_status_text',
+				'mh_footer_status_url',
+				'mh_footer_podcast_title',
 				'mh_social_facebook',
 				'mh_social_twitter',
 				'mh_social_instagram',
@@ -150,6 +390,7 @@ function mh_register_footer_section( $wp_customize ) {
 				'mh_social_github',
 				'blogname',
 				'blogdescription',
+				'custom_logo',
 			),
 			'container_inclusive' => true,
 			'render_callback'     => 'mh_render_footer_markup',
@@ -161,17 +402,10 @@ function mh_register_footer_section( $wp_customize ) {
  * Render footer brand logo and site title in selective refresh
  */
 function mh_render_footer_brand() {
-	?>
-	<a href="<?php echo esc_url( home_url( '/' ) ); ?>" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 12px;">
-		<?php if ( has_site_icon() ) : ?>
-			<img src="<?php echo esc_url( get_site_icon_url( 256 ) ); ?>" alt="Logo" style="height: 128px; width: 128px; object-fit: contain; filter: drop-shadow(0 0 6px rgba(98,201,255,0.4)); opacity: 0.8; border-radius: 12px;" />
-		<?php else : ?>
-			<img src="<?php echo esc_url( get_template_directory_uri() . '/icon.svg' ); ?>" alt="Logo" style="height: 128px; width: 128px; object-fit: contain; filter: drop-shadow(0 0 6px rgba(98,201,255,0.4)); opacity: 0.8;" />
-		<?php endif; ?>
-		<span class="mh-footer-site-name" style="font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.9); font-family: var(--mh-font-heading, sans-serif);"><?php bloginfo( 'name' ); ?></span>
-	</a>
-	<p class="mh-footer-tagline" style="font-size: 14px; line-height: 1.6; max-width: 250px; margin: 0;"><?php bloginfo( 'description' ); ?></p>
-	<?php
+	mh_render_brand_logo( 'footer' );
+	if ( get_bloginfo( 'description' ) ) {
+		echo '<p class="mh-footer-tagline" style="font-size: 14px; line-height: 1.6; max-width: 250px; margin: 0;">' . esc_html( get_bloginfo( 'description' ) ) . '</p>';
+	}
 }
 
 /**

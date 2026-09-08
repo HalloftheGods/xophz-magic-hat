@@ -16,16 +16,26 @@ if ( function_exists( 'mh_render_hero_markup' ) ) {
 }
 ?>
 
-<main id="mw-page-content" class="mh-page-main" style="width: 100%; min-height: 40vh; position: relative; z-index: 1;">
-	<?php
-	if ( have_posts() ) {
-		while ( have_posts() ) {
-			the_post();
-			the_content();
+<div class="<?php echo esc_attr( mh_get_content_container_classes() ); ?>">
+	<?php if ( mh_has_left_sidebar() ) : ?>
+		<?php mh_render_sidebar( 'left' ); ?>
+	<?php endif; ?>
+
+	<main id="mw-page-content" class="mh-page-main site-main" data-mw-type="content">
+		<?php
+		if ( have_posts() ) {
+			while ( have_posts() ) {
+				the_post();
+				the_content();
+			}
 		}
-	}
-	?>
-</main>
+		?>
+	</main>
+
+	<?php if ( mh_has_right_sidebar() ) : ?>
+		<?php mh_render_sidebar( 'right' ); ?>
+	<?php endif; ?>
+</div>
 
 <?php
 get_footer();

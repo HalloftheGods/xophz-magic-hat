@@ -2,7 +2,7 @@
 /**
  * Site Colors Customizer Section Registration
  *
- * Implements accordion-grouped color controls inside General Settings panel.
+ * Implements accordion-grouped color controls inside Brand Settings panel.
  *
  * @package Xophz_Magic_Hat
  */
@@ -18,11 +18,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function mh_register_site_colors_section( $wp_customize ) {
 	// ==============================================
-	// SECTION: Site Colors (Inside General Settings)
+	// SECTION: Site Colors (Inside Brand Settings)
 	// ==============================================
 	$wp_customize->add_section( 'magic_hat_colors', array(
 		'title'       => __( '🎨 Site Colors', 'xophz-magic-hat' ),
-		'panel'       => 'magic_hat_general_settings',
+		'panel'       => 'magic_hat_brand_settings',
 		'priority'    => 30,
 		'description' => __( 'Configure circadian dynamic color modes and customize palette tokens with collapsible accordion groups.', 'xophz-magic-hat' ),
 	) );

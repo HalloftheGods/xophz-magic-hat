@@ -259,7 +259,8 @@ a.secondary_button:hover {
    4. Overlapable Four Boxes Section
    ========================================================================== */
 
-.mh-section-overlap-four-boxes .about-four-boxes-innerrow {
+.mh-section-overlap-four-boxes .about-four-boxes-innerrow,
+.mh-section-overlap-four-boxes .wp-block-columns {
 	display: flex;
 	flex-wrap: wrap;
 	border-radius: var(--mh-radius-lg);
@@ -267,6 +268,8 @@ a.secondary_button:hover {
 	box-shadow: var(--mh-shadow-lg);
 	background: var(--mh-color-card);
 	border: 1px solid var(--mh-color-border-muted);
+	margin-bottom: var(--mh-spacing-6);
+	gap: 0;
 }
 
 .mh-section-overlap-four-boxes .about-four-boxes-imgcol,
