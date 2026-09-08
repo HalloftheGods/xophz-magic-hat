@@ -28,14 +28,24 @@
 		'#mw-header:hover { outline: 1px dashed #2563eb; outline-offset: -1px; }' +
 		'#mh-front-page-hero:hover { outline: 1px dashed #2563eb; outline-offset: -1px; }' +
 		'#mw-footer:hover { outline: 1px dashed #2563eb; outline-offset: -1px; }' +
-		'[data-mh-focus] { position: relative; transition: outline 0.15s, box-shadow 0.15s; }' +
-		'[data-mh-focus]:hover { outline: 2px dashed #2563eb !important; outline-offset: 4px; cursor: pointer; }' +
-		'[data-mh-focus]:focus { outline: 2px solid #2563eb !important; outline-offset: 4px; background: rgba(37,99,235,0.05); }' +
+		'[data-mh-focus], [data-mh-btn-url], [data-mh-link] { position: relative; transition: outline 0.15s, box-shadow 0.15s; }' +
+		'[data-mh-focus]:hover, [data-mh-btn-url]:hover, [data-mh-link]:hover { outline: 2px dashed #2563eb !important; outline-offset: 4px; cursor: pointer; }' +
+		'[data-mh-focus]:focus, [data-mh-btn-url]:focus, [data-mh-link]:focus { outline: 2px solid #62c9ff !important; outline-offset: 4px; background: rgba(98,201,255,0.08); }' +
 		'[data-mh-image]:hover { outline: 2px dashed #2563eb !important; outline-offset: 4px; cursor: pointer; filter: brightness(0.95); }' +
-		'.mh-canvas-url-popover { position: absolute; z-index: 999999; background: #0f172a; color: #f8fafc; border: 1px solid #334155; border-radius: 8px; padding: 10px 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; flex-direction: column; gap: 8px; min-width: 260px; font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }' +
-		'.mh-canvas-url-popover label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; }' +
-		'.mh-canvas-url-popover input { background: #1e293b; border: 1px solid #475569; border-radius: 4px; padding: 6px 8px; color: #ffffff; font-size: 12px; outline: none; }' +
-		'.mh-canvas-url-popover input:focus { border-color: #62c9ff; }';
+		'.mh-canvas-url-popover { position: absolute; z-index: 999999; background: #0f172a; color: #f8fafc; border: 1px solid #334155; border-radius: 8px; padding: 12px 14px; box-shadow: 0 12px 32px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 8px; min-width: 280px; font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; box-sizing: border-box; }' +
+		'.mh-canvas-url-popover .mh-popover-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; }' +
+		'.mh-canvas-url-popover .mh-popover-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #62c9ff; }' +
+		'.mh-canvas-url-popover .mh-popover-close { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 16px; line-height: 1; padding: 0; transition: color 0.15s; }' +
+		'.mh-canvas-url-popover .mh-popover-close:hover { color: #ffffff; }' +
+		'.mh-canvas-url-popover .mh-popover-field { display: flex; flex-direction: column; gap: 4px; }' +
+		'.mh-canvas-url-popover label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #94a3b8; }' +
+		'.mh-canvas-url-popover input[type="text"] { width: 100%; box-sizing: border-box; background: #1e293b; border: 1px solid #475569; border-radius: 4px; padding: 6px 8px; color: #ffffff; font-size: 12px; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }' +
+		'.mh-canvas-url-popover input[type="text"]:focus { border-color: #62c9ff; box-shadow: 0 0 0 1px #62c9ff; }' +
+		'.mh-canvas-url-popover .mh-popover-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }' +
+		'.mh-canvas-url-popover .mh-btn-popover-sidebar { background: transparent; color: #94a3b8; border: none; font-size: 11px; cursor: pointer; padding: 0; text-decoration: underline; transition: color 0.15s; }' +
+		'.mh-canvas-url-popover .mh-btn-popover-sidebar:hover { color: #62c9ff; }' +
+		'.mh-canvas-url-popover .mh-btn-url-save { background: #2563eb; color: #ffffff; border: none; border-radius: 4px; padding: 5px 12px; font-size: 11px; font-weight: 600; cursor: pointer; transition: background 0.15s; }' +
+		'.mh-canvas-url-popover .mh-btn-url-save:hover { background: #1d4ed8; }';
 
 	$('head').append('<style>' + handleCss + '</style>');
 
@@ -247,11 +257,33 @@
 		});
 	}
 
+	function getButtonText($btn) {
+		var $label = $btn.find('.mh-statement-btn-label');
+		if ($label.length) return $label.text().trim();
+		var text = $btn.text().trim();
+		return text.replace(/[\u2192\u2190\u2191\u2193]/g, '').trim();
+	}
+
+	function setButtonText($btn, newText) {
+		var $label = $btn.find('.mh-statement-btn-label');
+		if ($label.length) {
+			$label.text(newText);
+		} else {
+			$btn.text(newText);
+		}
+	}
+
 	// Click on in-canvas elements:
 	// Direct text click retains focus in-place for instant on-site editing without jumping to sidepanel.
 	// Shift-click routes to parent Customizer sidebar control when explicitly requested.
 	$(document).on('click', '[data-mh-focus]', function(e) {
 		var $el = $(this);
+
+		// If this element also has a button URL/link, let the button popover handler manage it cleanly
+		if ( $el.is('[data-mh-btn-url], [data-mh-link]') ) {
+			return;
+		}
+
 		var isTextEditable = ! $el.is('img') && ! $el.is('input');
 
 		if ( isTextEditable ) {
@@ -295,7 +327,7 @@
 	function commitInlineChange($el) {
 		if ( ! $el || ! $el.length || $el.is('img') || $el.is('input') ) return;
 		var settingId = $el.attr('data-mh-focus');
-		var newText = $el.text().trim();
+		var newText = getButtonText($el);
 		if ( settingId && parentApi(settingId) && parentApi(settingId).get() !== newText ) {
 			parentApi(settingId).set(newText);
 		}
@@ -349,10 +381,15 @@
 		heroMediaFrame.open();
 	});
 
-	// ── In-Canvas URL Popover ─────
+	// ── In-Canvas Button & URL Popover ─────
 	var $activeUrlPopover = null;
+	var $activeBtn = null;
 
 	function closeUrlPopover() {
+		if ($activeBtn) {
+			$activeBtn.off('input.mhBtnPopover');
+			$activeBtn = null;
+		}
 		if ($activeUrlPopover) {
 			$activeUrlPopover.remove();
 			$activeUrlPopover = null;
@@ -362,50 +399,109 @@
 	function showUrlPopover($btn) {
 		closeUrlPopover();
 
-		var urlSettingId = $btn.attr('data-mh-btn-url');
-		if (!urlSettingId) return;
+		var urlSettingId = $btn.attr('data-mh-btn-url') || $btn.attr('data-mh-link') || '';
+		var textSettingId = $btn.attr('data-mh-focus') || '';
+		var isTextEditable = Boolean(textSettingId && ! $btn.is('img') && ! $btn.is('input'));
 
-		var currentUrl = (parentApi(urlSettingId) ? parentApi(urlSettingId).get() : '') || $btn.attr('href') || '';
+		var currentUrl = (urlSettingId && parentApi(urlSettingId) ? parentApi(urlSettingId).get() : '') || $btn.attr('href') || '';
+		var currentText = (textSettingId && parentApi(textSettingId) ? parentApi(textSettingId).get() : '') || getButtonText($btn) || '';
+
+		var textHtml = '';
+		if (isTextEditable) {
+			textHtml =
+				'<div class="mh-popover-field">' +
+					'<label>Button Text</label>' +
+					'<input type="text" class="mh-canvas-btn-text-input" value="' + (currentText.replace(/"/g, '&quot;')) + '" placeholder="Button text" spellcheck="false" />' +
+				'</div>';
+		}
+
+		var urlHtml = '';
+		if (urlSettingId || $btn.is('a')) {
+			urlHtml =
+				'<div class="mh-popover-field">' +
+					'<label>Target URL</label>' +
+					'<input type="text" class="mh-canvas-url-input" value="' + (currentUrl.replace(/"/g, '&quot;')) + '" placeholder="https://... or #contact" spellcheck="false" />' +
+				'</div>';
+		}
+
+		var titleText = isTextEditable ? 'Edit Button' : 'Target URL';
 
 		var $pop = $(
 			'<div class="mh-canvas-url-popover">' +
-				'<div style="display: flex; justify-content: space-between; align-items: center;">' +
-					'<label>Target URL</label>' +
-					'<button type="button" class="mh-popover-close" style="background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 16px; line-height: 1; padding: 0;">&times;</button>' +
+				'<div class="mh-popover-header">' +
+					'<span class="mh-popover-title">' + titleText + '</span>' +
+					'<button type="button" class="mh-popover-close" title="Close">&times;</button>' +
 				'</div>' +
-				'<input type="text" class="mh-canvas-url-input" value="' + (currentUrl.replace(/"/g, '&quot;')) + '" placeholder="https://... or #target" />' +
-				'<div style="display: flex; justify-content: flex-end; gap: 6px;">' +
-					'<button type="button" class="mh-btn-url-save" style="background: #2563eb; color: #ffffff; border: none; border-radius: 4px; padding: 4px 10px; font-size: 11px; font-weight: 600; cursor: pointer;">Save</button>' +
+				textHtml +
+				urlHtml +
+				'<div class="mh-popover-footer">' +
+					'<button type="button" class="mh-btn-popover-sidebar" title="Open Customizer sidebar control">Sidebar &rarr;</button>' +
+					'<button type="button" class="mh-btn-url-save">Save</button>' +
 				'</div>' +
 			'</div>'
 		);
 
 		$('body').append($pop);
 		$activeUrlPopover = $pop;
+		$activeBtn = $btn;
 
 		var offset = $btn.offset();
 		var btnHeight = $btn.outerHeight();
-		var popHeight = $pop.outerHeight() || 110;
+		var popHeight = $pop.outerHeight() || 150;
 		var top = offset.top + btnHeight + 8;
 		var left = offset.left;
 
 		if (top + popHeight > $(window).scrollTop() + $(window).height()) {
 			top = Math.max(10, offset.top - popHeight - 8);
 		}
-		if (left + 270 > $(window).width()) {
-			left = Math.max(10, $(window).width() - 280);
+		if (left + 290 > $(window).width()) {
+			left = Math.max(10, $(window).width() - 300);
 		}
 
 		$pop.css({ top: top, left: left });
 
-		var $input = $pop.find('.mh-canvas-url-input');
-		$input.focus().select();
+		var $textInput = $pop.find('.mh-canvas-btn-text-input');
+		var $urlInput = $pop.find('.mh-canvas-url-input');
 
-		function saveUrl() {
-			var newUrl = $input.val().trim();
-			$btn.attr('href', newUrl);
-			if (parentApi(urlSettingId)) {
-				parentApi(urlSettingId).set(newUrl);
+		// Two-way synchronization:
+		// 1. As user types directly on canvas button, update popover text input
+		if (isTextEditable) {
+			$btn.off('input.mhBtnPopover').on('input.mhBtnPopover', function() {
+				if ($activeUrlPopover) {
+					$activeUrlPopover.find('.mh-canvas-btn-text-input').val(getButtonText($btn));
+				}
+			});
+
+			// 2. As user types in popover text input, update button on canvas and setting
+			$textInput.on('input', function() {
+				var val = $(this).val();
+				setButtonText($btn, val);
+				if (textSettingId && parentApi(textSettingId)) {
+					parentApi(textSettingId).set(val);
+				}
+			});
+		}
+
+		// 3. As user types in popover url input, update href
+		$urlInput.on('input', function() {
+			var val = $(this).val().trim();
+			$btn.attr('href', val);
+		});
+
+		function saveAndClose() {
+			if ($textInput.length) {
+				var newText = $textInput.val().trim();
+				setButtonText($btn, newText);
+				if (textSettingId && parentApi(textSettingId)) {
+					parentApi(textSettingId).set(newText);
+				}
+			}
+			if ($urlInput.length) {
+				var newUrl = $urlInput.val().trim();
+				$btn.attr('href', newUrl);
+				if (urlSettingId && parentApi(urlSettingId)) {
+					parentApi(urlSettingId).set(newUrl);
+				}
 			}
 			closeUrlPopover();
 		}
@@ -413,7 +509,7 @@
 		$pop.find('.mh-btn-url-save').on('click', function(e) {
 			e.preventDefault();
 			e.stopPropagation();
-			saveUrl();
+			saveAndClose();
 		});
 
 		$pop.find('.mh-popover-close').on('click', function(e) {
@@ -422,10 +518,23 @@
 			closeUrlPopover();
 		});
 
-		$input.on('keydown', function(e) {
+		$pop.find('.mh-btn-popover-sidebar').on('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			if (textSettingId && parentApi.control && parentApi.control(textSettingId)) {
+				parentApi.control(textSettingId).focus();
+			} else if (urlSettingId && parentApi.control && parentApi.control(urlSettingId)) {
+				parentApi.control(urlSettingId).focus();
+			} else if (parentApi.section && parentApi.section('magic_hat_header')) {
+				parentApi.section('magic_hat_header').focus();
+			}
+			closeUrlPopover();
+		});
+
+		$pop.find('input').on('keydown', function(e) {
 			if (e.key === 'Enter') {
 				e.preventDefault();
-				saveUrl();
+				saveAndClose();
 			} else if (e.key === 'Escape') {
 				e.preventDefault();
 				closeUrlPopover();
@@ -433,13 +542,45 @@
 		});
 	}
 
-	$(document).on('click', '[data-mh-btn-url]', function(e) {
+	$(document).on('click', '[data-mh-btn-url], [data-mh-link]', function(e) {
+		var $btn = $(this);
+
+		if (e.shiftKey) {
+			closeUrlPopover();
+			var textSettingId = $btn.attr('data-mh-focus');
+			var urlSettingId = $btn.attr('data-mh-btn-url') || $btn.attr('data-mh-link');
+			if (textSettingId && parentApi.control && parentApi.control(textSettingId)) {
+				parentApi.control(textSettingId).focus();
+			} else if (urlSettingId && parentApi.control && parentApi.control(urlSettingId)) {
+				parentApi.control(urlSettingId).focus();
+			} else if (parentApi.section && parentApi.section('magic_hat_header')) {
+				parentApi.section('magic_hat_header').focus();
+			}
+			return;
+		}
+
 		e.preventDefault();
-		showUrlPopover($(this));
+		e.stopPropagation();
+
+		var isTextEditable = ! $btn.is('img') && ! $btn.is('input');
+
+		if (isTextEditable) {
+			if ($btn.attr('contenteditable') !== 'true') {
+				$btn.attr('contenteditable', 'true').attr('spellcheck', 'false');
+			}
+			$btn.focus();
+		}
+
+		// If popover is already active for this exact button, retain focus on button without re-creating
+		if ($activeUrlPopover && $activeBtn && $activeBtn[0] === $btn[0]) {
+			return;
+		}
+
+		showUrlPopover($btn);
 	});
 
 	$(document).on('click', function(e) {
-		if ($activeUrlPopover && !$(e.target).closest('.mh-canvas-url-popover, [data-mh-btn-url]').length) {
+		if ($activeUrlPopover && !$(e.target).closest('.mh-canvas-url-popover, [data-mh-btn-url], [data-mh-link]').length) {
 			closeUrlPopover();
 		}
 	});
@@ -475,7 +616,7 @@
 
 	// In-canvas clicking on Footer components
 	$(document).on('click', '#mw-footer', function(e) {
-		if ( $(e.target).closest('[data-mh-focus], [data-mh-btn-url], .mh-canvas-url-popover').length ) {
+		if ( $(e.target).closest('[data-mh-focus], [data-mh-btn-url], [data-mh-link], .mh-canvas-url-popover').length ) {
 			return;
 		}
 		if ( $(e.target).closest('a').length && parentApi.section && parentApi.section('magic_hat_footer') ) {
