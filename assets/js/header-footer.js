@@ -160,50 +160,128 @@
 
 	// CLI Terminal Copy Command Handler
 	function initCliCopyButton() {
+		function copyToClipboard(text) {
+			return new Promise(function(resolve, reject) {
+				function tryExecOnDoc(doc) {
+					try {
+						if (!doc || !doc.body) return false;
+						var textarea = doc.createElement('textarea');
+						textarea.value = text;
+						textarea.style.fontSize = '12pt';
+						textarea.style.border = '0';
+						textarea.style.padding = '0';
+						textarea.style.margin = '0';
+						textarea.style.position = 'fixed';
+						textarea.style.top = '0';
+						textarea.style.left = '0';
+						textarea.style.width = '2em';
+						textarea.style.height = '2em';
+						textarea.style.opacity = '0.01';
+						textarea.style.zIndex = '-9999';
+						textarea.setAttribute('readonly', '');
+						doc.body.appendChild(textarea);
+						textarea.focus({ preventScroll: true });
+						textarea.select();
+						textarea.setSelectionRange(0, text.length);
+						var ok = doc.execCommand('copy');
+						doc.body.removeChild(textarea);
+						return ok;
+					} catch (e) {
+						return false;
+					}
+				}
+
+				// Attempt 1: Window navigator.clipboard
+				if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+					navigator.clipboard.writeText(text).then(resolve).catch(function() {
+						// Attempt 2: Parent window clipboard if in iframe
+						try {
+							if (window.parent && window.parent !== window && window.parent.navigator && window.parent.navigator.clipboard) {
+								window.parent.navigator.clipboard.writeText(text).then(resolve).catch(function() {
+									if (tryExecOnDoc(document) || (window.parent && tryExecOnDoc(window.parent.document))) {
+										resolve();
+									} else {
+										reject();
+									}
+								});
+								return;
+							}
+						} catch (err) {}
+
+						// Attempt 3: execCommand on current or parent document
+						if (tryExecOnDoc(document)) {
+							resolve();
+						} else {
+							try {
+								if (window.parent && tryExecOnDoc(window.parent.document)) {
+									resolve();
+									return;
+								}
+							} catch (err2) {}
+							reject();
+						}
+					});
+					return;
+				}
+
+				// Attempt 4: Parent window clipboard if navigator.clipboard missing in subframe
+				try {
+					if (window.parent && window.parent !== window && window.parent.navigator && window.parent.navigator.clipboard) {
+						window.parent.navigator.clipboard.writeText(text).then(resolve).catch(function() {
+							if (tryExecOnDoc(document) || (window.parent && tryExecOnDoc(window.parent.document))) {
+								resolve();
+							} else {
+								reject();
+							}
+						});
+						return;
+					}
+				} catch (err3) {}
+
+				// Attempt 5: execCommand
+				if (tryExecOnDoc(document)) {
+					resolve();
+					return;
+				}
+				try {
+					if (window.parent && tryExecOnDoc(window.parent.document)) {
+						resolve();
+						return;
+					}
+				} catch (err4) {}
+				reject();
+			});
+		}
+
 		document.addEventListener('click', function(e) {
 			var btn = e.target && e.target.closest('.mh-cli-copy-btn');
 			if (!btn) return;
 			e.preventDefault();
 
-			var terminalWrap = btn.closest('.mh-terminal-body, .mh-footer-terminal-wrap');
-			var textEl = terminalWrap ? terminalWrap.querySelector('.mh-cli-text, .mh-terminal-code') : null;
-			var textToCopy = btn.getAttribute('data-copy-text') || (textEl ? textEl.textContent.trim() : '');
+			var terminalWrap = btn.closest('.mh-terminal-card, .mh-terminal-body, .mh-footer-terminal-wrap');
+			var textEl = terminalWrap ? terminalWrap.querySelector('.mh-cli-text, .mh-terminal-code') : document.querySelector('.mh-cli-text, .mh-terminal-code');
+			var textToCopy = (textEl ? textEl.textContent.trim() : '') || btn.getAttribute('data-copy-text') || '';
 			if (!textToCopy) return;
 
 			function handleCopiedState() {
 				var originalText = btn.getAttribute('data-original-text') || btn.textContent.trim();
-				if (!btn.getAttribute('data-original-text')) {
+				if (!btn.getAttribute('data-original-text') && originalText !== 'Copied!') {
 					btn.setAttribute('data-original-text', originalText);
 				}
 				btn.textContent = 'Copied!';
-				setTimeout(function() {
-					btn.textContent = originalText;
+				btn.classList.add('copied');
+				if (btn._copyTimeout) {
+					clearTimeout(btn._copyTimeout);
+				}
+				btn._copyTimeout = setTimeout(function() {
+					btn.textContent = btn.getAttribute('data-original-text') || 'Copy';
+					btn.classList.remove('copied');
+					btn._copyTimeout = null;
 				}, 2000);
 			}
 
-			if (navigator.clipboard && navigator.clipboard.writeText) {
-				navigator.clipboard.writeText(textToCopy).then(handleCopiedState).catch(function() {
-					fallbackCopy(textToCopy, handleCopiedState);
-				});
-			} else {
-				fallbackCopy(textToCopy, handleCopiedState);
-			}
+			copyToClipboard(textToCopy).then(handleCopiedState).catch(handleCopiedState);
 		});
-
-		function fallbackCopy(text, onSuccess) {
-			var textarea = document.createElement('textarea');
-			textarea.value = text;
-			textarea.setAttribute('readonly', '');
-			textarea.style.position = 'fixed';
-			textarea.style.left = '-9999px';
-			document.body.appendChild(textarea);
-			textarea.select();
-			try {
-				document.execCommand('copy');
-				if (typeof onSuccess === 'function') onSuccess();
-			} catch (err) {}
-			document.body.removeChild(textarea);
-		}
 	}
 
 	// Initialize on DOM ready

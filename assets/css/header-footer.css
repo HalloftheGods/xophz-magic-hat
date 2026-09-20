@@ -1947,6 +1947,11 @@
   background: #2563eb;
   color: #ffffff;
 }
+.mh-cli-copy-btn.copied {
+  background: #059669;
+  border-color: #059669;
+  color: #ffffff;
+}
 .mh-terminal-nav-row {
   display: flex;
   align-items: center;
