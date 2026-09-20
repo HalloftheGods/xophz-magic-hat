@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [26.9.11] - 2026-09-07
 
 ### Added
+- Hero Mobile Phone iFrame Mockup Option (`inc/hero.php`, `assets/css/sections/hero-overlap.css`): Added `mh_hero_media_type` (`image` vs `iframe`) and `mh_hero_iframe_url` controls to Customizer Front Page Hero settings and selective refresh. Embedded an interactive 9:19.5 mobile phone mockup frame with speaker notch, front camera lens, sensor, screen, and home indicator. Implemented responsive styling to automatically hide the mobile phone iframe mockup and media container on screens 768px and smaller.
 - Transparent Hero Background Option (`inc/hero.php`): Added `transparent` choice to `mh_hero_bg_type` in the Customizer Front Page Hero controls and render template, allowing background canvas animations and global body gradients to display cleanly through the hero section without solid surface interference.
 - 20 Bespoke Header Archetypes (`inc/header-footer.php`, `inc/customizer/sections/section-header.php`, `assets/css/header-footer.css`, `assets/js/customizer-preview-header-footer.js`, `assets/js/customizer-layout-modal.js`): Expanded header layouts to 20 unique archetypes. New additions include:
   - Console App Header (`app_header`): Developer console bar with workspace environment pill, live notification beacon, and user menu action.

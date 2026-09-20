@@ -255,6 +255,101 @@ a.secondary_button:hover {
 	border: 1px solid var(--mh-color-border-muted);
 }
 
+/* Hero Phone Mockup (Mobile Ratio iFrame) */
+.mh-hero-phone-mockup {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	margin: 0 auto;
+}
+
+.mh-phone-frame {
+	position: relative;
+	width: 320px;
+	height: 650px;
+	aspect-ratio: 9 / 19.5;
+	max-height: 80vh;
+	background: #0f172a;
+	border: 10px solid #1e293b;
+	border-radius: 44px;
+	box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08), 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(98, 201, 255, 0.15);
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.mh-phone-speaker-notch {
+	position: absolute;
+	top: 10px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 90px;
+	height: 20px;
+	background: #020617;
+	border-radius: 20px;
+	z-index: 10;
+	pointer-events: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+}
+
+.mh-phone-lens {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: #0f172a;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mh-phone-sensor {
+	width: 4px;
+	height: 4px;
+	border-radius: 50%;
+	background: #1e293b;
+}
+
+.mh-phone-screen {
+	width: 100%;
+	height: 100%;
+	background: #ffffff;
+	border-radius: 34px;
+	overflow: hidden;
+	position: relative;
+}
+
+.mh-hero-iframe {
+	width: 100%;
+	height: 100%;
+	border: none;
+	display: block;
+	background: #ffffff;
+}
+
+.mh-phone-home-indicator {
+	position: absolute;
+	bottom: 8px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 100px;
+	height: 4px;
+	background: rgba(255, 255, 255, 0.35);
+	border-radius: 9999px;
+	z-index: 10;
+	pointer-events: none;
+}
+
+/* Hide on mobile devices (< 768px) */
+@media (max-width: 768px) {
+	.mh-hero-phone-mockup,
+	.mh-hero-media-iframe {
+		display: none !important;
+	}
+}
+
 /* ==========================================================================
    4. Overlapable Four Boxes Section
    ========================================================================== */
