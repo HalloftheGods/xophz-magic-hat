@@ -266,80 +266,40 @@ a.secondary_button:hover {
 
 .mh-phone-frame {
 	position: relative;
-	width: 320px;
-	height: 650px;
-	aspect-ratio: 9 / 19.5;
-	max-height: 80vh;
-	background: #0f172a;
-	border: 10px solid #1e293b;
-	border-radius: 44px;
-	box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08), 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(98, 201, 255, 0.15);
+	width: 100%;
+	max-width: 340px;
+	background: var(--mh-color-card, #0f172a);
+	border: 1px solid var(--mh-color-border-muted, #cbd5e1);
+	border-radius: 28px;
+	padding: 12px;
+	box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05);
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
-	overflow: hidden;
-}
-
-.mh-phone-speaker-notch {
-	position: absolute;
-	top: 10px;
-	left: 50%;
-	transform: translateX(-50%);
-	width: 90px;
-	height: 20px;
-	background: #020617;
-	border-radius: 20px;
-	z-index: 10;
-	pointer-events: none;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 6px;
-}
-
-.mh-phone-lens {
-	width: 8px;
-	height: 8px;
-	border-radius: 50%;
-	background: #0f172a;
-	border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.mh-phone-sensor {
-	width: 4px;
-	height: 4px;
-	border-radius: 50%;
-	background: #1e293b;
 }
 
 .mh-phone-screen {
 	width: 100%;
 	height: 100%;
-	background: #ffffff;
-	border-radius: 34px;
+	aspect-ratio: 9 / 19.5;
+	min-height: 560px;
+	max-height: 80vh;
+	background: #000000;
+	border-radius: 18px;
 	overflow: hidden;
 	position: relative;
+	display: flex;
 }
 
 .mh-hero-iframe {
 	width: 100%;
 	height: 100%;
-	border: none;
+	min-height: 560px;
+	border: none !important;
+	outline: none;
 	display: block;
 	background: #ffffff;
-}
-
-.mh-phone-home-indicator {
-	position: absolute;
-	bottom: 8px;
-	left: 50%;
-	transform: translateX(-50%);
-	width: 100px;
-	height: 4px;
-	background: rgba(255, 255, 255, 0.35);
-	border-radius: 9999px;
-	z-index: 10;
-	pointer-events: none;
+	border-radius: 18px;
 }
 
 /* Hide on mobile devices (< 768px) */

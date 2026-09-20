@@ -286,16 +286,11 @@ function mh_render_hero_media( $media_type, $image_url, $iframe_url, $headline, 
 		$url = ! empty( $iframe_url ) ? $iframe_url : home_url( '/' );
 		ob_start();
 		?>
-		<div class="mh-hero-phone-mockup" data-mh-focus="mh_hero_iframe_url">
-			<div class="mh-phone-frame">
-				<div class="mh-phone-speaker-notch">
-					<div class="mh-phone-lens"></div>
-					<div class="mh-phone-sensor"></div>
+		<div class="mh-hero-phone-mockup" data-mh-focus="mh_hero_iframe_url" style="display: flex; justify-content: center; align-items: center; width: 100%; margin: 0 auto;">
+			<div class="mh-phone-frame" style="position: relative; width: 100%; max-width: 340px; background: var(--mh-color-card, #0f172a); border: 1px solid var(--mh-color-border-muted, #cbd5e1); border-radius: 28px; padding: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05); box-sizing: border-box; display: flex; flex-direction: column;">
+				<div class="mh-phone-screen" style="width: 100%; aspect-ratio: 9 / 19.5; min-height: 560px; max-height: 80vh; background: #000000; border-radius: 18px; overflow: hidden; position: relative; display: flex;">
+					<iframe class="mh-hero-iframe" src="<?php echo esc_url( $url ); ?>" title="<?php echo esc_attr( $headline ); ?>" loading="lazy" style="width: 100%; height: 100%; min-height: 560px; border: none !important; outline: none; display: block; background: #ffffff; border-radius: 18px;"></iframe>
 				</div>
-				<div class="mh-phone-screen">
-					<iframe class="mh-hero-iframe" src="<?php echo esc_url( $url ); ?>" title="<?php echo esc_attr( $headline ); ?>" loading="lazy"></iframe>
-				</div>
-				<div class="mh-phone-home-indicator"></div>
 			</div>
 		</div>
 		<?php
@@ -430,7 +425,7 @@ function mh_render_hero_markup( $post_id = null ) {
 							<?php endif; ?>
 						</div>
 					</div>
-					<div class="mh-hero-media<?php echo 'iframe' === $media_type ? ' mh-hero-media-iframe' : ''; ?>" style="text-align: center;">
+					<div class="mh-hero-media<?php echo 'iframe' === $media_type ? ' mh-hero-media-iframe' : ''; ?>" style="text-align: center; display: flex; justify-content: center;">
 						<?php echo mh_render_hero_media( $media_type, $image_url, $iframe_url, $headline, 'width: 100%; max-height: 480px; object-fit: cover; border-radius: 14px; box-shadow: 0 20px 35px -10px rgba(0,0,0,0.12); border: 1px solid var(--mh-color-border-muted, #e2e8f0);' ); ?>
 					</div>
 				</div>
@@ -462,7 +457,7 @@ function mh_render_hero_markup( $post_id = null ) {
 						<?php endif; ?>
 					</div>
 					<?php if ( 'iframe' === $media_type || ! empty( $image_url ) ) : ?>
-						<div class="mh-hero-media<?php echo 'iframe' === $media_type ? ' mh-hero-media-iframe' : ''; ?>" style="margin-top: 20px;">
+						<div class="mh-hero-media<?php echo 'iframe' === $media_type ? ' mh-hero-media-iframe' : ''; ?>" style="margin-top: 20px; display: flex; justify-content: center;">
 							<?php echo mh_render_hero_media( $media_type, $image_url, $iframe_url, $headline, 'width: 100%; max-height: 420px; object-fit: cover; border-radius: 12px; box-shadow: 0 25px 40px -15px rgba(0,0,0,0.15); border: 1px solid var(--mh-color-border-muted, #e2e8f0);' ); ?>
 						</div>
 					<?php endif; ?>

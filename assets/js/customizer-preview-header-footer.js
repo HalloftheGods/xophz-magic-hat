@@ -251,7 +251,7 @@
 		$('[data-mh-focus]').each(function() {
 			var $el = $(this);
 			// Enable inline editing for text elements
-			if ( ! $el.is('img') && ! $el.is('input') && ! $el.is('nav') && ! $el.is('ul') ) {
+			if ( ! $el.is('img') && ! $el.is('input') && ! $el.is('nav') && ! $el.is('ul') && ! $el.is('iframe') && ! $el.hasClass('mh-hero-phone-mockup') && ! $el.closest('.mh-hero-phone-mockup').length ) {
 				$el.attr('contenteditable', 'true').attr('spellcheck', 'false');
 			}
 		});
@@ -872,6 +872,12 @@
 				if ( newImg ) {
 					$( '.mh-hero-image-el' ).attr( 'src', newImg );
 				}
+			} );
+		} );
+
+		wp.customize( 'mh_hero_iframe_url', function( value ) {
+			value.bind( function( newUrl ) {
+				$( '.mh-hero-iframe' ).attr( 'src', newUrl || '/' );
 			} );
 		} );
 
