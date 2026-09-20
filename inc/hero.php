@@ -198,10 +198,11 @@ function xophz_magic_hat_register_hero_customizer( $wp_customize ) {
 		'section'     => 'mh_front_page_hero',
 		'label'       => __( 'Hero Background Surface', 'xophz-magic-hat' ),
 		'choices'     => array(
-			'default'  => __( 'Theme Surface (Circadian Daylight)', 'xophz-magic-hat' ),
-			'subtle'   => __( 'Subtle Slate Tint', 'xophz-magic-hat' ),
-			'gradient' => __( 'Soft Linear Gradient', 'xophz-magic-hat' ),
-			'dark'     => __( 'Deep Obsidian Slate', 'xophz-magic-hat' ),
+			'default'     => __( 'Theme Surface (Circadian Daylight)', 'xophz-magic-hat' ),
+			'transparent' => __( 'Transparent (Allow Canvas / Background Through)', 'xophz-magic-hat' ),
+			'subtle'      => __( 'Subtle Slate Tint', 'xophz-magic-hat' ),
+			'gradient'    => __( 'Soft Linear Gradient', 'xophz-magic-hat' ),
+			'dark'        => __( 'Deep Obsidian Slate', 'xophz-magic-hat' ),
 		),
 	) );
 
@@ -302,7 +303,9 @@ function mh_render_hero_markup( $post_id = null ) {
 
 	// Background surface
 	$bg_style = 'background: var(--mh-color-body, #ffffff);';
-	if ( $bg_type === 'subtle' ) {
+	if ( $bg_type === 'transparent' ) {
+		$bg_style = 'background: transparent; border-bottom: none;';
+	} elseif ( $bg_type === 'subtle' ) {
 		$bg_style = 'background: var(--mh-color-section, #f8fafc);';
 	} elseif ( $bg_type === 'gradient' ) {
 		$bg_style = 'background: linear-gradient(135deg, var(--mh-color-body, #f8fafc) 0%, var(--mh-color-section, #eff6ff) 100%);';

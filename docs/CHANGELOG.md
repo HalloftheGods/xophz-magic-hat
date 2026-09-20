@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [26.9.11] - 2026-09-07
 
 ### Added
+- Transparent Hero Background Option (`inc/hero.php`): Added `transparent` choice to `mh_hero_bg_type` in the Customizer Front Page Hero controls and render template, allowing background canvas animations and global body gradients to display cleanly through the hero section without solid surface interference.
 - 20 Bespoke Header Archetypes (`inc/header-footer.php`, `inc/customizer/sections/section-header.php`, `assets/css/header-footer.css`, `assets/js/customizer-preview-header-footer.js`, `assets/js/customizer-layout-modal.js`): Expanded header layouts to 20 unique archetypes. New additions include:
   - Console App Header (`app_header`): Developer console bar with workspace environment pill, live notification beacon, and user menu action.
   - Mega Menu Directory (`mega_menu_bar`): Enterprise directory navigation with section indicators, sales telephone link, and action CTA.
