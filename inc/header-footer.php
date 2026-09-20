@@ -166,6 +166,49 @@ function mh_render_split_nav_items( $part = 'left', $menu_id_setting = 0 ) {
 }
 
 /**
+ * Render Footer Navigation Menu according to Customizer selection or theme location fallback.
+ *
+ * @param mixed $menu_setting Setting from theme_mod 'mh_footer_menu'.
+ * @param array $args         Optional wp_nav_menu argument overrides.
+ */
+function mh_render_footer_nav_menu( $menu_setting = '_footer_1', $args = array() ) {
+	$menu_class = isset( $args['menu_class'] ) ? $args['menu_class'] : 'mh-inline-menu';
+	$depth      = isset( $args['depth'] ) ? (int) $args['depth'] : 1;
+	$container  = isset( $args['container'] ) ? $args['container'] : false;
+	$fallback   = isset( $args['fallback_cb'] ) ? $args['fallback_cb'] : false;
+
+	$menu_args = array(
+		'container'   => $container,
+		'menu_class'  => $menu_class,
+		'depth'       => $depth,
+		'fallback_cb' => $fallback,
+	);
+
+	if ( ! empty( $menu_setting ) && ! in_array( $menu_setting, array( '_footer_1', '_primary', '_footer_2', '_footer_3', '_footer_4' ), true ) && is_nav_menu( $menu_setting ) ) {
+		$menu_args['menu'] = $menu_setting;
+	} elseif ( $menu_setting === '_primary' ) {
+		$menu_args['theme_location'] = 'primary';
+	} elseif ( $menu_setting === '_footer_2' ) {
+		$menu_args['theme_location'] = 'footer_2';
+	} elseif ( $menu_setting === '_footer_3' ) {
+		$menu_args['theme_location'] = 'footer_3';
+	} elseif ( $menu_setting === '_footer_4' ) {
+		$menu_args['theme_location'] = 'footer_4';
+	} else {
+		// Default _footer_1, fallback to primary if footer_1 is empty
+		if ( has_nav_menu( 'footer_1' ) ) {
+			$menu_args['theme_location'] = 'footer_1';
+		} elseif ( has_nav_menu( 'primary' ) ) {
+			$menu_args['theme_location'] = 'primary';
+		} else {
+			$menu_args['theme_location'] = 'footer_1';
+		}
+	}
+
+	wp_nav_menu( $menu_args );
+}
+
+/**
  * Render brand logo and/or site title according to customizer settings.
  *
  * @param string $location 'header' or 'footer'
@@ -819,6 +862,7 @@ function mh_render_footer_markup() {
 	$layout       = get_theme_mod( 'mh_footer_layout', 'columns_4' );
 	$bg_style     = get_theme_mod( 'mh_footer_bg', 'surface_section' );
 	$show_menus   = get_theme_mod( 'mh_footer_show_menus', true );
+	$menu_setting = get_theme_mod( 'mh_footer_menu', '_footer_1' );
 	$raw_copy     = get_theme_mod( 'mh_footer_copyright_text', '&copy; {year} {site_title}. All rights reserved.' );
 
 	$copyright_text = str_replace(
@@ -855,18 +899,17 @@ function mh_render_footer_markup() {
 
 					<nav class="mh-footer-inline-nav" aria-label="<?php esc_attr_e( 'Footer Navigation', 'xophz-magic-hat' ); ?>">
 						<?php 
-						if ( has_nav_menu( 'primary' ) ) {
-							wp_nav_menu( array( 'theme_location' => 'primary', 'container' => false, 'menu_class' => 'mh-inline-menu', 'depth' => 1, 'fallback_cb' => false ) );
-						} elseif ( has_nav_menu( 'footer_1' ) ) {
-							wp_nav_menu( array( 'theme_location' => 'footer_1', 'container' => false, 'menu_class' => 'mh-inline-menu', 'depth' => 1, 'fallback_cb' => false ) );
-						} else {
-							echo '<ul class="mh-inline-menu">';
-							echo '<li><a href="#about">' . esc_html__( 'About', 'xophz-magic-hat' ) . '</a></li>';
-							echo '<li><a href="#services">' . esc_html__( 'Services', 'xophz-magic-hat' ) . '</a></li>';
-							echo '<li><a href="#portfolio">' . esc_html__( 'Portfolio', 'xophz-magic-hat' ) . '</a></li>';
-							echo '<li><a href="#contact">' . esc_html__( 'Contact', 'xophz-magic-hat' ) . '</a></li>';
-							echo '</ul>';
-						}
+						mh_render_footer_nav_menu( $menu_setting, array(
+							'menu_class'  => 'mh-inline-menu',
+							'fallback_cb' => function() {
+								echo '<ul class="mh-inline-menu">';
+								echo '<li><a href="#about">' . esc_html__( 'About', 'xophz-magic-hat' ) . '</a></li>';
+								echo '<li><a href="#services">' . esc_html__( 'Services', 'xophz-magic-hat' ) . '</a></li>';
+								echo '<li><a href="#portfolio">' . esc_html__( 'Portfolio', 'xophz-magic-hat' ) . '</a></li>';
+								echo '<li><a href="#contact">' . esc_html__( 'Contact', 'xophz-magic-hat' ) . '</a></li>';
+								echo '</ul>';
+							},
+						) );
 						?>
 					</nav>
 
@@ -890,11 +933,10 @@ function mh_render_footer_markup() {
 					<div class="mh-footer-split-right">
 						<nav class="mh-footer-inline-nav" aria-label="<?php esc_attr_e( 'Footer Navigation', 'xophz-magic-hat' ); ?>">
 							<?php 
-							if ( has_nav_menu( 'footer_1' ) ) {
-								wp_nav_menu( array( 'theme_location' => 'footer_1', 'container' => false, 'menu_class' => 'mh-inline-menu', 'depth' => 1, 'fallback_cb' => false ) );
-							} else {
-								mh_default_nav_fallback();
-							}
+							mh_render_footer_nav_menu( $menu_setting, array(
+								'menu_class'  => 'mh-inline-menu',
+								'fallback_cb' => 'mh_default_nav_fallback',
+							) );
 							?>
 						</nav>
 						<?php mh_render_footer_social_icons(); ?>
@@ -933,19 +975,29 @@ function mh_render_footer_markup() {
 						</div>
 
 						<!-- Tile 3: Resources -->
-						<div class="mh-bento-tile mh-bento-tile-resources">
-							<h4 class="mh-footer-heading"><?php esc_html_e( 'Resources', 'xophz-magic-hat' ); ?></h4>
-							<?php
-							if ( has_nav_menu( 'footer_1' ) ) {
-								wp_nav_menu( array( 'theme_location' => 'footer_1', 'container' => false, 'menu_class' => 'mh-footer-menu-list', 'depth' => 1, 'fallback_cb' => false ) );
-							} else {
-								echo '<ul class="mh-footer-menu-list">';
-								echo '<li><a href="#about">' . esc_html__( 'About Us', 'xophz-magic-hat' ) . '</a></li>';
-								echo '<li><a href="#features">' . esc_html__( 'Features', 'xophz-magic-hat' ) . '</a></li>';
-								echo '<li><a href="#pricing">' . esc_html__( 'Pricing', 'xophz-magic-hat' ) . '</a></li>';
-								echo '<li><a href="#contact">' . esc_html__( 'Contact', 'xophz-magic-hat' ) . '</a></li>';
-								echo '</ul>';
+						<?php
+						$bento_res_title = __( 'Resources', 'xophz-magic-hat' );
+						if ( ! empty( $menu_setting ) && ! in_array( $menu_setting, array( '_footer_1', '_primary' ), true ) && is_nav_menu( $menu_setting ) ) {
+							$custom_m = wp_get_nav_menu_object( $menu_setting );
+							if ( $custom_m && ! empty( $custom_m->name ) ) {
+								$bento_res_title = $custom_m->name;
 							}
+						}
+						?>
+						<div class="mh-bento-tile mh-bento-tile-resources">
+							<h4 class="mh-footer-heading"><?php echo esc_html( $bento_res_title ); ?></h4>
+							<?php
+							mh_render_footer_nav_menu( $menu_setting, array(
+								'menu_class'  => 'mh-footer-menu-list',
+								'fallback_cb' => function() {
+									echo '<ul class="mh-footer-menu-list">';
+									echo '<li><a href="#about">' . esc_html__( 'About Us', 'xophz-magic-hat' ) . '</a></li>';
+									echo '<li><a href="#features">' . esc_html__( 'Features', 'xophz-magic-hat' ) . '</a></li>';
+									echo '<li><a href="#pricing">' . esc_html__( 'Pricing', 'xophz-magic-hat' ) . '</a></li>';
+									echo '<li><a href="#contact">' . esc_html__( 'Contact', 'xophz-magic-hat' ) . '</a></li>';
+									echo '</ul>';
+								},
+							) );
 							?>
 						</div>
 
@@ -995,11 +1047,10 @@ function mh_render_footer_markup() {
 						</div>
 						<nav class="mh-statement-nav" aria-label="<?php esc_attr_e( 'Footer Navigation', 'xophz-magic-hat' ); ?>">
 							<?php
-							if ( has_nav_menu( 'primary' ) ) {
-								wp_nav_menu( array( 'theme_location' => 'primary', 'container' => false, 'menu_class' => 'mh-inline-menu', 'depth' => 1, 'fallback_cb' => false ) );
-							} else {
-								mh_default_nav_fallback();
-							}
+							mh_render_footer_nav_menu( $menu_setting, array(
+								'menu_class'  => 'mh-inline-menu',
+								'fallback_cb' => 'mh_default_nav_fallback',
+							) );
 							?>
 						</nav>
 						<div class="mh-statement-social">
@@ -1051,7 +1102,19 @@ function mh_render_footer_markup() {
 							if ( $rendered >= 3 ) break;
 							$rendered++;
 							$menu_name = $default_heading;
-							if ( isset( $locations[ $loc_slug ] ) && $locations[ $loc_slug ] ) {
+							if ( $loc_slug === 'footer_1' && ! empty( $menu_setting ) && $menu_setting !== '_footer_1' ) {
+								if ( ! in_array( $menu_setting, array( '_primary', '_footer_2', '_footer_3', '_footer_4' ), true ) && is_nav_menu( $menu_setting ) ) {
+									$custom_m = wp_get_nav_menu_object( $menu_setting );
+									if ( $custom_m && ! empty( $custom_m->name ) ) {
+										$menu_name = $custom_m->name;
+									}
+								} elseif ( $menu_setting === '_primary' && isset( $locations['primary'] ) && $locations['primary'] ) {
+									$menu_obj = wp_get_nav_menu_object( $locations['primary'] );
+									if ( $menu_obj && ! empty( $menu_obj->name ) ) {
+										$menu_name = $menu_obj->name;
+									}
+								}
+							} elseif ( isset( $locations[ $loc_slug ] ) && $locations[ $loc_slug ] ) {
 								$menu_obj = wp_get_nav_menu_object( $locations[ $loc_slug ] );
 								if ( $menu_obj && ! empty( $menu_obj->name ) ) {
 									$menu_name = $menu_obj->name;
@@ -1061,7 +1124,18 @@ function mh_render_footer_markup() {
 							<div class="mh-footer-col mh-footer-nav-col">
 								<h4 class="mh-footer-heading"><?php echo esc_html( $menu_name ); ?></h4>
 								<?php
-								if ( has_nav_menu( $loc_slug ) ) {
+								if ( $loc_slug === 'footer_1' ) {
+									mh_render_footer_nav_menu( $menu_setting, array(
+										'menu_class'  => 'mh-footer-menu-list',
+										'fallback_cb' => function() {
+											echo '<ul class="mh-footer-menu-list">';
+											echo '<li><a href="#about">' . esc_html__( 'About', 'xophz-magic-hat' ) . '</a></li>';
+											echo '<li><a href="#features">' . esc_html__( 'Features', 'xophz-magic-hat' ) . '</a></li>';
+											echo '<li><a href="#contact">' . esc_html__( 'Contact', 'xophz-magic-hat' ) . '</a></li>';
+											echo '</ul>';
+										},
+									) );
+								} elseif ( has_nav_menu( $loc_slug ) ) {
 									wp_nav_menu( array( 'theme_location' => $loc_slug, 'container' => false, 'menu_class' => 'mh-footer-menu-list', 'depth' => 1, 'fallback_cb' => false ) );
 								} else {
 									echo '<ul class="mh-footer-menu-list">';
@@ -1092,11 +1166,10 @@ function mh_render_footer_markup() {
 						</div>
 						<nav class="mh-dock-center" aria-label="<?php esc_attr_e( 'Footer Navigation', 'xophz-magic-hat' ); ?>">
 							<?php
-							if ( has_nav_menu( 'primary' ) ) {
-								wp_nav_menu( array( 'theme_location' => 'primary', 'container' => false, 'menu_class' => 'mh-inline-menu', 'depth' => 1, 'fallback_cb' => false ) );
-							} else {
-								mh_default_nav_fallback();
-							}
+							mh_render_footer_nav_menu( $menu_setting, array(
+								'menu_class'  => 'mh-inline-menu',
+								'fallback_cb' => 'mh_default_nav_fallback',
+							) );
 							?>
 						</nav>
 						<div class="mh-dock-right">
@@ -1237,11 +1310,10 @@ function mh_render_footer_markup() {
 						</div>
 						<nav class="mh-social-hub-nav" aria-label="<?php esc_attr_e( 'Footer Navigation', 'xophz-magic-hat' ); ?>">
 							<?php
-							if ( has_nav_menu( 'primary' ) ) {
-								wp_nav_menu( array( 'theme_location' => 'primary', 'container' => false, 'menu_class' => 'mh-inline-menu', 'depth' => 1, 'fallback_cb' => false ) );
-							} else {
-								mh_default_nav_fallback();
-							}
+							mh_render_footer_nav_menu( $menu_setting, array(
+								'menu_class'  => 'mh-inline-menu',
+								'fallback_cb' => 'mh_default_nav_fallback',
+							) );
 							?>
 						</nav>
 						<p class="mh-copyright-text"><?php echo wp_kses_post( $copyright_text ); ?></p>
@@ -1370,12 +1442,21 @@ function mh_render_footer_markup() {
 						<div class="mh-terminal-brand">
 							<?php mh_render_brand_logo( 'footer' ); ?>
 						</div>
-						<div class="mh-terminal-links">
-							<a href="#docs"><?php esc_html_e( 'Docs', 'xophz-magic-hat' ); ?></a>
-							<a href="#api"><?php esc_html_e( 'API Reference', 'xophz-magic-hat' ); ?></a>
-							<a href="#github"><?php esc_html_e( 'GitHub', 'xophz-magic-hat' ); ?></a>
-							<a href="#changelog"><?php esc_html_e( 'Changelog', 'xophz-magic-hat' ); ?></a>
-						</div>
+						<nav class="mh-terminal-nav" aria-label="<?php esc_attr_e( 'Terminal Navigation', 'xophz-magic-hat' ); ?>">
+							<?php
+							mh_render_footer_nav_menu( $menu_setting, array(
+								'menu_class'  => 'mh-terminal-links',
+								'fallback_cb' => function() {
+									echo '<ul class="mh-terminal-links">';
+									echo '<li><a href="#docs">' . esc_html__( 'Docs', 'xophz-magic-hat' ) . '</a></li>';
+									echo '<li><a href="#api">' . esc_html__( 'API Reference', 'xophz-magic-hat' ) . '</a></li>';
+									echo '<li><a href="#github">' . esc_html__( 'GitHub', 'xophz-magic-hat' ) . '</a></li>';
+									echo '<li><a href="#changelog">' . esc_html__( 'Changelog', 'xophz-magic-hat' ) . '</a></li>';
+									echo '</ul>';
+								},
+							) );
+							?>
+						</nav>
 						<p class="mh-copyright-text"><?php echo wp_kses_post( $copyright_text ); ?></p>
 					</div>
 				</div>
@@ -1495,11 +1576,10 @@ function mh_render_footer_markup() {
 						</div>
 						<nav class="mh-manifesto-nav" aria-label="<?php esc_attr_e( 'Manifesto Navigation', 'xophz-magic-hat' ); ?>">
 							<?php
-							if ( has_nav_menu( 'primary' ) ) {
-								wp_nav_menu( array( 'theme_location' => 'primary', 'container' => false, 'menu_class' => 'mh-inline-menu', 'depth' => 1, 'fallback_cb' => false ) );
-							} else {
-								mh_default_nav_fallback();
-							}
+							mh_render_footer_nav_menu( $menu_setting, array(
+								'menu_class'  => 'mh-inline-menu',
+								'fallback_cb' => 'mh_default_nav_fallback',
+							) );
 							?>
 						</nav>
 						<p class="mh-copyright-text"><?php echo wp_kses_post( $copyright_text ); ?></p>
@@ -1528,12 +1608,21 @@ function mh_render_footer_markup() {
 						<div class="mh-status-brand">
 							<?php mh_render_brand_logo( 'footer' ); ?>
 						</div>
-						<div class="mh-status-links">
-							<a href="#metrics"><?php esc_html_e( 'Metrics', 'xophz-magic-hat' ); ?></a>
-							<a href="#security"><?php esc_html_e( 'Security', 'xophz-magic-hat' ); ?></a>
-							<a href="#sla"><?php esc_html_e( 'SLA Policy', 'xophz-magic-hat' ); ?></a>
-							<a href="#support"><?php esc_html_e( 'Live Support', 'xophz-magic-hat' ); ?></a>
-						</div>
+						<nav class="mh-status-nav" aria-label="<?php esc_attr_e( 'Status Navigation', 'xophz-magic-hat' ); ?>">
+							<?php
+							mh_render_footer_nav_menu( $menu_setting, array(
+								'menu_class'  => 'mh-status-links',
+								'fallback_cb' => function() {
+									echo '<ul class="mh-status-links">';
+									echo '<li><a href="#metrics">' . esc_html__( 'Metrics', 'xophz-magic-hat' ) . '</a></li>';
+									echo '<li><a href="#security">' . esc_html__( 'Security', 'xophz-magic-hat' ) . '</a></li>';
+									echo '<li><a href="#sla">' . esc_html__( 'SLA Policy', 'xophz-magic-hat' ) . '</a></li>';
+									echo '<li><a href="#support">' . esc_html__( 'Live Support', 'xophz-magic-hat' ) . '</a></li>';
+									echo '</ul>';
+								},
+							) );
+							?>
+						</nav>
 						<p class="mh-copyright-text"><?php echo wp_kses_post( $copyright_text ); ?></p>
 					</div>
 				</div>
@@ -1621,9 +1710,18 @@ function mh_render_footer_markup() {
 							<?php mh_render_brand_logo( 'footer' ); ?>
 						</div>
 						<nav class="mh-colophon-nav" aria-label="<?php esc_attr_e( 'Colophon Navigation', 'xophz-magic-hat' ); ?>">
-							<a href="#privacy"><?php esc_html_e( 'Privacy', 'xophz-magic-hat' ); ?></a>
-							<a href="#terms"><?php esc_html_e( 'Terms', 'xophz-magic-hat' ); ?></a>
-							<a href="#colophon"><?php esc_html_e( 'Colophon', 'xophz-magic-hat' ); ?></a>
+							<?php
+							mh_render_footer_nav_menu( $menu_setting, array(
+								'menu_class'  => 'mh-colophon-links',
+								'fallback_cb' => function() {
+									echo '<ul class="mh-colophon-links">';
+									echo '<li><a href="#privacy">' . esc_html__( 'Privacy', 'xophz-magic-hat' ) . '</a></li>';
+									echo '<li><a href="#terms">' . esc_html__( 'Terms', 'xophz-magic-hat' ) . '</a></li>';
+									echo '<li><a href="#colophon">' . esc_html__( 'Colophon', 'xophz-magic-hat' ) . '</a></li>';
+									echo '</ul>';
+								},
+							) );
+							?>
 						</nav>
 						<p class="mh-copyright-text"><?php echo wp_kses_post( $copyright_text ); ?></p>
 					</div>
@@ -1653,7 +1751,19 @@ function mh_render_footer_markup() {
 							$rendered++;
 							
 							$menu_name = $default_heading;
-							if ( isset( $locations[ $loc_slug ] ) && $locations[ $loc_slug ] ) {
+							if ( $loc_slug === 'footer_1' && ! empty( $menu_setting ) && $menu_setting !== '_footer_1' ) {
+								if ( ! in_array( $menu_setting, array( '_primary', '_footer_2', '_footer_3', '_footer_4' ), true ) && is_nav_menu( $menu_setting ) ) {
+									$custom_m = wp_get_nav_menu_object( $menu_setting );
+									if ( $custom_m && ! empty( $custom_m->name ) ) {
+										$menu_name = $custom_m->name;
+									}
+								} elseif ( $menu_setting === '_primary' && isset( $locations['primary'] ) && $locations['primary'] ) {
+									$menu_obj = wp_get_nav_menu_object( $locations['primary'] );
+									if ( $menu_obj && ! empty( $menu_obj->name ) ) {
+										$menu_name = $menu_obj->name;
+									}
+								}
+							} elseif ( isset( $locations[ $loc_slug ] ) && $locations[ $loc_slug ] ) {
 								$menu_obj = wp_get_nav_menu_object( $locations[ $loc_slug ] );
 								if ( $menu_obj && ! empty( $menu_obj->name ) ) {
 									$menu_name = $menu_obj->name;
@@ -1663,7 +1773,19 @@ function mh_render_footer_markup() {
 							<div class="mh-footer-col mh-footer-nav-col">
 								<h4 class="mh-footer-heading"><?php echo esc_html( $menu_name ); ?></h4>
 								<?php 
-								if ( has_nav_menu( $loc_slug ) ) {
+								if ( $loc_slug === 'footer_1' ) {
+									mh_render_footer_nav_menu( $menu_setting, array(
+										'menu_class'  => 'mh-footer-menu-list',
+										'fallback_cb' => function() {
+											echo '<ul class="mh-footer-menu-list">';
+											echo '<li><a href="#about">' . esc_html__( 'About Us', 'xophz-magic-hat' ) . '</a></li>';
+											echo '<li><a href="#features">' . esc_html__( 'Features', 'xophz-magic-hat' ) . '</a></li>';
+											echo '<li><a href="#portfolio">' . esc_html__( 'Our Work', 'xophz-magic-hat' ) . '</a></li>';
+											echo '<li><a href="#pricing">' . esc_html__( 'Pricing', 'xophz-magic-hat' ) . '</a></li>';
+											echo '</ul>';
+										},
+									) );
+								} elseif ( has_nav_menu( $loc_slug ) ) {
 									wp_nav_menu( array(
 										'theme_location' => $loc_slug,
 										'container'      => false,
@@ -1673,12 +1795,7 @@ function mh_render_footer_markup() {
 									) );
 								} else {
 									echo '<ul class="mh-footer-menu-list">';
-									if ( $loc_slug === 'footer_1' ) {
-										echo '<li><a href="#about">' . esc_html__( 'About Us', 'xophz-magic-hat' ) . '</a></li>';
-										echo '<li><a href="#features">' . esc_html__( 'Features', 'xophz-magic-hat' ) . '</a></li>';
-										echo '<li><a href="#portfolio">' . esc_html__( 'Our Work', 'xophz-magic-hat' ) . '</a></li>';
-										echo '<li><a href="#pricing">' . esc_html__( 'Pricing', 'xophz-magic-hat' ) . '</a></li>';
-									} elseif ( $loc_slug === 'footer_2' ) {
+									if ( $loc_slug === 'footer_2' ) {
 										echo '<li><a href="#">' . esc_html__( 'Help Center', 'xophz-magic-hat' ) . '</a></li>';
 										echo '<li><a href="#">' . esc_html__( 'Documentation', 'xophz-magic-hat' ) . '</a></li>';
 										echo '<li><a href="#">' . esc_html__( 'Community', 'xophz-magic-hat' ) . '</a></li>';

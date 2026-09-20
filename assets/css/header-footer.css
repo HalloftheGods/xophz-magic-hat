@@ -1956,7 +1956,16 @@
 }
 .mh-terminal-links {
   display: flex;
+  align-items: center;
   gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mh-terminal-links li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 .mh-terminal-links a {
   color: var(--mh-color-text-muted, #64748b);
@@ -2173,13 +2182,26 @@
 }
 .mh-status-links {
   display: flex;
+  align-items: center;
   gap: 18px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mh-status-links li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 .mh-status-links a {
   font-size: 13px;
   font-weight: 600;
   color: var(--mh-color-text-muted, #64748b);
   text-decoration: none;
+  transition: color 0.15s ease;
+}
+.mh-status-links a:hover {
+  color: var(--mh-color-brand-base, #62c9ff);
 }
 
 /* 18. Accordion FAQ Quick-Help Footer */
@@ -2336,17 +2358,30 @@
   align-items: center;
   justify-content: space-between;
 }
-.mh-colophon-nav {
+.mh-colophon-nav,
+.mh-colophon-links {
   display: flex;
+  align-items: center;
   gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
-.mh-colophon-nav a {
+.mh-colophon-links li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mh-colophon-nav a,
+.mh-colophon-links a {
   font-family: monospace;
   font-size: 12px;
   color: var(--mh-color-text-muted, #64748b);
   text-decoration: none;
+  transition: color 0.15s ease;
 }
-.mh-colophon-nav a:hover {
+.mh-colophon-nav a:hover,
+.mh-colophon-links a:hover {
   color: var(--mh-color-brand-base, #62c9ff);
 }
 

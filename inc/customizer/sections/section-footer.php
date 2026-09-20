@@ -127,6 +127,35 @@ function mh_register_footer_section( $wp_customize ) {
 		'type'        => 'checkbox',
 	) );
 
+	// Build navigation menus list for dropdown selector
+	$all_nav_menus       = wp_get_nav_menus();
+	$footer_menu_choices = array(
+		'_footer_1' => __( 'Follow Location: Footer Menu 1 (Explore)', 'xophz-magic-hat' ),
+		'_primary'  => __( 'Follow Location: Primary Menu', 'xophz-magic-hat' ),
+		'_footer_2' => __( 'Follow Location: Footer Menu 2 (Resources)', 'xophz-magic-hat' ),
+		'_footer_3' => __( 'Follow Location: Footer Menu 3 (Legal)', 'xophz-magic-hat' ),
+		'_footer_4' => __( 'Follow Location: Footer Menu 4 (Contact)', 'xophz-magic-hat' ),
+	);
+	if ( ! empty( $all_nav_menus ) && ! is_wp_error( $all_nav_menus ) ) {
+		foreach ( $all_nav_menus as $nav_m ) {
+			$footer_menu_choices[ $nav_m->term_id ] = sprintf( __( 'Menu: %s', 'xophz-magic-hat' ), $nav_m->name );
+		}
+	}
+
+	// Footer Navigation Menu
+	$wp_customize->add_setting( 'mh_footer_menu', array(
+		'default'           => '_footer_1',
+		'sanitize_callback' => 'sanitize_text_field',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_footer_menu', array(
+		'label'       => __( 'Footer Navigation Menu', 'xophz-magic-hat' ),
+		'description' => __( 'Choose which WordPress menu to render in the footer.', 'xophz-magic-hat' ),
+		'section'     => 'magic_hat_footer',
+		'type'        => 'select',
+		'choices'     => $footer_menu_choices,
+	) );
+
 	// Copyright Text
 	$wp_customize->add_setting( 'mh_footer_copyright_text', array(
 		'default'           => '&copy; {year} {site_title}. All rights reserved.',
@@ -368,6 +397,7 @@ function mh_register_footer_section( $wp_customize ) {
 				'mh_footer_logo_height',
 				'mh_footer_bg',
 				'mh_footer_show_menus',
+				'mh_footer_menu',
 				'mh_footer_copyright_text',
 				'mh_footer_statement_badge',
 				'mh_footer_statement_title',

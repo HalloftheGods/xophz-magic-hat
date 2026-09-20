@@ -251,7 +251,7 @@
 		$('[data-mh-focus]').each(function() {
 			var $el = $(this);
 			// Enable inline editing for text elements
-			if ( ! $el.is('img') && ! $el.is('input') ) {
+			if ( ! $el.is('img') && ! $el.is('input') && ! $el.is('nav') && ! $el.is('ul') ) {
 				$el.attr('contenteditable', 'true').attr('spellcheck', 'false');
 			}
 		});
@@ -617,6 +617,12 @@
 	// In-canvas clicking on Footer components
 	$(document).on('click', '#mw-footer', function(e) {
 		if ( $(e.target).closest('[data-mh-focus], [data-mh-btn-url], [data-mh-link], .mh-canvas-url-popover').length ) {
+			return;
+		}
+		var $targetNav = $(e.target).closest('nav, .mh-terminal-links, .mh-status-links, .mh-colophon-links, .mh-colophon-nav, .mh-inline-menu, .mh-footer-menu-list');
+		if ( $targetNav.length && parentApi.control && parentApi.control('mh_footer_menu') ) {
+			e.preventDefault();
+			parentApi.control('mh_footer_menu').focus();
 			return;
 		}
 		if ( $(e.target).closest('a').length && parentApi.section && parentApi.section('magic_hat_footer') ) {
