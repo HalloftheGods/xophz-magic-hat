@@ -175,7 +175,24 @@ function xophz_magic_hat_register_hero_customizer( $wp_customize ) {
 		'label'       => __( 'Secondary Button Destination URL', 'xophz-magic-hat' ),
 	) );
 
-	// 10. Visual Image
+	// 10. Hero Media Display Type (Image vs Mobile Phone iFrame Mockup)
+	$wp_customize->add_setting( 'mh_hero_media_type', array(
+		'default'           => 'image',
+		'sanitize_callback' => 'sanitize_key',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_hero_media_type', array(
+		'type'        => 'select',
+		'section'     => 'mh_front_page_hero',
+		'label'       => __( 'Hero Media Display Type', 'xophz-magic-hat' ),
+		'description' => __( 'Choose whether to display a graphic image or an interactive mobile phone iframe preview.', 'xophz-magic-hat' ),
+		'choices'     => array(
+			'image'  => __( 'Standard Graphic / Image', 'xophz-magic-hat' ),
+			'iframe' => __( 'Mobile Phone iFrame Mockup', 'xophz-magic-hat' ),
+		),
+	) );
+
+	// 11. Visual Image
 	$wp_customize->add_setting( 'mh_hero_image', array(
 		'default'           => '',
 		'sanitize_callback' => 'esc_url_raw',
@@ -187,7 +204,20 @@ function xophz_magic_hat_register_hero_customizer( $wp_customize ) {
 		'description' => __( 'Upload an image or illustration to display alongside the headline.', 'xophz-magic-hat' ),
 	) ) );
 
-	// 11. Hero Background Type
+	// 12. Hero Mobile iFrame URL
+	$wp_customize->add_setting( 'mh_hero_iframe_url', array(
+		'default'           => '',
+		'sanitize_callback' => 'esc_url_raw',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_hero_iframe_url', array(
+		'type'        => 'url',
+		'section'     => 'mh_front_page_hero',
+		'label'       => __( 'Hero Mobile iFrame URL', 'xophz-magic-hat' ),
+		'description' => __( 'URL or path to embed inside the mobile phone mockup frame (defaults to site home). Hidden automatically on mobile devices.', 'xophz-magic-hat' ),
+	) );
+
+	// 13. Hero Background Type
 	$wp_customize->add_setting( 'mh_hero_bg_type', array(
 		'default'           => 'default',
 		'sanitize_callback' => 'sanitize_text_field',
@@ -198,10 +228,11 @@ function xophz_magic_hat_register_hero_customizer( $wp_customize ) {
 		'section'     => 'mh_front_page_hero',
 		'label'       => __( 'Hero Background Surface', 'xophz-magic-hat' ),
 		'choices'     => array(
-			'default'  => __( 'Theme Surface (Circadian Daylight)', 'xophz-magic-hat' ),
-			'subtle'   => __( 'Subtle Slate Tint', 'xophz-magic-hat' ),
-			'gradient' => __( 'Soft Linear Gradient', 'xophz-magic-hat' ),
-			'dark'     => __( 'Deep Obsidian Slate', 'xophz-magic-hat' ),
+			'default'     => __( 'Theme Surface (Circadian Daylight)', 'xophz-magic-hat' ),
+			'transparent' => __( 'Transparent (Allow Canvas / Background Through)', 'xophz-magic-hat' ),
+			'subtle'      => __( 'Subtle Slate Tint', 'xophz-magic-hat' ),
+			'gradient'    => __( 'Soft Linear Gradient', 'xophz-magic-hat' ),
+			'dark'        => __( 'Deep Obsidian Slate', 'xophz-magic-hat' ),
 		),
 	) );
 
@@ -216,6 +247,9 @@ function xophz_magic_hat_register_hero_customizer( $wp_customize ) {
 				'mh_hero_width',
 				'mh_hero_height',
 				'mh_hero_bg_type',
+				'mh_hero_media_type',
+				'mh_hero_iframe_url',
+				'mh_hero_image',
 			),
 			'render_callback'     => 'mh_render_hero_markup',
 			'container_inclusive' => true,
@@ -236,6 +270,45 @@ function xophz_magic_hat_register_hero_block() {
 	}
 }
 add_action( 'init', 'xophz_magic_hat_register_hero_block' );
+
+/**
+ * Render Hero Media Element (Standard Image or Mobile Phone iFrame Mockup)
+ *
+ * @param string $media_type      'image' or 'iframe'.
+ * @param string $image_url       Image source URL.
+ * @param string $iframe_url      iFrame embed URL.
+ * @param string $headline        Headline text for alt / title attributes.
+ * @param string $extra_img_style Optional inline style overrides for image.
+ * @return string Rendered HTML markup.
+ */
+function mh_render_hero_media( $media_type, $image_url, $iframe_url, $headline, $extra_img_style = '' ) {
+	if ( 'iframe' === $media_type ) {
+		$url = ! empty( $iframe_url ) ? $iframe_url : home_url( '/' );
+		ob_start();
+		?>
+		<div class="mh-hero-phone-mockup" data-mh-focus="mh_hero_iframe_url">
+			<div class="mh-phone-frame">
+				<div class="mh-phone-speaker-notch">
+					<div class="mh-phone-lens"></div>
+					<div class="mh-phone-sensor"></div>
+				</div>
+				<div class="mh-phone-screen">
+					<iframe class="mh-hero-iframe" src="<?php echo esc_url( $url ); ?>" title="<?php echo esc_attr( $headline ); ?>" loading="lazy"></iframe>
+				</div>
+				<div class="mh-phone-home-indicator"></div>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	return sprintf(
+		'<img class="mh-hero-image-el" data-mh-focus="mh_hero_image" data-mh-image="mh_hero_image" src="%s" alt="%s" style="%s" />',
+		esc_url( $image_url ),
+		esc_attr( $headline ),
+		esc_attr( $extra_img_style )
+	);
+}
 
 /**
  * Render Hero HTML Markup (Supports any page with dynamic title fallbacks)
@@ -283,6 +356,11 @@ function mh_render_hero_markup( $post_id = null ) {
 	$cta1_url    = get_theme_mod( 'mh_hero_cta_primary_url', '#features' );
 	$cta2_text   = get_theme_mod( 'mh_hero_cta_secondary_text', 'Explore Architecture' );
 	$cta2_url    = get_theme_mod( 'mh_hero_cta_secondary_url', '#about' );
+	$media_type  = get_theme_mod( 'mh_hero_media_type', 'image' );
+	$iframe_url  = get_theme_mod( 'mh_hero_iframe_url', '' );
+	if ( empty( $iframe_url ) ) {
+		$iframe_url = home_url( '/' );
+	}
 	$image_url   = get_theme_mod( 'mh_hero_image', '' );
 	$bg_type     = get_theme_mod( 'mh_hero_bg_type', 'default' );
 
@@ -302,7 +380,9 @@ function mh_render_hero_markup( $post_id = null ) {
 
 	// Background surface
 	$bg_style = 'background: var(--mh-color-body, #ffffff);';
-	if ( $bg_type === 'subtle' ) {
+	if ( $bg_type === 'transparent' ) {
+		$bg_style = 'background: transparent; border-bottom: none;';
+	} elseif ( $bg_type === 'subtle' ) {
 		$bg_style = 'background: var(--mh-color-section, #f8fafc);';
 	} elseif ( $bg_type === 'gradient' ) {
 		$bg_style = 'background: linear-gradient(135deg, var(--mh-color-body, #f8fafc) 0%, var(--mh-color-section, #eff6ff) 100%);';
@@ -350,8 +430,8 @@ function mh_render_hero_markup( $post_id = null ) {
 							<?php endif; ?>
 						</div>
 					</div>
-					<div class="mh-hero-media" style="text-align: center;">
-						<img class="mh-hero-image-el" data-mh-focus="mh_hero_image" data-mh-image="mh_hero_image" src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $headline ); ?>" style="width: 100%; max-height: 480px; object-fit: cover; border-radius: 14px; box-shadow: 0 20px 35px -10px rgba(0,0,0,0.12); border: 1px solid var(--mh-color-border-muted, #e2e8f0);" />
+					<div class="mh-hero-media<?php echo 'iframe' === $media_type ? ' mh-hero-media-iframe' : ''; ?>" style="text-align: center;">
+						<?php echo mh_render_hero_media( $media_type, $image_url, $iframe_url, $headline, 'width: 100%; max-height: 480px; object-fit: cover; border-radius: 14px; box-shadow: 0 20px 35px -10px rgba(0,0,0,0.12); border: 1px solid var(--mh-color-border-muted, #e2e8f0);' ); ?>
 					</div>
 				</div>
 
@@ -381,9 +461,9 @@ function mh_render_hero_markup( $post_id = null ) {
 							</a>
 						<?php endif; ?>
 					</div>
-					<?php if ( ! empty( $image_url ) ) : ?>
-						<div style="margin-top: 20px;">
-							<img class="mh-hero-image-el" data-mh-focus="mh_hero_image" data-mh-image="mh_hero_image" src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $headline ); ?>" style="width: 100%; max-height: 420px; object-fit: cover; border-radius: 12px; box-shadow: 0 25px 40px -15px rgba(0,0,0,0.15); border: 1px solid var(--mh-color-border-muted, #e2e8f0);" />
+					<?php if ( 'iframe' === $media_type || ! empty( $image_url ) ) : ?>
+						<div class="mh-hero-media<?php echo 'iframe' === $media_type ? ' mh-hero-media-iframe' : ''; ?>" style="margin-top: 20px;">
+							<?php echo mh_render_hero_media( $media_type, $image_url, $iframe_url, $headline, 'width: 100%; max-height: 420px; object-fit: cover; border-radius: 12px; box-shadow: 0 25px 40px -15px rgba(0,0,0,0.15); border: 1px solid var(--mh-color-border-muted, #e2e8f0);' ); ?>
 						</div>
 					<?php endif; ?>
 				</div>
@@ -432,10 +512,14 @@ function mh_render_hero_markup( $post_id = null ) {
 							<?php endif; ?>
 						</div>
 					</div>
-					<div style="display: flex; justify-content: center;">
-						<div style="background: var(--mh-color-card, #ffffff); border: 1px solid var(--mh-color-border-muted, #cbd5e1); border-radius: 18px; padding: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.18); max-width: 440px; width: 100%;">
-							<img class="mh-hero-image-el" data-mh-focus="mh_hero_image" data-mh-image="mh_hero_image" src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $headline ); ?>" style="width: 100%; border-radius: 10px; display: block;" />
-						</div>
+					<div class="mh-hero-media<?php echo 'iframe' === $media_type ? ' mh-hero-media-iframe' : ''; ?>" style="display: flex; justify-content: center;">
+						<?php if ( 'iframe' === $media_type ) : ?>
+							<?php echo mh_render_hero_media( $media_type, $image_url, $iframe_url, $headline ); ?>
+						<?php else : ?>
+							<div style="background: var(--mh-color-card, #ffffff); border: 1px solid var(--mh-color-border-muted, #cbd5e1); border-radius: 18px; padding: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.18); max-width: 440px; width: 100%;">
+								<?php echo mh_render_hero_media( $media_type, $image_url, $iframe_url, $headline, 'width: 100%; border-radius: 10px; display: block;' ); ?>
+							</div>
+						<?php endif; ?>
 					</div>
 				</div>
 
