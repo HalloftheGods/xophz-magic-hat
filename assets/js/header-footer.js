@@ -158,17 +158,67 @@
 		});
 	}
 
+	// CLI Terminal Copy Command Handler
+	function initCliCopyButton() {
+		document.addEventListener('click', function(e) {
+			var btn = e.target && e.target.closest('.mh-cli-copy-btn');
+			if (!btn) return;
+			e.preventDefault();
+
+			var terminalWrap = btn.closest('.mh-terminal-body, .mh-footer-terminal-wrap');
+			var textEl = terminalWrap ? terminalWrap.querySelector('.mh-cli-text, .mh-terminal-code') : null;
+			var textToCopy = btn.getAttribute('data-copy-text') || (textEl ? textEl.textContent.trim() : '');
+			if (!textToCopy) return;
+
+			function handleCopiedState() {
+				var originalText = btn.getAttribute('data-original-text') || btn.textContent.trim();
+				if (!btn.getAttribute('data-original-text')) {
+					btn.setAttribute('data-original-text', originalText);
+				}
+				btn.textContent = 'Copied!';
+				setTimeout(function() {
+					btn.textContent = originalText;
+				}, 2000);
+			}
+
+			if (navigator.clipboard && navigator.clipboard.writeText) {
+				navigator.clipboard.writeText(textToCopy).then(handleCopiedState).catch(function() {
+					fallbackCopy(textToCopy, handleCopiedState);
+				});
+			} else {
+				fallbackCopy(textToCopy, handleCopiedState);
+			}
+		});
+
+		function fallbackCopy(text, onSuccess) {
+			var textarea = document.createElement('textarea');
+			textarea.value = text;
+			textarea.setAttribute('readonly', '');
+			textarea.style.position = 'fixed';
+			textarea.style.left = '-9999px';
+			document.body.appendChild(textarea);
+			textarea.select();
+			try {
+				document.execCommand('copy');
+				if (typeof onSuccess === 'function') onSuccess();
+			} catch (err) {}
+			document.body.removeChild(textarea);
+		}
+	}
+
 	// Initialize on DOM ready
 	if (document.readyState === 'loading') {
 		document.addEventListener('DOMContentLoaded', function() {
 			initMobileMenu();
 			initStickyHeader();
 			initInlineSearch();
+			initCliCopyButton();
 		});
 	} else {
 		initMobileMenu();
 		initStickyHeader();
 		initInlineSearch();
+		initCliCopyButton();
 	}
 
 	// Support WordPress Customizer Selective Refresh re-initialization
