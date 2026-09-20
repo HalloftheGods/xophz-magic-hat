@@ -1049,10 +1049,11 @@
 
 		wp.customize( 'mh_footer_cli_command', function( value ) {
 			value.bind( function( to ) {
-				var $el = $( '.mh-terminal-code' );
+				var $el = $( '.mh-cli-text, .mh-terminal-code' );
 				if ( $el.length && ! $el.is( ':focus' ) ) {
 					$el.text( to );
 				}
+				$( '.mh-cli-copy-btn' ).attr( 'data-copy-text', to );
 			} );
 		} );
 
