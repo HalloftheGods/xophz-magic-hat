@@ -1435,7 +1435,7 @@ function mh_render_footer_markup() {
 						<div class="mh-terminal-body">
 							<span class="mh-cli-prompt">$</span>
 							<code class="mh-cli-text mh-terminal-code" data-mh-focus="mh_footer_cli_command"><?php echo esc_html( $cli_cmd ); ?></code>
-							<button type="button" class="mh-cli-copy-btn" data-copy-text="<?php echo esc_attr( $cli_cmd ); ?>" aria-label="<?php esc_attr_e( 'Copy command to clipboard', 'xophz-magic-hat' ); ?>"><?php esc_html_e( 'Copy', 'xophz-magic-hat' ); ?></button>
+							<button type="button" class="mh-cli-copy-btn" onclick="window.mhCopyCliText ? window.mhCopyCliText(this, event) : null" data-copy-text="<?php echo esc_attr( $cli_cmd ); ?>" aria-label="<?php esc_attr_e( 'Copy command to clipboard', 'xophz-magic-hat' ); ?>"><?php esc_html_e( 'Copy', 'xophz-magic-hat' ); ?></button>
 						</div>
 					</div>
 					<div class="mh-terminal-nav-row">

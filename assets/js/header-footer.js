@@ -158,129 +158,122 @@
 		});
 	}
 
-	// CLI Terminal Copy Command Handler
-	function initCliCopyButton() {
-		function copyToClipboard(text) {
-			return new Promise(function(resolve, reject) {
-				function tryExecOnDoc(doc) {
-					try {
-						if (!doc || !doc.body) return false;
-						var textarea = doc.createElement('textarea');
-						textarea.value = text;
-						textarea.style.fontSize = '12pt';
-						textarea.style.border = '0';
-						textarea.style.padding = '0';
-						textarea.style.margin = '0';
-						textarea.style.position = 'fixed';
-						textarea.style.top = '0';
-						textarea.style.left = '0';
-						textarea.style.width = '2em';
-						textarea.style.height = '2em';
-						textarea.style.opacity = '0.01';
-						textarea.style.zIndex = '-9999';
-						textarea.setAttribute('readonly', '');
-						doc.body.appendChild(textarea);
-						textarea.focus({ preventScroll: true });
-						textarea.select();
-						textarea.setSelectionRange(0, text.length);
-						var ok = doc.execCommand('copy');
-						doc.body.removeChild(textarea);
-						return ok;
-					} catch (e) {
-						return false;
-					}
-				}
+	// Helper to extract the exact text from the terminal code element
+	function mhGetCliText(btn) {
+		var wrap = (btn && btn.closest) ? btn.closest('.mh-terminal-body, .mh-terminal-card, .mh-footer-terminal-wrap') : null;
+		var codeEl = wrap ? wrap.querySelector('.mh-cli-text, .mh-terminal-code') : document.querySelector('.mh-cli-text, .mh-terminal-code');
+		if (codeEl) {
+			var str = (codeEl.innerText || codeEl.textContent || '').trim();
+			if (str) return str;
+		}
+		return (btn && btn.getAttribute) ? (btn.getAttribute('data-copy-text') || '') : '';
+	}
 
-				// Attempt 1: Window navigator.clipboard
-				if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
-					navigator.clipboard.writeText(text).then(resolve).catch(function() {
-						// Attempt 2: Parent window clipboard if in iframe
-						try {
-							if (window.parent && window.parent !== window && window.parent.navigator && window.parent.navigator.clipboard) {
-								window.parent.navigator.clipboard.writeText(text).then(resolve).catch(function() {
-									if (tryExecOnDoc(document) || (window.parent && tryExecOnDoc(window.parent.document))) {
-										resolve();
-									} else {
-										reject();
-									}
-								});
-								return;
-							}
-						} catch (err) {}
+	// Synchronous and multi-tier clipboard execution
+	function mhExecuteCopy(text) {
+		if (!text) return false;
 
-						// Attempt 3: execCommand on current or parent document
-						if (tryExecOnDoc(document)) {
-							resolve();
-						} else {
-							try {
-								if (window.parent && tryExecOnDoc(window.parent.document)) {
-									resolve();
-									return;
-								}
-							} catch (err2) {}
-							reject();
-						}
-					});
-					return;
-				}
-
-				// Attempt 4: Parent window clipboard if navigator.clipboard missing in subframe
+		function runExecCopy(doc) {
+			try {
+				if (!doc || !doc.body) return false;
+				var ta = doc.createElement('textarea');
+				ta.value = text;
+				ta.style.position = 'fixed';
+				ta.style.top = '0';
+				ta.style.left = '0';
+				ta.style.width = '2em';
+				ta.style.height = '2em';
+				ta.style.padding = '0';
+				ta.style.border = 'none';
+				ta.style.outline = 'none';
+				ta.style.boxShadow = 'none';
+				ta.style.background = 'transparent';
+				doc.body.appendChild(ta);
+				ta.focus();
+				ta.select();
+				ta.setSelectionRange(0, ta.value.length);
+				var ok = false;
 				try {
-					if (window.parent && window.parent !== window && window.parent.navigator && window.parent.navigator.clipboard) {
-						window.parent.navigator.clipboard.writeText(text).then(resolve).catch(function() {
-							if (tryExecOnDoc(document) || (window.parent && tryExecOnDoc(window.parent.document))) {
-								resolve();
-							} else {
-								reject();
-							}
-						});
-						return;
-					}
-				} catch (err3) {}
-
-				// Attempt 5: execCommand
-				if (tryExecOnDoc(document)) {
-					resolve();
-					return;
+					ok = doc.execCommand('copy');
+				} catch (err) {
+					ok = false;
 				}
-				try {
-					if (window.parent && tryExecOnDoc(window.parent.document)) {
-						resolve();
-						return;
-					}
-				} catch (err4) {}
-				reject();
-			});
+				doc.body.removeChild(ta);
+				return ok;
+			} catch (e) {
+				return false;
+			}
 		}
 
-		document.addEventListener('click', function(e) {
-			var btn = e.target && e.target.closest('.mh-cli-copy-btn');
-			if (!btn) return;
-			e.preventDefault();
+		// 1. Synchronous document execCommand (highest reliability inside user click gesture)
+		var copied = runExecCopy(document);
+		if (copied) return true;
 
-			var terminalWrap = btn.closest('.mh-terminal-card, .mh-terminal-body, .mh-footer-terminal-wrap');
-			var textEl = terminalWrap ? terminalWrap.querySelector('.mh-cli-text, .mh-terminal-code') : document.querySelector('.mh-cli-text, .mh-terminal-code');
-			var textToCopy = (textEl ? textEl.textContent.trim() : '') || btn.getAttribute('data-copy-text') || '';
-			if (!textToCopy) return;
-
-			function handleCopiedState() {
-				var originalText = btn.getAttribute('data-original-text') || btn.textContent.trim();
-				if (!btn.getAttribute('data-original-text') && originalText !== 'Copied!') {
-					btn.setAttribute('data-original-text', originalText);
-				}
-				btn.textContent = 'Copied!';
-				btn.classList.add('copied');
-				if (btn._copyTimeout) {
-					clearTimeout(btn._copyTimeout);
-				}
-				btn._copyTimeout = setTimeout(function() {
-					btn.textContent = btn.getAttribute('data-original-text') || 'Copy';
-					btn.classList.remove('copied');
-					btn._copyTimeout = null;
-				}, 2000);
+		// 2. Synchronous parent document execCommand (if inside an iframe like Customizer)
+		try {
+			if (window.parent && window.parent !== window && window.parent.document) {
+				if (runExecCopy(window.parent.document)) return true;
 			}
+		} catch (e1) {}
 
-			copyToClipboard(textToCopy).then(handleCopiedState).catch(handleCopiedState);
+		// 3. Native navigator.clipboard.writeText
+		if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+			try {
+				navigator.clipboard.writeText(text).catch(function() {
+					try {
+						if (window.parent && window.parent !== window && window.parent.navigator && window.parent.navigator.clipboard) {
+							window.parent.navigator.clipboard.writeText(text).catch(function() {});
+						}
+					} catch (e2) {}
+				});
+				return true;
+			} catch (e3) {}
+		}
+
+		// 4. Parent window navigator.clipboard
+		try {
+			if (window.parent && window.parent !== window && window.parent.navigator && window.parent.navigator.clipboard) {
+				window.parent.navigator.clipboard.writeText(text).catch(function() {});
+				return true;
+			}
+		} catch (e4) {}
+
+		return false;
+	}
+
+	window.mhCopyCliText = function(btn, e) {
+		if (e && e.preventDefault) e.preventDefault();
+		if (!btn) return;
+
+		var text = mhGetCliText(btn);
+		if (!text) return;
+
+		mhExecuteCopy(text);
+
+		var originalText = btn.getAttribute('data-original-text') || btn.textContent.trim();
+		if (!btn.getAttribute('data-original-text') && originalText !== 'Copied!') {
+			btn.setAttribute('data-original-text', originalText);
+		}
+		btn.textContent = 'Copied!';
+		btn.classList.add('copied');
+
+		if (btn._copyTimeout) {
+			clearTimeout(btn._copyTimeout);
+		}
+		btn._copyTimeout = setTimeout(function() {
+			btn.textContent = btn.getAttribute('data-original-text') || 'Copy';
+			btn.classList.remove('copied');
+			btn._copyTimeout = null;
+		}, 2000);
+	};
+
+	// CLI Terminal Copy Command Handler
+	function initCliCopyButton() {
+		document.addEventListener('click', function(e) {
+			var btn = e.target && e.target.closest ? e.target.closest('.mh-cli-copy-btn') : null;
+			if (btn) {
+				window.mhCopyCliText(btn, e);
+			}
 		});
 	}
 

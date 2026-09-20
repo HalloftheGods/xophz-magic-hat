@@ -1125,6 +1125,13 @@
 				document.documentElement.style.setProperty( '--mh-sidebar-width', to + 'px' );
 			} );
 		} );
+
+		// Live Preview: CLI Terminal Copy Handler
+		$(document).on('click', '.mh-cli-copy-btn', function(e) {
+			if (window.mhCopyCliText) {
+				window.mhCopyCliText(this, e);
+			}
+		});
 	}
 
 })(jQuery);
