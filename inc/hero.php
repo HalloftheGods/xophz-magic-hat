@@ -192,6 +192,24 @@ function xophz_magic_hat_register_hero_customizer( $wp_customize ) {
 		),
 	) );
 
+	// 10b. Hero Mobile Phone Ratio
+	$wp_customize->add_setting( 'mh_hero_phone_ratio', array(
+		'default'           => '16_9',
+		'sanitize_callback' => 'sanitize_key',
+		'transport'         => 'postMessage',
+	) );
+	$wp_customize->add_control( 'mh_hero_phone_ratio', array(
+		'type'        => 'select',
+		'section'     => 'mh_front_page_hero',
+		'label'       => __( 'Phone Mockup Aspect Ratio', 'xophz-magic-hat' ),
+		'description' => __( 'Choose the screen proportion for the interactive mobile phone preview.', 'xophz-magic-hat' ),
+		'choices'     => array(
+			'16_9'   => __( 'Wider Mobile (9:16 - Recommended)', 'xophz-magic-hat' ),
+			'17_9'   => __( 'Modern Mobile (9:17)', 'xophz-magic-hat' ),
+			'19_5_9' => __( 'Tall Slender (9:19.5)', 'xophz-magic-hat' ),
+		),
+	) );
+
 	// 11. Visual Image
 	$wp_customize->add_setting( 'mh_hero_image', array(
 		'default'           => '',
@@ -248,6 +266,7 @@ function xophz_magic_hat_register_hero_customizer( $wp_customize ) {
 				'mh_hero_height',
 				'mh_hero_bg_type',
 				'mh_hero_media_type',
+				'mh_hero_phone_ratio',
 				'mh_hero_iframe_url',
 				'mh_hero_image',
 			),
@@ -283,13 +302,20 @@ add_action( 'init', 'xophz_magic_hat_register_hero_block' );
  */
 function mh_render_hero_media( $media_type, $image_url, $iframe_url, $headline, $extra_img_style = '' ) {
 	if ( 'iframe' === $media_type ) {
-		$url = ! empty( $iframe_url ) ? $iframe_url : home_url( '/' );
+		$url          = ! empty( $iframe_url ) ? $iframe_url : home_url( '/' );
+		$ratio_mod    = get_theme_mod( 'mh_hero_phone_ratio', '16_9' );
+		$aspect_ratio = '9 / 16';
+		if ( '19_5_9' === $ratio_mod ) {
+			$aspect_ratio = '9 / 19.5';
+		} elseif ( '17_9' === $ratio_mod ) {
+			$aspect_ratio = '9 / 17';
+		}
 		ob_start();
 		?>
 		<div class="mh-hero-phone-mockup" data-mh-focus="mh_hero_iframe_url" style="display: flex; justify-content: center; align-items: center; width: 100%; margin: 0 auto;">
-			<div class="mh-phone-frame" style="position: relative; width: 100%; max-width: 340px; background: var(--mh-color-card, #0f172a); border: 1px solid var(--mh-color-border-muted, #cbd5e1); border-radius: 28px; padding: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05); box-sizing: border-box; display: flex; flex-direction: column;">
-				<div class="mh-phone-screen" style="width: 100%; aspect-ratio: 9 / 19.5; min-height: 560px; max-height: 80vh; background: #000000; border-radius: 18px; overflow: hidden; position: relative; display: flex;">
-					<iframe class="mh-hero-iframe" src="<?php echo esc_url( $url ); ?>" title="<?php echo esc_attr( $headline ); ?>" loading="lazy" style="width: 100%; height: 100%; min-height: 560px; border: none !important; outline: none; display: block; background: #ffffff; border-radius: 18px;"></iframe>
+			<div class="mh-phone-frame" style="position: relative; width: 100%; max-width: 400px; background: var(--mh-color-card, #0f172a); border: 1px solid var(--mh-color-border-muted, #cbd5e1); border-radius: 28px; padding: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05); box-sizing: border-box; display: flex; flex-direction: column;">
+				<div class="mh-phone-screen" data-ratio="<?php echo esc_attr( $ratio_mod ); ?>" style="width: 100%; aspect-ratio: <?php echo esc_attr( $aspect_ratio ); ?>; min-height: 500px; max-height: 78vh; background: #000000; border-radius: 18px; overflow: hidden; position: relative; display: flex;">
+					<iframe class="mh-hero-iframe" src="<?php echo esc_url( $url ); ?>" title="<?php echo esc_attr( $headline ); ?>" loading="lazy" style="width: 100%; height: 100%; min-height: 500px; border: none !important; outline: none; display: block; background: #ffffff; border-radius: 18px;"></iframe>
 				</div>
 			</div>
 		</div>
@@ -392,14 +418,25 @@ function mh_render_hero_markup( $post_id = null ) {
 
 	$display_style = ( ! $enabled && is_customize_preview() ) ? 'display: none;' : '';
 
+	$hero_classes = array(
+		'mh-front-page-hero',
+		'mh-hero-' . sanitize_html_class( $layout ),
+		'mh-hero-width-' . sanitize_html_class( $width_mode ),
+	);
+	if ( 'iframe' === $media_type ) {
+		$hero_classes[] = 'mh-hero-has-iframe';
+	}
+
 	ob_start();
 	?>
-	<section id="mh-front-page-hero" class="mh-front-page-hero mh-hero-<?php echo esc_attr( $layout ); ?> mh-hero-width-<?php echo esc_attr( $width_mode ); ?>" style="position: relative; z-index: 1; border-bottom: 1px solid var(--mh-color-border-muted, #e2e8f0); min-height: <?php echo esc_attr( $min_height ); ?>; display: flex; align-items: center; <?php echo $bg_style; ?> <?php echo $display_style; ?>" data-mw-type="hero">
+	<section id="mh-front-page-hero" class="<?php echo esc_attr( implode( ' ', $hero_classes ) ); ?>" style="position: relative; z-index: 1; border-bottom: 1px solid var(--mh-color-border-muted, #e2e8f0); min-height: <?php echo esc_attr( $min_height ); ?>; display: flex; align-items: center; <?php echo $bg_style; ?> <?php echo $display_style; ?>" data-mw-type="hero">
 		
 		<div class="mh-hero-container" style="<?php echo $container_style; ?>">
-			<?php if ( $layout === 'split' ) : ?>
+			<?php if ( $layout === 'split' ) : 
+				$split_padding = ( 'iframe' === $media_type ) ? 'padding: 20px 0 28px;' : 'padding: 40px 0 48px;';
+				?>
 				<!-- Split 2-Column Layout -->
-				<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 48px; align-items: center; padding: 60px 0;">
+				<div class="mh-hero-split-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 48px; align-items: center; <?php echo esc_attr( $split_padding ); ?>">
 					<div class="mh-hero-text">
 						<?php if ( ! empty( $badge ) ) : ?>
 							<span class="mh-hero-badge" data-mh-focus="mh_hero_badge" style="display: inline-block; padding: 4px 12px; background: color-mix(in srgb, var(--mh-color-brand-base, #2563eb) 12%, transparent); color: var(--mh-color-brand-base, #2563eb); border-radius: 9999px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 16px;">
@@ -430,9 +467,11 @@ function mh_render_hero_markup( $post_id = null ) {
 					</div>
 				</div>
 
-			<?php elseif ( $layout === 'centered' ) : ?>
+			<?php elseif ( $layout === 'centered' ) : 
+				$centered_padding = ( 'iframe' === $media_type ) ? 'padding: 28px 0 36px;' : 'padding: 60px 0;';
+				?>
 				<!-- Centered Impact Layout -->
-				<div style="text-align: center; max-width: 820px; margin: 0 auto; padding: 80px 0;">
+				<div class="mh-hero-centered-wrap" style="text-align: center; max-width: 820px; margin: 0 auto; <?php echo esc_attr( $centered_padding ); ?>">
 					<?php if ( ! empty( $badge ) ) : ?>
 						<span class="mh-hero-badge" data-mh-focus="mh_hero_badge" style="display: inline-block; padding: 4px 14px; background: color-mix(in srgb, var(--mh-color-brand-base, #2563eb) 12%, transparent); color: var(--mh-color-brand-base, #2563eb); border-radius: 9999px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 18px;">
 							<?php echo esc_html( $badge ); ?>
@@ -457,7 +496,7 @@ function mh_render_hero_markup( $post_id = null ) {
 						<?php endif; ?>
 					</div>
 					<?php if ( 'iframe' === $media_type || ! empty( $image_url ) ) : ?>
-						<div class="mh-hero-media<?php echo 'iframe' === $media_type ? ' mh-hero-media-iframe' : ''; ?>" style="margin-top: 20px; display: flex; justify-content: center;">
+						<div class="mh-hero-media<?php echo 'iframe' === $media_type ? ' mh-hero-media-iframe' : ''; ?>" style="margin-top: 12px; display: flex; justify-content: center;">
 							<?php echo mh_render_hero_media( $media_type, $image_url, $iframe_url, $headline, 'width: 100%; max-height: 420px; object-fit: cover; border-radius: 12px; box-shadow: 0 25px 40px -15px rgba(0,0,0,0.15); border: 1px solid var(--mh-color-border-muted, #e2e8f0);' ); ?>
 						</div>
 					<?php endif; ?>

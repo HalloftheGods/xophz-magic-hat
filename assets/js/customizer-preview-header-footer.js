@@ -881,6 +881,18 @@
 			} );
 		} );
 
+		wp.customize( 'mh_hero_phone_ratio', function( value ) {
+			value.bind( function( newRatio ) {
+				var ratioVal = '9 / 16';
+				if ( newRatio === '17_9' ) {
+					ratioVal = '9 / 17';
+				} else if ( newRatio === '19_5_9' ) {
+					ratioVal = '9 / 19.5';
+				}
+				$( '.mh-phone-screen' ).attr( 'data-ratio', newRatio ).css( 'aspect-ratio', ratioVal );
+			} );
+		} );
+
 		// Live Preview: Header text settings
 		wp.customize( 'blogname', function( value ) {
 			value.bind( function( to ) {

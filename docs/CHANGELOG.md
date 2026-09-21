@@ -5,6 +5,15 @@ All notable changes to the Xophz Magic Hat theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2026-09-21]
+
+### Changed
+- Hero Mobile Phone iFrame Mockup Dimensions and Ratio (`inc/hero.php`, `assets/css/sections/hero-overlap.css`, `assets/js/customizer-preview-header-footer.js`): Expanded phone mockup maximum width from 340px to 400px (providing 376px inner screen width) and updated default screen aspect ratio to 9:16 with 500px min-height, eliminating cramped text layouts and vertical distortion.
+- Hero Vertical Top Padding Reduction (`inc/hero.php`, `assets/css/sections/hero-overlap.css`): Reduced top padding from 60px down to 20px when the iframe preview is active (`.mh-hero-has-iframe .mh-hero-split-grid`) and to 28px in centered layout, ensuring the phone frame remains above the fold.
+
+### Added
+- Customizer Phone Aspect Ratio Selector (`inc/hero.php`, `assets/js/customizer-preview-header-footer.js`): Added `mh_hero_phone_ratio` control with selective refresh and live postMessage synchronization, supporting 9:16 (Wider Mobile), 9:17 (Modern Mobile), and 9:19.5 (Tall Slender).
+
 ## [26.9.11] - 2026-09-07
 
 ### Added
