@@ -46,6 +46,7 @@ function xophz_magic_hat_setup() {
     add_editor_style( 'assets/css/sections/team-testimonials.css' );
     add_editor_style( 'assets/css/sections/cta-contact.css' );
     add_editor_style( 'assets/css/sections/pricing-portfolio.css' );
+    add_editor_style( 'assets/css/sections/phone-slider.css' );
 
     // Support selective refresh in Customizer
     add_theme_support( 'customize-selective-refresh-widgets' );
@@ -216,6 +217,7 @@ function xophz_magic_hat_enqueue_styles() {
         'team-testimonials',
         'cta-contact',
         'pricing-portfolio',
+        'phone-slider',
     );
     $section_handles = array();
 
@@ -244,6 +246,15 @@ function xophz_magic_hat_enqueue_styles() {
         get_template_directory_uri() . '/assets/js/header-footer.js',
         array(),
         file_exists( get_template_directory() . '/assets/js/header-footer.js' ) ? filemtime( get_template_directory() . '/assets/js/header-footer.js' ) : wp_get_theme()->get('Version'),
+        true
+    );
+
+    // Enqueue Phone Slider client-side controller
+    wp_enqueue_script(
+        'magic-hat-phone-slider',
+        get_template_directory_uri() . '/assets/js/phone-slider.js',
+        array(),
+        file_exists( get_template_directory() . '/assets/js/phone-slider.js' ) ? filemtime( get_template_directory() . '/assets/js/phone-slider.js' ) : wp_get_theme()->get('Version'),
         true
     );
 }

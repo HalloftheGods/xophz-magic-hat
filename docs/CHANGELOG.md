@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Hero Vertical Top Padding Reduction (`inc/hero.php`, `assets/css/sections/hero-overlap.css`): Reduced top padding from 60px down to 20px when the iframe preview is active (`.mh-hero-has-iframe .mh-hero-split-grid`) and to 28px in centered layout, ensuring the phone frame remains above the fold.
 
 ### Added
+- Wide Phone Apps Iframe Slider Section (`assets/css/sections/phone-slider.css`, `assets/js/phone-slider.js`, `patterns/phone-slider.php`, `functions.php`): Added a dedicated modular page section for showcasing mobile phone applications. Features realistic smartphone hardware bezels with obsidian chassis styling, top speaker notch, volume and power buttons, glass glare overlays, and borderless responsive iframes. Configured in wide phone aspect ratio (4:3) with smooth track transitions, previous and next navigation buttons, dot pagination, and touch or keyboard accessibility.
 - Customizer Phone Aspect Ratio Selector (`inc/hero.php`, `assets/js/customizer-preview-header-footer.js`): Added `mh_hero_phone_ratio` control with selective refresh and live postMessage synchronization, supporting 9:16 (Wider Mobile), 9:17 (Modern Mobile), and 9:19.5 (Tall Slender).
 
 ## [26.9.11] - 2026-09-07

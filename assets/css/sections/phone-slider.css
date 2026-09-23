@@ -1,0 +1,396 @@
+/**
+ * Section Styles: Wide Phone Apps Iframe Slider
+ *
+ * Implements hardware-accurate wide mobile phone chassis, bezels,
+ * borderless app viewport iframes, and interactive slider controls.
+ *
+ * @package Xophz_Magic_Hat
+ */
+
+:root {
+	--mh-phone-aspect-ratio: 4 / 3;
+	--mh-phone-max-width: 680px;
+	--mh-phone-bezel-color: #0f172a;
+	--mh-phone-bezel-rim: rgba(255, 255, 255, 0.12);
+	--mh-phone-accent: var(--mh-color-brand-base, #62c9ff);
+}
+
+/* Section Container */
+.mh-section-phone-slider {
+	position: relative;
+	overflow: hidden;
+}
+
+.mh-phone-slider-container {
+	position: relative;
+	width: 100%;
+	max-width: 1140px;
+	margin: 0 auto;
+}
+
+/* Slider Viewport & Track */
+.mh-phone-slider-stage {
+	position: relative;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: var(--wp--preset--spacing--4, 16px) 0;
+}
+
+.mh-phone-slider-track {
+	position: relative;
+	width: 100%;
+	display: flex;
+	transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+	will-change: transform;
+}
+
+.mh-phone-slide {
+	position: relative;
+	flex: 0 0 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	opacity: 0.35;
+	transform: scale(0.94);
+	transition: opacity 0.4s ease, transform 0.4s ease;
+	pointer-events: none;
+}
+
+.mh-phone-slide.is-active {
+	opacity: 1;
+	transform: scale(1);
+	pointer-events: auto;
+}
+
+/* Smartphone Hardware Shell & Bezel */
+.mh-phone-device-wrap {
+	position: relative;
+	width: 100%;
+	max-width: var(--mh-phone-max-width);
+	margin: 0 auto;
+	padding: 0 var(--wp--preset--spacing--4, 16px);
+}
+
+.mh-phone-chassis {
+	position: relative;
+	width: 100%;
+	background: #000000;
+	border-radius: 40px;
+	border: 12px solid var(--mh-phone-bezel-color);
+	box-shadow:
+		0 0 0 2px var(--mh-phone-bezel-rim),
+		0 25px 60px -10px rgba(0, 0, 0, 0.85),
+		0 0 35px rgba(98, 201, 255, 0.18);
+	overflow: hidden;
+	transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.mh-phone-chassis:hover {
+	box-shadow:
+		0 0 0 2px rgba(98, 201, 255, 0.4),
+		0 30px 70px -10px rgba(0, 0, 0, 0.9),
+		0 0 45px rgba(98, 201, 255, 0.28);
+}
+
+/* Hardware Accent: Speaker Bar & Front Sensor Notch */
+.mh-phone-notch {
+	position: absolute;
+	top: 6px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 90px;
+	height: 18px;
+	background: #000000;
+	border-bottom-left-radius: 12px;
+	border-bottom-right-radius: 12px;
+	z-index: 30;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	pointer-events: none;
+}
+
+.mh-phone-speaker {
+	width: 38px;
+	height: 3px;
+	background: #334155;
+	border-radius: 2px;
+}
+
+.mh-phone-camera {
+	width: 7px;
+	height: 7px;
+	background: #1e293b;
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: 50%;
+}
+
+/* Hardware Buttons Simulation */
+.mh-phone-hardware-btn {
+	position: absolute;
+	background: #1e293b;
+	box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.3);
+	z-index: 5;
+}
+
+.mh-phone-btn-vol-up {
+	left: -15px;
+	top: 70px;
+	width: 4px;
+	height: 42px;
+	border-radius: 3px 0 0 3px;
+}
+
+.mh-phone-btn-vol-down {
+	left: -15px;
+	top: 125px;
+	width: 4px;
+	height: 42px;
+	border-radius: 3px 0 0 3px;
+}
+
+.mh-phone-btn-power {
+	right: -15px;
+	top: 90px;
+	width: 4px;
+	height: 55px;
+	border-radius: 0 3px 3px 0;
+}
+
+/* Inner Screen Frame & Viewport */
+.mh-phone-screen {
+	position: relative;
+	width: 100%;
+	aspect-ratio: var(--mh-phone-aspect-ratio);
+	background: #090d16;
+	border-radius: 28px;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Borderless Responsive Iframe */
+.mh-phone-screen iframe.mh-phone-iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border: none !important;
+	outline: none !important;
+	background: transparent;
+	display: block;
+	z-index: 10;
+}
+
+/* Glass Glare Sheen Reflection */
+.mh-phone-glare {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 45%;
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 60%, transparent 100%);
+	pointer-events: none;
+	z-index: 20;
+	border-top-left-radius: 28px;
+	border-top-right-radius: 28px;
+}
+
+/* Iframe Loading Placeholder */
+.mh-phone-loader {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	background: #0a0b10;
+	color: var(--mh-phone-accent);
+	font-family: var(--mh-font-mono, monospace);
+	font-size: 13px;
+	z-index: 5;
+}
+
+.mh-phone-loader-spinner {
+	width: 32px;
+	height: 32px;
+	border: 3px solid rgba(98, 201, 255, 0.2);
+	border-top-color: var(--mh-phone-accent);
+	border-radius: 50%;
+	animation: mh-phone-spin 0.8s linear infinite;
+}
+
+@keyframes mh-phone-spin {
+	to { transform: rotate(360deg); }
+}
+
+/* Slide Metadata & Action Bar */
+.mh-phone-meta {
+	width: 100%;
+	max-width: var(--mh-phone-max-width);
+	margin-top: var(--wp--preset--spacing--5, 20px);
+	text-align: center;
+	padding: 0 var(--wp--preset--spacing--3, 12px);
+}
+
+.mh-phone-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	background: rgba(98, 201, 255, 0.12);
+	border: 1px solid rgba(98, 201, 255, 0.3);
+	color: var(--mh-phone-accent);
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	padding: 3px 10px;
+	border-radius: 9999px;
+	margin-bottom: var(--wp--preset--spacing--2, 8px);
+}
+
+.mh-phone-app-title {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: var(--mh-color-text-heading, #ffffff);
+	margin: 0 0 var(--wp--preset--spacing--2, 8px) 0;
+	line-height: 1.3;
+}
+
+.mh-phone-app-desc {
+	font-size: 0.95rem;
+	color: var(--mh-color-text-muted, #94a3b8);
+	max-width: 540px;
+	margin: 0 auto var(--wp--preset--spacing--3, 12px) auto;
+	line-height: 1.5;
+}
+
+.mh-phone-app-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	color: var(--mh-phone-accent);
+	font-size: 13px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: color 0.2s, transform 0.2s;
+}
+
+.mh-phone-app-link:hover {
+	color: #ffffff;
+	transform: translateX(2px);
+}
+
+/* Slider Navigation Controls */
+.mh-phone-nav-btn {
+	position: absolute;
+	top: 45%;
+	transform: translateY(-50%);
+	width: 46px;
+	height: 46px;
+	border-radius: 50%;
+	background: rgba(15, 23, 42, 0.85);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	color: #ffffff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	z-index: 40;
+	transition: background 0.2s, border-color 0.2s, transform 0.2s, color 0.2s;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.mh-phone-nav-btn:hover {
+	background: var(--mh-phone-accent);
+	border-color: var(--mh-phone-accent);
+	color: #000000;
+	transform: translateY(-50%) scale(1.08);
+}
+
+.mh-phone-nav-prev {
+	left: 12px;
+}
+
+.mh-phone-nav-next {
+	right: 12px;
+}
+
+@media (max-width: 768px) {
+	.mh-phone-nav-prev {
+		left: 4px;
+	}
+	.mh-phone-nav-next {
+		right: 4px;
+	}
+}
+
+/* Dot Pagination Indicators */
+.mh-phone-dots {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	margin-top: var(--wp--preset--spacing--5, 20px);
+	padding: 8px 0;
+}
+
+.mh-phone-dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 9999px;
+	background: rgba(255, 255, 255, 0.25);
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mh-phone-dot:hover {
+	background: rgba(98, 201, 255, 0.6);
+	transform: scale(1.2);
+}
+
+.mh-phone-dot.is-active {
+	width: 28px;
+	background: var(--mh-phone-accent);
+	box-shadow: 0 0 10px rgba(98, 201, 255, 0.5);
+}
+
+/* Responsive Viewports */
+@media (max-width: 640px) {
+	.mh-phone-chassis {
+		border-width: 8px;
+		border-radius: 30px;
+	}
+
+	.mh-phone-screen {
+		border-radius: 20px;
+	}
+
+	.mh-phone-notch {
+		width: 70px;
+		height: 14px;
+	}
+
+	.mh-phone-speaker {
+		width: 26px;
+		height: 2px;
+	}
+
+	.mh-phone-btn-vol-up,
+	.mh-phone-btn-vol-down,
+	.mh-phone-btn-power {
+		display: none;
+	}
+}
