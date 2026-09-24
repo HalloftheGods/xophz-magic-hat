@@ -77,3 +77,49 @@ function mh_register_page_builder_section( $wp_customize ) {
 		'section' => 'mh_page_builder',
 	) ) );
 }
+
+/**
+ * Synchronize page sections theme mod to front page post content on Customizer publish if plugin is absent.
+ *
+ * @param WP_Customize_Manager $wp_customize Customizer instance.
+ */
+function mh_sync_sections_on_save( $wp_customize ) {
+	$has_magic_wand_public = class_exists( 'Xophz_Compass_Magic_Wand_Public' );
+	if ( $has_magic_wand_public ) {
+		return;
+	}
+
+	$setting = $wp_customize->get_setting( 'mh_page_sections' );
+	$sections_json = '';
+	if ( $setting ) {
+		$sections_json = $setting->post_value();
+		if ( empty( $sections_json ) ) {
+			$sections_json = $setting->value();
+		}
+	}
+
+	if ( empty( $sections_json ) ) {
+		$sections_json = get_theme_mod( 'mh_page_sections', '[]' );
+	}
+
+	$sections = json_decode( $sections_json, true );
+	$is_valid_sections_array = is_array( $sections );
+	if ( ! $is_valid_sections_array || empty( $sections ) ) {
+		return;
+	}
+
+	$front_page_id = absint( get_option( 'page_on_front' ) );
+	if ( ! $front_page_id ) {
+		$home_page = get_page_by_path( 'home' );
+		if ( $home_page ) {
+			$front_page_id = $home_page->ID;
+		}
+	}
+
+	if ( ! $front_page_id ) {
+		return;
+	}
+
+	update_post_meta( $front_page_id, '_mh_page_sections', wp_slash( $sections_json ) );
+}
+add_action( 'customize_save_after', 'mh_sync_sections_on_save' );

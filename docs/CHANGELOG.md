@@ -5,6 +5,11 @@ All notable changes to the Xophz Magic Hat theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2026-09-23]
+
+### Added
+- Page Builder Customizer Save Fallback (`inc/customizer/sections/section-page-builder.php`): Added `mh_sync_sections_on_save()` hooked to `customize_save_after` to ensure `mh_page_sections` theme mod is synchronized to front page post meta upon Customizer publish when the Magic Wand plugin is absent.
+
 ## [2026-09-21]
 
 ### Changed
