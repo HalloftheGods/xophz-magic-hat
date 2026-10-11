@@ -189,6 +189,8 @@ add_action('init', 'xophz_magic_hat_create_default_menus');
 
 // Load Customizer Settings, AI Architect Engine, Header/Footer Engine & Page Layouts
 require_once get_template_directory() . '/inc/customizer.php';
+require_once get_template_directory() . '/inc/class-magic-hat-connectors.php';
+Magic_Hat_Connectors::init();
 require_once get_template_directory() . '/inc/class-magic-hat-ai-architect.php';
 require_once get_template_directory() . '/inc/header-footer.php';
 require_once get_template_directory() . '/inc/hero.php';

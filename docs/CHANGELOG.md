@@ -5,6 +5,13 @@ All notable changes to the Xophz Magic Hat theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2026-10-10]
+
+### Security
+- Gemini key out of the URL (`inc/class-magic-hat-ai-architect.php`): the direct Gemini REST call sends the key in the `x-goog-api-key` header instead of a `?key=` query parameter, so it cannot land in provider, proxy or HTTP debug logs.
+- One credential resolver (`inc/class-magic-hat-connectors.php`): the Google, Anthropic, OpenAI, OpenRouter and Ollama endpoint settings all resolve through `Magic_Hat_Connectors::get_key()`, which reads only the connector's declared env var, constant and option. The hand-rolled constant, `getenv`, `$_ENV` and option tiers are deleted, including the `GEMINI_API_KEY` names and the AiClient registry read.
+- New connectors `openrouter_api_key` and `ollama_url` register on `wp_connectors_init`, so they appear under Settings > Connectors. Google, Anthropic and OpenAI use the core connectors.
+
 ## [2026-09-23]
 
 ### Added

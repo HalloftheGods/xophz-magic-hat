@@ -87,76 +87,10 @@ class Magic_Hat_AI_Architect {
 	}
 
 	/**
-	/**
-	 * Retrieve configured Gemini / Google API key from environment, constants, or WP Connectors.
+	 * Retrieve the Gemini / Google API key from the core Google connector (Settings > Connectors).
 	 */
 	public static function get_api_key() {
-		// 1. Environment variables and PHP constants
-		if ( defined( 'GOOGLE_API_KEY' ) && ! empty( GOOGLE_API_KEY ) ) {
-			return GOOGLE_API_KEY;
-		}
-		if ( defined( 'GEMINI_API_KEY' ) && ! empty( GEMINI_API_KEY ) ) {
-			return GEMINI_API_KEY;
-		}
-		$env_key = getenv( 'GOOGLE_API_KEY' ) ?: getenv( 'GEMINI_API_KEY' );
-		if ( ! empty( $env_key ) ) {
-			return $env_key;
-		}
-		if ( ! empty( $_ENV['GOOGLE_API_KEY'] ) ) {
-			return $_ENV['GOOGLE_API_KEY'];
-		}
-		if ( ! empty( $_ENV['GEMINI_API_KEY'] ) ) {
-			return $_ENV['GEMINI_API_KEY'];
-		}
-
-		// 2. WP Connectors and COMPASS Options
-		$opt_keys = array(
-			'connectors_ai_google_api_key',
-			'ai_google_api_key',
-			'compass_gemini_api_key',
-			'xophz_gemini_api_key',
-		);
-		foreach ( $opt_keys as $opt ) {
-			$val = get_option( $opt, '' );
-			if ( ! empty( $val ) ) {
-				return $val;
-			}
-		}
-
-		// 3. Official WordPress Connectors registry check
-		if ( function_exists( 'wp_get_connectors' ) ) {
-			$connectors = wp_get_connectors();
-			if ( ! empty( $connectors['google']['authentication']['setting_name'] ) ) {
-				$val = get_option( $connectors['google']['authentication']['setting_name'], '' );
-				if ( ! empty( $val ) ) {
-					return $val;
-				}
-			}
-			if ( ! empty( $connectors['google_gemini_api_key']['authentication']['setting_name'] ) ) {
-				$val = get_option( $connectors['google_gemini_api_key']['authentication']['setting_name'], '' );
-				if ( ! empty( $val ) ) {
-					return $val;
-				}
-			}
-		}
-
-		// 4. WordPress AiClient registry check
-		if ( class_exists( 'WordPress\\AiClient\\AiClient' ) ) {
-			try {
-				$registry = \WordPress\AiClient\AiClient::defaultRegistry();
-				$auth = $registry->getProviderRequestAuthentication( 'google' );
-				if ( $auth && method_exists( $auth, 'getApiKey' ) ) {
-					$k = $auth->getApiKey();
-					if ( ! empty( $k ) ) {
-						return $k;
-					}
-				}
-			} catch ( \Throwable $t ) {
-				// Registry not yet initialized
-			}
-		}
-
-		return '';
+		return Magic_Hat_Connectors::get_key( Magic_Hat_Connectors::GOOGLE );
 	}
 
 	/**
@@ -187,67 +121,31 @@ class Magic_Hat_AI_Architect {
 	}
 
 	/**
-	 * Retrieve configured Anthropic Claude API key
+	 * Retrieve the Anthropic Claude API key from the core Anthropic connector.
 	 */
 	public static function get_anthropic_api_key() {
-		if ( defined( 'ANTHROPIC_API_KEY' ) && ! empty( ANTHROPIC_API_KEY ) ) {
-			return ANTHROPIC_API_KEY;
-		}
-		$env = getenv( 'ANTHROPIC_API_KEY' );
-		if ( ! empty( $env ) ) {
-			return $env;
-		}
-		$opt = get_option( 'connectors_ai_anthropic_api_key', '' );
-		if ( ! empty( $opt ) ) {
-			return $opt;
-		}
-		return get_option( 'compass_anthropic_api_key', '' );
+		return Magic_Hat_Connectors::get_key( Magic_Hat_Connectors::ANTHROPIC );
 	}
 
 	/**
-	 * Retrieve configured OpenAI API key
+	 * Retrieve the OpenAI API key from the core OpenAI connector.
 	 */
 	public static function get_openai_api_key() {
-		if ( defined( 'OPENAI_API_KEY' ) && ! empty( OPENAI_API_KEY ) ) {
-			return OPENAI_API_KEY;
-		}
-		$env = getenv( 'OPENAI_API_KEY' );
-		if ( ! empty( $env ) ) {
-			return $env;
-		}
-		$opt = get_option( 'connectors_ai_openai_api_key', '' );
-		if ( ! empty( $opt ) ) {
-			return $opt;
-		}
-		return get_option( 'compass_openai_api_key', '' );
+		return Magic_Hat_Connectors::get_key( Magic_Hat_Connectors::OPENAI );
 	}
 
 	/**
-	 * Retrieve configured OpenRouter API key
+	 * Retrieve the OpenRouter API key from the openrouter_api_key connector.
 	 */
 	public static function get_openrouter_api_key() {
-		if ( defined( 'OPENROUTER_API_KEY' ) && ! empty( OPENROUTER_API_KEY ) ) {
-			return OPENROUTER_API_KEY;
-		}
-		$env = getenv( 'OPENROUTER_API_KEY' );
-		if ( ! empty( $env ) ) {
-			return $env;
-		}
-		return get_option( 'compass_openrouter_api_key', '' );
+		return Magic_Hat_Connectors::get_key( Magic_Hat_Connectors::OPENROUTER );
 	}
 
 	/**
-	 * Retrieve configured Ollama endpoint URL
+	 * Retrieve the Ollama endpoint URL from the ollama_url connector.
 	 */
 	public static function get_ollama_url() {
-		if ( defined( 'OLLAMA_URL' ) && ! empty( OLLAMA_URL ) ) {
-			return OLLAMA_URL;
-		}
-		$env = getenv( 'OLLAMA_URL' );
-		if ( ! empty( $env ) ) {
-			return $env;
-		}
-		return get_option( 'compass_ollama_url', '' );
+		return Magic_Hat_Connectors::get_key( Magic_Hat_Connectors::OLLAMA_URL );
 	}
 
 	/**
@@ -637,7 +535,7 @@ class Magic_Hat_AI_Architect {
 			default:
 				$key = self::get_api_key();
 				if ( empty( $key ) ) {
-					return new WP_Error( 'missing_key', 'Google Gemini API key is not configured in WP Connectors or environment.' );
+					return new WP_Error( 'missing_key', 'Google Gemini API key is not configured. Add it under Settings > Connectors (Google).' );
 				}
 
 				$chosen_model = ! empty( $model ) ? $model : 'gemini-3.5-flash';
@@ -797,7 +695,7 @@ class Magic_Hat_AI_Architect {
 		if ( 'gemini-2.5-flash' === $target_model || 'gemini-1.5-flash' === $target_model ) {
 			$target_model = 'gemini-3.5-flash';
 		}
-		$url = 'https://generativelanguage.googleapis.com/v1beta/models/' . urlencode( $target_model ) . ':generateContent?key=' . urlencode( $api_key );
+		$url = 'https://generativelanguage.googleapis.com/v1beta/models/' . urlencode( $target_model ) . ':generateContent';
 
 		$body = array(
 			'contents' => array(
@@ -820,7 +718,10 @@ class Magic_Hat_AI_Architect {
 		$response = wp_remote_post(
 			$url,
 			array(
-				'headers' => array( 'Content-Type' => 'application/json' ),
+				'headers' => array(
+					'Content-Type'   => 'application/json',
+					'x-goog-api-key' => $api_key,
+				),
 				'body'    => wp_json_encode( $body ),
 				'timeout' => 25,
 			)
